@@ -210,7 +210,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
-                R.id.container, CardPaymentFragment.newInstance());
+                R.id.container, CardPaymentFragment.newInstance(mPaymentParams));
         ft.addToBackStack(null);
         ft.commit();
     }

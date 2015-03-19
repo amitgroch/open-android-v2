@@ -47,7 +47,7 @@ public class CreditCardOption extends CardOption implements android.os.Parcelabl
 
     @Override
     public String getCardType() {
-        return CardType.DEBIT.getCardType();
+        return CardType.CREDIT.getCardType();
     }
 
 

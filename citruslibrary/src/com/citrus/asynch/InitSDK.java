@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.citrus.interfaces.InitListener;
 import com.citrus.mobile.Callback;
 import com.citrus.mobile.Config;
+import com.citrus.sdkui.CardOption;
 import com.citrus.sdkui.NetbankingOption;
 import com.citrus.sdkui.PaymentOption;
 
@@ -76,7 +77,12 @@ public class InitSDK {
                         if (paymentOptions != null) {
                             for (int i = 0; i < paymentOptions.length(); i++) {
                                 PaymentOption option = PaymentOption.fromJSONObject(paymentOptions.getJSONObject(i));
-                                walletList.add(option);
+
+                                // NOTE: Add only Cards, no need to add netbanking at this moment.
+                                // As per decided.
+                                if (option instanceof CardOption) {
+                                    walletList.add(option);
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -116,6 +122,5 @@ public class InitSDK {
                     initListener.onNetBankingListFailed(error);
             }
         };
-
     }
 }

@@ -10,7 +10,7 @@ import com.citrus.mobile.Config;
 
 public class TestActivity extends ActionBarActivity {
 
-    private static final String BILL_URL = "http://192.168.42.185:8080/billGenerator.orig.jsp";// host your bill url here
+    private static final String BILL_URL = "http://192.168.1.5:8080/billGenerator.orig.jsp";// host your bill url here
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class TestActivity extends ActionBarActivity {
         CitrusPaymentParams paymentParams = new CitrusPaymentParams();
         paymentParams.billUrl = BILL_URL;
         paymentParams.merchantName = "Shopstore";
-        paymentParams.transactionAmount = 5.0;
+        paymentParams.transactionAmount = 5;
         paymentParams.vanity = "NativeSDK";
         paymentParams.colorPrimary = "#F9A323";
         paymentParams.colorPrimaryDark = "#E7961D";

@@ -1,114 +1,212 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="#414A5A"
-             tools:context="com.citruspay.sdkui.SaveCardPaymentFragment"
-    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#414A5A"
+              android:orientation="vertical"
+              tools:context="com.citruspay.sdkui.SaveCardPaymentFragment">
 
     <!-- TODO: Add all the colors in xml files. -->
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/transaction_status_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        app:cardCornerRadius="4dp"
-        android:background="@drawable/cc_background">
-
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="#495764"
+        app:cardCornerRadius="6dp"
+        app:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">
 
-            <ImageView
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:id="@+id/img_citrus_logo"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/layout_card_logo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/ic_launcher"
-                />
+                android:orientation="horizontal">
 
-            <!--Logo of the type of card i.e. VISA, MASTER etc.-->
-            <ImageView
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:id="@+id/img_card_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/visa"/>
+                <ImageView
+                    android:id="@+id/img_citrus_logo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_margin="@dimen/transaction_status_margin"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_launcher"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="3"
+                    android:background="@android:color/transparent"/>
+
+                <!--Logo of the type of card i.e. VISA, MASTER etc.-->
+                <ImageView
+                    android:id="@+id/img_card_logo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_margin="@dimen/transaction_status_margin"
+                    android:layout_weight="1"
+                    android:src="@drawable/visa"/>
+
+            </LinearLayout>
 
             <TextView
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
                 android:id="@+id/txt_card_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/img_citrus_logo"
+                android:layout_below="@id/layout_card_logo"
+                android:layout_margin="@dimen/transaction_status_margin"
                 android:gravity="center_horizontal|start"
+                android:paddingLeft="@dimen/transaction_status_margin"
                 android:text="XXXX XXXX XXXX 8001"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                />
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
 
-            <TextView
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:id="@+id/txt_title_card_holder"
-                android:layout_width="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txt_card_number"
-                android:gravity="center_horizontal"
-                android:text="CARD HOLDER"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-
-                />
-
-            <TextView
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:id="@+id/txt_title_card_expiry"
-                android:layout_alignParentRight="true"
+            <LinearLayout
+                android:id="@+id/layout_title_card_name_expiry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txt_card_number"
-                android:gravity="center_vertical|end"
-                android:text="VALID THRU"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                />
+                android:orientation="horizontal">
 
-            <TextView
-                android:paddingTop="4dp"
-                android:id="@+id/txt_card_holder"
-                android:layout_width="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txt_title_card_holder"
-                android:gravity="center_vertical|start"
-                android:text="Salil Godbole"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                />
+                <TextView
+                    android:id="@+id/txt_title_card_holder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_weight="2.5"
+                    android:gravity="center_vertical|start"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/transaction_status_margin"
+                    android:text="CARD HOLDER"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"/>
 
-            <TextView
-                android:paddingTop="4dp"
-                android:paddingRight="@dimen/activity_vertical_margin"
-                android:id="@+id/txt_card_expiry"
-                android:layout_alignParentRight="true"
+                <TextView
+                    android:id="@+id/txt_title_card_expiry"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1.5"
+                    android:gravity="center_vertical|start"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/transaction_status_margin"
+                    android:text="VALID THRU"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_txt_card_name_expiry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt_title_card_expiry"
-                android:gravity="center_vertical|end"
-                android:text="12/19"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                />
+                android:layout_below="@id/layout_title_card_name_expiry"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txt_card_holder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_weight="2.5"
+                    android:gravity="center_vertical|start"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="2dp"
+                    android:text="Salil Godbole"
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/txt_card_expiry"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@id/txt_card_holder"
+                    android:layout_weight="1.5"
+                    android:gravity="center_vertical"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingTop="2dp"
+                    android:text="12/19"
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
         </RelativeLayout>
-
     </android.support.v7.widget.CardView>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="ENTER CVV"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white"/>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/transaction_status_margin">
+
+        <CheckBox
+            android:id="@+id/check_cvv_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/selector_cvv"
+            android:padding="4dp"
+            android:text=""/>
+
+        <CheckBox
+            android:id="@+id/check_cvv_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/selector_cvv"
+            android:padding="4dp"
+            android:text=""/>
+
+        <CheckBox
+            android:id="@+id/check_cvv_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/selector_cvv"
+            android:padding="4dp"
+            android:text=""/>
+
+        <CheckBox
+            android:id="@+id/check_cvv_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/selector_cvv"
+            android:padding="4dp"
+            android:text=""
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edit_cvv_hidden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-200dp"
+        android:focusableInTouchMode="true"
+        android:inputType="numberDecimal"
+        android:visibility="visible">
+
+        <requestFocus/>
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pay"/>
+
+</LinearLayout>

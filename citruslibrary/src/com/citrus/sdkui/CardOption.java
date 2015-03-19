@@ -52,12 +52,11 @@ public abstract class CardOption extends PaymentOption {
     }
 
     /**
-     *
-     * @param cardHolderName - Name of the card holder.
-     * @param cardNumber     - Card number.
-     * @param cardCVV        - CVV of the card. We do not store CVV at our end.
+     * @param cardHolderName  - Name of the card holder.
+     * @param cardNumber      - Card number.
+     * @param cardCVV         - CVV of the card. We do not store CVV at our end.
      * @param cardExpiryMonth - Card Expiry Month 01 to 12 e.g. 01 for January.
-     * @param cardExpiryYear - Card Expiry Year in the form of YYYY e.g. 2015.
+     * @param cardExpiryYear  - Card Expiry Year in the form of YYYY e.g. 2015.
      */
     public CardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiryMonth, String cardExpiryYear) {
         this.cardHolderName = cardHolderName;
@@ -66,7 +65,7 @@ public abstract class CardOption extends PaymentOption {
         this.cardExpiryMonth = cardExpiryMonth;
         this.cardExpiryYear = cardExpiryYear;
 
-        if (!TextUtils.isEmpty(cardExpiryMonth) &&TextUtils.isEmpty(cardExpiryYear)) {
+        if (!TextUtils.isEmpty(cardExpiryMonth) && !TextUtils.isEmpty(cardExpiryYear)) {
             this.cardExpiry = cardExpiryMonth + "/" + cardExpiryYear;
         }
     }
@@ -104,6 +103,10 @@ public abstract class CardOption extends PaymentOption {
 
     public String getCardExpiryYear() {
         return cardExpiryYear;
+    }
+
+    public String getCardExpiry() {
+        return cardExpiry;
     }
 
     public String getCardExpiryMonth() {
