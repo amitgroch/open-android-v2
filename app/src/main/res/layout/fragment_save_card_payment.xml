@@ -161,6 +161,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/selector_cvv"
+            android:enabled="false"
             android:padding="4dp"
             android:text=""/>
 
@@ -169,6 +170,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/selector_cvv"
+            android:enabled="false"
             android:padding="4dp"
             android:text=""/>
 
@@ -177,6 +179,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/selector_cvv"
+            android:enabled="false"
             android:padding="4dp"
             android:text=""/>
 
@@ -185,6 +188,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/selector_cvv"
+            android:enabled="false"
             android:padding="4dp"
             android:text=""
             android:visibility="gone"/>
