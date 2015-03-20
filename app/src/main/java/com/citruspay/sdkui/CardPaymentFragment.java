@@ -199,8 +199,4 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
 
         return valid;
     }
-
-    public static interface OnCardPaymentListener {
-        public void onCardPaymentSelected(CardOption cardOption);
-    }
 }

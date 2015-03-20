@@ -31,7 +31,7 @@ import com.citrus.sdkui.CardOption;
  * create an instance of this fragment.
  */
 public class SaveCardPaymentFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
+    private OnCardPaymentListener mListener;
     private CardOption mSavedCard = null;
 
     private TextView mCardNumber = null;
@@ -57,7 +57,6 @@ public class SaveCardPaymentFragment extends Fragment {
      *
      * @return A new instance of fragment SaveCardPaymentFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SaveCardPaymentFragment newInstance(CardOption cardOption) {
         SaveCardPaymentFragment fragment = new SaveCardPaymentFragment();
         Bundle args = new Bundle();
@@ -94,7 +93,8 @@ public class SaveCardPaymentFragment extends Fragment {
         mBtnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "CVV :: " + mCVV, Toast.LENGTH_SHORT).show();
+                mSavedCard.setCardCVV(mCVV);
+                mListener.onCardPaymentSelected(mSavedCard);
             }
         });
 
@@ -139,13 +139,6 @@ public class SaveCardPaymentFragment extends Fragment {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
             inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
-        }
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
         }
     }
 
@@ -211,12 +204,12 @@ public class SaveCardPaymentFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        try {
+            mListener = (OnCardPaymentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnCardPaymentListener");
+        }
     }
 
     @Override
@@ -224,20 +217,4 @@ public class SaveCardPaymentFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-
 }

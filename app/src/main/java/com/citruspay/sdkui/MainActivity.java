@@ -40,10 +40,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.citruspay.sdkui.CardPaymentFragment.OnCardPaymentListener;
-import static com.citruspay.sdkui.CitrusTransactionResponse.*;
+import static com.citruspay.sdkui.CitrusTransactionResponse.TransactionStatus;
 import static com.citruspay.sdkui.PaymentProcessingFragment.OnTransactionCompleteListener;
 import static com.citruspay.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
 
@@ -486,41 +484,41 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         mFragmentManager.popBackStack();
 
 
-        Log.i("Citrus", cardOption.toString() + " :::: " + cardOption.getCardType());
-
         final Card card;
 
         if (cardOption != null) {
-            card = new Card(cardOption.getCardNumber(), cardOption.getCardExpiryMonth(), cardOption.getCardExpiryYear(), cardOption.getCardCVV(), cardOption.getCardHolderName(), cardOption.getCardType());
-        } else {
-            card = null;
-        }
-
-        new GetBill(mMerchantBillUrl, mTransactionAmount, new Callback() {
-            @Override
-            public void onTaskexecuted(String billString, String error) {
-                Bill bill = null;
-                if (TextUtils.isEmpty(error)) {
-                    bill = new Bill(billString);
-                    // TODO: Use customer data from User to fill the data in the getCustomer.
-                    UserDetails userDetails = new UserDetails(getCustomer());
-
-                    PG paymentGateway = new PG(card, bill, userDetails);
-
-                    paymentGateway.charge(new Callback() {
-                        @Override
-                        public void onTaskexecuted(String success, String error) {
-                            processResponse(success, error);
-                        }
-                    });
-                }
+            if (!TextUtils.isEmpty(cardOption.getToken())) {
+                card = new Card(cardOption.getToken(), cardOption.getCardCVV());
+            } else {
+                card = new Card(cardOption.getCardNumber(), cardOption.getCardExpiryMonth(), cardOption.getCardExpiryYear(), cardOption.getCardCVV(), cardOption.getCardHolderName(), cardOption.getCardType());
             }
-        }).execute();
+
+            new GetBill(mMerchantBillUrl, mTransactionAmount, new Callback() {
+                @Override
+                public void onTaskexecuted(String billString, String error) {
+                    Bill bill = null;
+                    if (TextUtils.isEmpty(error)) {
+                        bill = new Bill(billString);
+                        // TODO: Use customer data from User to fill the data in the getCustomer.
+                        UserDetails userDetails = new UserDetails(getCustomer());
+
+                        PG paymentGateway = new PG(card, bill, userDetails);
+
+                        paymentGateway.charge(new Callback() {
+                            @Override
+                            public void onTaskexecuted(String success, String error) {
+                                processResponse(success, error);
+                            }
+                        });
+                    }
+                }
+            }).execute();
 
 
-        // Save the card if the user has opted to save the card.
-        if (cardOption.isSavePaymentOption()) {
-            saveCard(card);
+            // Save the card if the user has opted to save the card.
+            if (cardOption.isSavePaymentOption()) {
+                saveCard(card);
+            }
         }
     }
 }
