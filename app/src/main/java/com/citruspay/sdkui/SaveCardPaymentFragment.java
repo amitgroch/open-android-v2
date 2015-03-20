@@ -126,7 +126,8 @@ public class SaveCardPaymentFragment extends Fragment {
 
         mCardNumber.setText(s1 + " " + s2 + " " + s3 + " " + s4);
         mCardHolder.setText(mSavedCard.getCardHolderName());
-        mCardExpiry.setText(mSavedCard.getCardExpiry());
+
+        mCardExpiry.setText(mSavedCard.getCardExpiry().substring(0, 2) + "/" + mSavedCard.getCardExpiry().substring(4, mSavedCard.getCardExpiry().length()));
 
         return view;
     }
