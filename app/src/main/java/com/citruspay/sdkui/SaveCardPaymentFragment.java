@@ -118,7 +118,13 @@ public class SaveCardPaymentFragment extends Fragment {
         mCardExpiry.setTypeface(tf);
         mCardHolder.setTypeface(tf);
 
-        mCardNumber.setText(mSavedCard.getCardNumber());
+        String s = mSavedCard.getCardNumber();
+        String s1 = s.substring(0, 4);
+        String s2 = s.substring(4, 8);
+        String s3 = s.substring(8, 12);
+        String s4 = s.substring(12, s.length());
+
+        mCardNumber.setText(s1 + " " + s2 + " " + s3 + " " + s4);
         mCardHolder.setText(mSavedCard.getCardHolderName());
         mCardExpiry.setText(mSavedCard.getCardExpiry());
 
