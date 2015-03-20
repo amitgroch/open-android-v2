@@ -9,4 +9,20 @@
     <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/btn_sandbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pay Using Sandbox"
+        android:onClick="onPaySandboxButtonClicked"
+        android:layout_alignParentBottom="true"/>
+
+    <Button
+        android:id="@+id/btn_prod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pay Using Production"
+        android:onClick="onPayProductionButtonClicked"
+        android:layout_above="@id/btn_sandbox"/>
+
 </RelativeLayout>

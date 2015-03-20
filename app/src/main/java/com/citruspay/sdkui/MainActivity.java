@@ -1,7 +1,9 @@
 package com.citruspay.sdkui;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -31,16 +33,17 @@ import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
 import com.citrus.sdkui.CardOption;
 import com.citrus.sdkui.CitrusCash;
-import com.citrus.sdkui.DebitCardOption;
 import com.citrus.sdkui.NetbankingOption;
 import com.citrus.sdkui.PaymentOption;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.citruspay.sdkui.CardPaymentFragment.OnCardPaymentListener;
+import static com.citruspay.sdkui.CitrusTransactionResponse.*;
 import static com.citruspay.sdkui.PaymentProcessingFragment.OnTransactionCompleteListener;
 import static com.citruspay.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
 
@@ -60,6 +63,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     private String mColorPrimaryDark = null;
     private ActionBar mActionBar = null;
     private CitrusTransactionResponse mTransactionResponse;
+    private boolean mShowDialog = false;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -134,9 +138,39 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
-        Toast.makeText(this, "BackButtonPressed.....", Toast.LENGTH_SHORT).show();
+        // TODO: Move this alert dialog inside the fragment.
+        // TODO: Create a super fragment and then inherit all the fragments from it.
+        if (mShowDialog) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Add the buttons
+            builder.setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+
+                    dialog.dismiss();
+
+                    CitrusTransactionResponse transactionResponse = new CitrusTransactionResponse(TransactionStatus.FAIL, "Cancelled by the user.");
+                    sendResponse(transactionResponse);
+                }
+            });
+            builder.setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+            // Set other dialog properties
+
+            builder.setMessage(R.string.message_transaction_cancel)
+                    .setTitle(R.string.message_title_transaction_cancel);
+            // Create the AlertDialog
+            AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        } else {
+            sendResponse(mTransactionResponse);
+            mShowDialog = true;
+        }
     }
 
     private void processResponse(String response, String error) {
@@ -158,13 +192,6 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         } else {
             Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private List<PaymentOption> getCitrusWalletForUser() {
-        List<PaymentOption> citrusWallet = Config.getCitrusWallet();
-
-
-        return citrusWallet;
     }
 
     private JSONObject getCustomer() {
@@ -197,6 +224,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
     private void showPaymentOptionsFragment() {
         mPaymentParams.netbankingOptionList = Config.getBankList();
+        mPaymentParams.topNetbankingOptions = Config.getTopBankList();
         mPaymentParams.userSavedOptionList = Config.getCitrusWallet();
 
         mFragmentManager.beginTransaction()
@@ -204,6 +232,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 .commit();
 
         dismissDialog();
+
+        mShowDialog = true;
     }
 
     private void showAddCardFragment() {
@@ -213,6 +243,9 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 R.id.container, CardPaymentFragment.newInstance(mPaymentParams));
         ft.addToBackStack(null);
         ft.commit();
+
+        // No need to display the dialog, since the user will be migrating to the payment fragment on backbutton press.
+        mShowDialog = false;
     }
 
     private void showSavedCardPaymentFragment(final CardOption cardOption) {
@@ -224,6 +257,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 R.id.container, SaveCardPaymentFragment.newInstance(cardOption));
         ft.addToBackStack(null);
         ft.commit();
+
+        mShowDialog = false;
 
 //        // The following code will move to the callback method of above fragment.
 //        new GetBill(mMerchantBillUrl, mTransactionAmount, new Callback() {
@@ -256,6 +291,15 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
     private void showNetbankingFragment() {
         // TODO: Show netbanking fragment. Need to display other banks
+        ArrayList netbankingOptionsList = Config.getBankList();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        ft.replace(
+                R.id.container, NetbankingPaymentFragment.newInstance(netbankingOptionsList));
+        ft.addToBackStack(null);
+        ft.commit();
+
+        mShowDialog = false;
     }
 
     private void showPaymentFragment(String redirectUrl) {
@@ -265,6 +309,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 R.id.container, PaymentProcessingFragment.newInstance(redirectUrl));
         ft.addToBackStack(null);
         ft.commit();
+
+        mShowDialog = true;
     }
 
     private void showPaymentStatusFragment(CitrusTransactionResponse transactionResponse, CitrusPaymentParams paymentParams) {
@@ -274,6 +320,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 R.id.container, PaymentStatusFragment.newInstance(transactionResponse, paymentParams));
         ft.addToBackStack(null);
         ft.commit();
+
+        mShowDialog = false;
     }
 
     private void processNebankingPayment(final NetbankingOption netbankingOption) {
@@ -303,6 +351,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
     private void showDialog(String message, boolean cancelable) {
         if (mProgressDialog != null) {
+            mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setCancelable(cancelable);
             mProgressDialog.setMessage(message);
             mProgressDialog.show();
@@ -316,7 +365,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     }
 
     private void saveCard(Card card) {
-        if (User.isUserLoggedIn(MainActivity.this))
+        if (User.isUserLoggedIn(MainActivity.this)) {
             new Savecard(MainActivity.this, new Callback() {
                 @Override
                 public void onTaskexecuted(String success, String error) {
@@ -327,6 +376,15 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                     }
                 }
             }).execute(card);
+        }
+    }
+
+    private void sendResponse(CitrusTransactionResponse transactionResponse) {
+        // TODO: Set the result and return the transaction response.
+        Intent intent = new Intent();
+        intent.putExtra(Utils.INTENT_EXTRA_PAYMENT_RESPONSE, transactionResponse);
+        setResult(Utils.REQUEST_CODE_PAYMENT_ACTIVITY, intent);
+        finish();
     }
 
     // Listeners
@@ -334,30 +392,32 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     @Override
     public void onOptionSelected(final PaymentOption paymentOption) {
 
-        Log.d("Citrus", paymentOption.toString());
+        if (paymentOption != null) {
+            if (paymentOption instanceof CardOption) {
+                final CardOption cardOption = (CardOption) paymentOption;
 
-        if (paymentOption instanceof CardOption) {
-            final CardOption cardOption = (CardOption) paymentOption;
+                // If the Add Card button is clicked show the fragment to Add New Card.
+                if (cardOption == CardOption.DEFAULT_CARD) {
+                    showAddCardFragment();
+                } else {
+                    showSavedCardPaymentFragment(cardOption);
+                }
+            } else if (paymentOption instanceof NetbankingOption) {
 
-            // If the Add Card button is clicked show the fragment to Add New Card.
-            if (cardOption == CardOption.DEFAULT_CARD) {
-                showAddCardFragment();
-            } else {
-                showSavedCardPaymentFragment(cardOption);
+                final NetbankingOption netbankingOption = (NetbankingOption) paymentOption;
+
+                // If the bank is selected other than the top 4 banks, show the list of available banks.
+                if (netbankingOption == NetbankingOption.DEFAULT_BANK) {
+                    showNetbankingFragment();
+                } else {
+                    processNebankingPayment(netbankingOption);
+                }
+            } else if (paymentOption instanceof CitrusCash) {
+                // TODO: Make payment using citrus cash
+                Toast.makeText(this, "Citrus Cash", Toast.LENGTH_SHORT).show();
             }
-        } else if (paymentOption instanceof NetbankingOption) {
-
-            final NetbankingOption netbankingOption = (NetbankingOption) paymentOption;
-
-            // If the bank is selected other than the top 4 banks, show the list of available banks.
-            if (netbankingOption == NetbankingOption.DEFAULT_BANK) {
-                showNetbankingFragment();
-            } else {
-                processNebankingPayment(netbankingOption);
-            }
-        } else if (paymentOption instanceof CitrusCash) {
-            // TODO: Make payment using citrus cash
-            Toast.makeText(this, "Citrus Cash", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Something went wrong..", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -397,6 +457,9 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     @Override
     public void onTransactionComplete(CitrusTransactionResponse transactionResponse) {
         mTransactionResponse = transactionResponse;
+        // Remove the payment processing fragment.
+        mFragmentManager.popBackStack();
+        // Show payment status fragment.
         showPaymentStatusFragment(transactionResponse, mPaymentParams);
     }
 
@@ -404,26 +467,25 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
     @Override
     public void onRetryTransaction() {
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.setCustomAnimations(android.R.anim.fade_out, android.R.anim.fade_in);
-        ft.commit();
-        mFragmentManager.popBackStack();
+//        FragmentTransaction ft = mFragmentManager.beginTransaction();
+//        ft.setCustomAnimations(android.R.anim.fade_out, android.R.anim.fade_in);
+//        ft.commit();
+
+        mFragmentManager.popBackStack(); // Remove the transaction status fragment.
     }
 
     @Override
     public void onDismiss() {
-        Toast.makeText(this, "Dismiss....", Toast.LENGTH_SHORT).show();
+        sendResponse(mTransactionResponse);
 
-        // TODO: Set the result and return the transaction response.
-        Intent intent = new Intent();
-        intent.putExtra(Utils.INTENT_EXTRA_PAYMENT_RESPONSE ,mTransactionResponse);
-        setResult(Utils.REQUEST_CODE_PAYMENT_ACTIVITY, intent);
-        finish();
+        mShowDialog = false;
     }
 
     @Override
     public void onCardPaymentSelected(final CardOption cardOption) {
         mFragmentManager.popBackStack();
+
+
         Log.i("Citrus", cardOption.toString() + " :::: " + cardOption.getCardType());
 
         final Card card;

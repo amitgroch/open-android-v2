@@ -31,6 +31,7 @@ public class Config {
     private static String emailID;
     private static String mobileNo;
     private static ArrayList<NetbankingOption> bankList;
+    private static ArrayList<NetbankingOption> topBankList;
 
     public static void setupSignupId(String id) {
         signupId = id;
@@ -82,6 +83,14 @@ public class Config {
 
     public static void setBankList(ArrayList<NetbankingOption> bankList) {
         Config.bankList = bankList;
+    }
+
+    public static ArrayList<NetbankingOption> getTopBankList() {
+        return topBankList;
+    }
+
+    public static void setTopBankList(ArrayList<NetbankingOption> topBankList) {
+        Config.topBankList = topBankList;
     }
 
     public static String getVanity() {

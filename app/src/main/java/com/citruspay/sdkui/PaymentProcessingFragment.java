@@ -64,7 +64,7 @@ public class PaymentProcessingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_otpwait, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_payment_processing, container, false);
 
         mContext = getActivity();
         mProgressDialog = new ProgressDialog(mContext);

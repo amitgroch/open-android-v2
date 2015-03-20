@@ -1,51 +1,50 @@
 package com.citruspay.sdkui;
 
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.citrus.sdkui.NetbankingOption;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link OnPaymentOptionSelectedListener} interface
+ * to handle interaction events.
  * Use the {@link NetbankingPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NetbankingPaymentFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class NetbankingPaymentFragment extends Fragment {
 
-    private OnPaymentOptionSelectedListener mListener = null;
-    private NetbankingOption mNetbankingOption = null;
-    private Spinner mSpinnerBankList = null;
+    private OnPaymentOptionSelectedListener mListener;
 
-    public void setBankList(List<NetbankingOption> mListBanks) {
-        this.mListBanks = mListBanks;
-    }
+    private RecyclerView mRecylerViewNetbanking;
+    private NetbankingAdapter mAdapter;
+    private ArrayList<NetbankingOption> mNetbankingOptionsList;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    private List<NetbankingOption> mListBanks = null;
-    private Button mButtonPay = null;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment NetbankingPaymentFragment.
+     * @return A new instance of fragment NetbankingPaymetFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NetbankingPaymentFragment newInstance(List<NetbankingOption> bankList) {
+    public static NetbankingPaymentFragment newInstance(ArrayList<NetbankingOption> netbankingOptionsList) {
         NetbankingPaymentFragment fragment = new NetbankingPaymentFragment();
-        fragment.setBankList(bankList);
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(Constants.INTENT_EXTRA_NETBANKING_PARAMS, netbankingOptionsList);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -56,24 +55,32 @@ public class NetbankingPaymentFragment extends Fragment implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mNetbankingOptionsList = getArguments().getParcelableArrayList(Constants.INTENT_EXTRA_NETBANKING_PARAMS);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_netbanking_payment, container, false);
+        View view = inflater.inflate(R.layout.fragment_netbanking_payment, container, false);
 
-        mButtonPay = (Button) rootView.findViewById(R.id.button_pay);
-        mButtonPay.setOnClickListener(this);
+        mAdapter = new NetbankingAdapter(mNetbankingOptionsList);
 
-        mSpinnerBankList = (Spinner) rootView.findViewById(R.id.spinnerBankList);
+        mRecylerViewNetbanking = (RecyclerView) view.findViewById(R.id.recycler_view_netbanking);
+        mRecylerViewNetbanking.setAdapter(mAdapter);
 
-        ArrayAdapter<NetbankingOption> adapter = new ArrayAdapter<NetbankingOption>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mListBanks);
-        mSpinnerBankList.setAdapter(adapter);
-        mSpinnerBankList.setOnItemSelectedListener(this);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecylerViewNetbanking.setHasFixedSize(true);
 
-        return rootView;
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecylerViewNetbanking.setLayoutManager(mLayoutManager);
+
+        mRecylerViewNetbanking.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new OnItemClickListener()));
+        return view;
     }
 
     @Override
@@ -87,33 +94,29 @@ public class NetbankingPaymentFragment extends Fragment implements View.OnClickL
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        Toast.makeText(getActivity(), "Pay Button Clicked...", Toast.LENGTH_SHORT).show();
-
-        if (mNetbankingOption != null) {
-            mListener.onOptionSelected(mNetbankingOption);
-        } else {
-            Toast.makeText(getActivity(), "Please choose the bank for payment!", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mNetbankingOption = getNetbankingOption(position);
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        mNetbankingOption = null;
-    }
-
-    private NetbankingOption getNetbankingOption(int position) {
+    private NetbankingOption getItem(int position) {
         NetbankingOption netbankingOption = null;
 
-        if (mListBanks != null && position > -1 && position < mListBanks.size()) {
-            netbankingOption = mListBanks.get(position);
+        if (mNetbankingOptionsList != null && mNetbankingOptionsList.size() > position && position >= -1) {
+            netbankingOption = mNetbankingOptionsList.get(position);
         }
+
         return netbankingOption;
+    }
+
+    private class OnItemClickListener extends RecyclerItemClickListener.SimpleOnItemClickListener {
+
+        @Override
+        public void onItemClick(View childView, int position) {
+            NetbankingOption netbankingOption = getItem(position);
+            mListener.onOptionSelected(netbankingOption);
+        }
     }
 }

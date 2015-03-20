@@ -22,6 +22,12 @@
     <string name="title_text2_error">Error Message</string>
 
     <string name="title_activity_otpwait">OTPWaitActivity</string>
+
+    <string name="message_transaction_cancel">Do you want to cancel the transaction?</string>
+    <string name="message_title_transaction_cancel">Cancel Transaction</string>
+    <string name="message_yes">Yes</string>
+    <string name="message_no">No</string>
+
     <string name="credit">Credit</string>
     <string name="debit">Debit</string>
     <string name="cardnumber">CARD NUMBER</string>

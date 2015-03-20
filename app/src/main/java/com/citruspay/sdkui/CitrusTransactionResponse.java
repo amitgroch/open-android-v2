@@ -44,6 +44,35 @@ public class CitrusTransactionResponse implements Parcelable {
 
     }
 
+    /**
+     * This constructor will be used internally.
+     *
+     * @param transactionStatus
+     * @param message
+     */
+    CitrusTransactionResponse(TransactionStatus transactionStatus, String message) {
+        this.transactionStatus = transactionStatus;
+        this.message = message;
+    }
+
+    /**
+     *
+     * @param amount
+     * @param currency
+     * @param message
+     * @param responseCode
+     * @param transactionStatus
+     * @param transactionDetails
+     * @param citrusUser
+     * @param paymentMode
+     * @param issuerCode
+     * @param impsMobileNumber
+     * @param impsMmid
+     * @param authIdCode
+     * @param signature
+     * @param COD - cash on delivery.
+     * @param customParamsMap - custom parameters sent with request.
+     */
     public CitrusTransactionResponse(String amount, String currency, String message, String responseCode, TransactionStatus transactionStatus, TransactionDetails transactionDetails, CitrusUser citrusUser, PaymentMode paymentMode, String issuerCode, String impsMobileNumber, String impsMmid, String authIdCode, String signature, boolean COD, Map<String, String> customParamsMap) {
         this.amount = amount;
         this.currency = currency;

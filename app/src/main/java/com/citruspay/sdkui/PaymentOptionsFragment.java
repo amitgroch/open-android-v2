@@ -83,6 +83,9 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         citrusCashCardsType.setPaymentOptionList(citrusCashList);
         mCardViewCitrusCash.init(this, citrusCashCardsType, mPaymentParams);
 
+        // Currently hiding the Citrus Cash View. We will enable in the next release.
+        mCardViewCitrusCash.setVisibility(View.GONE);
+
         // Saved Cards
         List<PaymentOption> userSavedOptionList = mPaymentParams.userSavedOptionList;
         if (userSavedOptionList != null && !userSavedOptionList.isEmpty()) {
@@ -104,12 +107,13 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         mCardViewDebitCreditCards.init(this, debitCreditCardsType, mPaymentParams);
 
         // Netbanking
-        List<NetbankingOption> netbankingOptionList = mPaymentParams.netbankingOptionList;
-        if (netbankingOptionList != null && !netbankingOptionList.isEmpty()) {
+        // Show only banks out of top banks which are enabled for the merchant.
+        List<NetbankingOption> topNetbankingList = mPaymentParams.topNetbankingOptions;
+        if (topNetbankingList != null && !topNetbankingList.isEmpty()) {
             PaymentOptionsType netbankingCardType = PaymentOptionsType.NETBANKING;
             netbankingCardType.setHeaderText("Netbanking");
             netbankingCardType.setFooterText("Select Other Bank");
-            netbankingCardType.setPaymentOptionList(netbankingOptionList);
+            netbankingCardType.setPaymentOptionList(topNetbankingList);
             mCardViewNetbanking.init(this, netbankingCardType, mPaymentParams);
         } else {
             //Hide the netbanking view as netbankings are not enabled for the merchant.

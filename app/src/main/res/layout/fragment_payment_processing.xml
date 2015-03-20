@@ -3,7 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="com.citruspay.sdkui.OTPWaitActivity$PlaceholderFragment">
+              tools:context="com.citruspay.sdkui.PaymentProcessingFragment">
 
     <WebView
         android:id="@+id/webViewPayment"
@@ -11,13 +11,14 @@
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
+    <!-- TODO Hiding the view temporarily till the time auto OTP feature is available -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:background="#37A8E8"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal" android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView"
@@ -43,6 +44,4 @@
 
             />
     </LinearLayout>
-
-
 </LinearLayout>
