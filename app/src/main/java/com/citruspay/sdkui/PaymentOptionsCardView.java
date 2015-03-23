@@ -213,8 +213,6 @@ public class PaymentOptionsCardView extends CardView implements View.OnClickList
      */
     @Override
     public void onClick(View v) {
-//        Toast.makeText(mContext, "Clicked,,,," + v.getId(), Toast.LENGTH_SHORT).show();
-
         if (v != null && v.getTag() != null && v.getTag() instanceof PaymentOption && mListener != null) {
             PaymentOption paymentOption = (PaymentOption) v.getTag();
             mListener.onOptionSelected(paymentOption);

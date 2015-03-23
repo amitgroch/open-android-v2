@@ -62,7 +62,6 @@
                 android:layout_margin="@dimen/transaction_status_margin"
                 android:gravity="center_horizontal|center"
                 android:paddingLeft="@dimen/transaction_status_margin"
-                android:text="XXXX XXXX XXXX 8001"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"/>

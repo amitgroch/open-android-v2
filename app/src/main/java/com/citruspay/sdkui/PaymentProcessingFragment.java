@@ -183,8 +183,6 @@ public class PaymentProcessingFragment extends Fragment {
 
         @JavascriptInterface
         public void pgResponse(String response) {
-            Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-
             CitrusTransactionResponse transactionResponse = CitrusTransactionResponse.fromJSON(response);
             mListener.onTransactionComplete(transactionResponse);
 

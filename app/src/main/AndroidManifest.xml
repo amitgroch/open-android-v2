@@ -17,17 +17,6 @@
                 android:value=".TestActivity" />
         </activity>
         <activity
-            android:name=".CitrusPaymentActivity"
-            android:label="@string/title_activity_citrus3_dsecure"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.citruspay.sdkui.MainActivity" />
-            <meta-data
-                android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version" />
-        </activity>
-        <activity
             android:name=".TestActivity"
             android:label="@string/title_activity_test" >
             <intent-filter>

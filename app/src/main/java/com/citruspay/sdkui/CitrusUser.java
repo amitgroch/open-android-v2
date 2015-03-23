@@ -3,6 +3,7 @@ package com.citruspay.sdkui;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -38,6 +39,33 @@ public class CitrusUser implements Parcelable {
         }
 
         return user;
+    }
+
+    public static JSONObject toJSONObject(CitrusUser user) {
+        JSONObject customer = null;
+        // TODO: Need to put valid values from the user object passed
+		/*
+         * All the below mentioned parameters are mandatory - missing anyone of them may create errors Do not change the
+		 * key in the json below - only change the values
+		 */
+
+        try {
+            customer = new JSONObject();
+            customer.put("firstName", "Tester");
+            customer.put("lastName", "Citrus");
+            customer.put("email", "tester@gmail.com");
+            customer.put("mobileNo", "9170164284");
+            customer.put("street1", "streetone");
+            customer.put("street2", "streettwo");
+            customer.put("city", "Mumbai");
+            customer.put("state", "Maharashtra");
+            customer.put("country", "India");
+            customer.put("zip", "400052");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return customer;
     }
 
     public String getEmailId() {

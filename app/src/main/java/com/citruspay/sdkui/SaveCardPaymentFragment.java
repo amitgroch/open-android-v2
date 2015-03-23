@@ -3,10 +3,10 @@ package com.citruspay.sdkui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,22 +17,27 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.citrus.card.Card;
+import com.citrus.mobile.Callback;
+import com.citrus.payment.Bill;
+import com.citrus.payment.PG;
+import com.citrus.payment.UserDetails;
 import com.citrus.sdkui.CardOption;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SaveCardPaymentFragment.OnFragmentInteractionListener} interface
+ * {@link ProcessPaymentListener} interface
  * to handle interaction events.
  * Use the {@link SaveCardPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SaveCardPaymentFragment extends Fragment {
-    private OnCardPaymentListener mListener;
+    private ProcessPaymentListener mListener;
     private CardOption mSavedCard = null;
+    private CitrusPaymentParams mPaymentParams;
 
     private TextView mCardNumber = null;
     private TextView mCardHolder = null;
@@ -57,10 +62,11 @@ public class SaveCardPaymentFragment extends Fragment {
      *
      * @return A new instance of fragment SaveCardPaymentFragment.
      */
-    public static SaveCardPaymentFragment newInstance(CardOption cardOption) {
+    public static SaveCardPaymentFragment newInstance(CardOption cardOption, CitrusPaymentParams paymentParams) {
         SaveCardPaymentFragment fragment = new SaveCardPaymentFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.PARAM_SAVED_CARD, cardOption);
+        args.putParcelable(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,6 +76,7 @@ public class SaveCardPaymentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mSavedCard = getArguments().getParcelable(Constants.PARAM_SAVED_CARD);
+            mPaymentParams = getArguments().getParcelable(Constants.INTENT_EXTRA_PAYMENT_PARAMS);
         }
     }
 
@@ -82,7 +89,6 @@ public class SaveCardPaymentFragment extends Fragment {
         mCardNumber = (TextView) view.findViewById(R.id.txt_card_number);
         mCardHolder = (TextView) view.findViewById(R.id.txt_card_holder);
         mCardExpiry = (TextView) view.findViewById(R.id.txt_card_expiry);
-        mImgCardType = (ImageView) view.findViewById(R.id.img_card_logo);
         mCheckCVV1 = (CheckBox) view.findViewById(R.id.check_cvv_1);
         mCheckCVV2 = (CheckBox) view.findViewById(R.id.check_cvv_2);
         mCheckCVV3 = (CheckBox) view.findViewById(R.id.check_cvv_3);
@@ -94,7 +100,7 @@ public class SaveCardPaymentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mSavedCard.setCardCVV(mCVV);
-                mListener.onCardPaymentSelected(mSavedCard);
+                processPayment(mSavedCard);
             }
         });
 
@@ -126,7 +132,7 @@ public class SaveCardPaymentFragment extends Fragment {
 
         mCardNumber.setText(s1 + " " + s2 + " " + s3 + " " + s4);
         mCardHolder.setText(mSavedCard.getCardHolderName());
-        mCardExpiry.setText(mSavedCard.getCardExpiry());
+        mCardExpiry.setText(mSavedCard.getCardExpiryMonth() + "/" + mSavedCard.getCardExpiryYear());
 
         return view;
     }
@@ -211,7 +217,7 @@ public class SaveCardPaymentFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnCardPaymentListener) activity;
+            mListener = (ProcessPaymentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnCardPaymentListener");
@@ -222,5 +228,40 @@ public class SaveCardPaymentFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void processPayment(CardOption cardOption) {
+
+        if (cardOption != null) {
+               final Card card = new Card(cardOption.getToken(), cardOption.getCardCVV());
+
+            new GetBill(mPaymentParams.billUrl, mPaymentParams.transactionAmount, new Callback() {
+                @Override
+                public void onTaskexecuted(String billString, String error) {
+                    Bill bill = null;
+                    if (TextUtils.isEmpty(error)) {
+                        bill = new Bill(billString);
+                        // TODO: Use customer data from User to fill the data in the getCustomer.
+                        UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mPaymentParams.user));
+
+                        PG paymentGateway = new PG(card, bill, userDetails);
+
+                        paymentGateway.charge(new Callback() {
+                            @Override
+                            public void onTaskexecuted(String success, String error) {
+                                mListener.processPayment(success, error);
+                            }
+                        });
+                    }
+                }
+            }).execute();
+
+
+            // TODO: Save the card in case of this the card payment.
+//            // Save the card if the user has opted to save the card.
+//            if (cardOption.isSavePaymentOption()) {
+//                saveCard(card);
+//            }
+        }
     }
 }

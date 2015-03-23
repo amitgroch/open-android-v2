@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.citrus.asynch.InitSDK;
@@ -46,7 +45,7 @@ import static com.citruspay.sdkui.PaymentProcessingFragment.OnTransactionComplet
 import static com.citruspay.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
 
 
-public class MainActivity extends ActionBarActivity implements OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, OnCardPaymentListener, InitListener {
+public class MainActivity extends ActionBarActivity implements OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
 
     private String mUserEmail = null;
     private String mUserMobile = null;
@@ -63,7 +62,6 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     private CitrusTransactionResponse mTransactionResponse;
     private boolean mShowDialog = false;
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,17 +88,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
             mColorPrimary = mPaymentParams.colorPrimary;
             mColorPrimaryDark = mPaymentParams.colorPrimaryDark;
 
-            // Set primary color
-            if (mColorPrimary != null && mActionBar != null) {
-                mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(mColorPrimary)));
-            }
-
-            // Set action bar color. Available only on android version Lollipop or higher.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mColorPrimaryDark != null) {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.parseColor(mColorPrimaryDark));
-            }
+            setActionBarBackground(mColorPrimary, mColorPrimaryDark);
 
             if (mMerchantName != null) {
                 setTitle(mMerchantName + "\t \t " + mTransactionAmount);
@@ -115,7 +103,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
         new InitSDK(this, this, mUserEmail, mUserMobile);
 
-        showDialog("Initializing....", true);
+        showDialog("Processing Your Payment...", true);
     }
 
     @Override
@@ -166,8 +154,30 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         } else {
-            sendResponse(mTransactionResponse);
+           // Check whether the transaction response is not null and finish the activity, as the transaction has completed.
+            if (mTransactionResponse != null) {
+                sendResponse(mTransactionResponse);
+            }
+
+            setActionBarBackground(mColorPrimary, mColorPrimaryDark);
+
+            super.onBackPressed();
             mShowDialog = true;
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setActionBarBackground(String colorPrimary, String colorPrimaryDark) {
+        // Set primary color
+        if (mColorPrimary != null && mActionBar != null) {
+            mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(colorPrimary)));
+        }
+
+        // Set action bar color. Available only on android version Lollipop or higher.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mColorPrimaryDark != null) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.parseColor(colorPrimaryDark));
         }
     }
 
@@ -181,14 +191,11 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 if (!TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
                     showPaymentFragment(redirect.getString("redirectUrl"));
                 }
-
-                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+            Utils.showToast(getApplicationContext(), error);
         }
     }
 
@@ -247,48 +254,19 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     }
 
     private void showSavedCardPaymentFragment(final CardOption cardOption) {
-        // TODO: Show saved card payment option.
+        setActionBarBackground("#414A5A" ,"#2B313D");
 
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
-                R.id.container, SaveCardPaymentFragment.newInstance(cardOption));
+                R.id.container, SaveCardPaymentFragment.newInstance(cardOption, mPaymentParams));
         ft.addToBackStack(null);
         ft.commit();
 
         mShowDialog = false;
-
-//        // The following code will move to the callback method of above fragment.
-//        new GetBill(mMerchantBillUrl, mTransactionAmount, new Callback() {
-//            @Override
-//            public void onTaskexecuted(String billString, String error) {
-//                if (TextUtils.isEmpty(error)) {
-//                    Bill bill = new Bill(billString);
-//                    Card card;
-//
-//                    if (!TextUtils.isEmpty(cardOption.getToken())) {
-//                        // TODO Take the CVV instead of hardcoded value.
-//                        card = new Card(cardOption.getToken(), "123");
-//                    } else {
-//                        card = new Card(cardOption.getCardNumber(), cardOption.getCardExpiryMonth(), cardOption.getCardExpiryYear(), cardOption.getCardCVV(), cardOption.getCardHolderName(), cardOption.getCardType());
-//                    }
-//
-//                    // TODO: Use customer data from User to fill the data in the getCustomer.
-//                    UserDetails userDetails = new UserDetails(getCustomer());
-//                    PG paymentGateway = new PG(card, bill, userDetails);
-//                    paymentGateway.charge(new Callback() {
-//                        @Override
-//                        public void onTaskexecuted(String success, String error) {
-//                            processResponse(success, error);
-//                        }
-//                    });
-//                }
-//            }
-//        }).execute();
     }
 
     private void showNetbankingFragment() {
-        // TODO: Show netbanking fragment. Need to display other banks
         ArrayList netbankingOptionsList = Config.getBankList();
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -331,6 +309,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 Bank netbank = new Bank(netbankingOption.getBankCID());
 
                 // TODO Make token payment for bank
+                // Token payment for bank may not be needed till we show saved netbanking options.
 
                 // TODO: Use customer data from User to fill the data in the getCustomer.
                 UserDetails userDetails = new UserDetails(getCustomer());
@@ -359,21 +338,6 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     private void dismissDialog() {
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
-        }
-    }
-
-    private void saveCard(Card card) {
-        if (User.isUserLoggedIn(MainActivity.this)) {
-            new Savecard(MainActivity.this, new Callback() {
-                @Override
-                public void onTaskexecuted(String success, String error) {
-                    if (!TextUtils.isEmpty(success)) {
-                        Utils.showToast(getApplicationContext(), "Card Saved Successfully.");
-                    } else {
-                        Utils.showToast(getApplicationContext(), "Error Occurred while saving the card.");
-                    }
-                }
-            }).execute(card);
         }
     }
 
@@ -412,10 +376,9 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 }
             } else if (paymentOption instanceof CitrusCash) {
                 // TODO: Make payment using citrus cash
-                Toast.makeText(this, "Citrus Cash", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Something went wrong..", Toast.LENGTH_SHORT).show();
+            Utils.showToast(getApplicationContext(), "Something went wrong..");
         }
     }
 
@@ -480,45 +443,12 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     }
 
     @Override
-    public void onCardPaymentSelected(final CardOption cardOption) {
+    public void processPayment(final String response, final String error) {
+        setActionBarBackground(mColorPrimary, mColorPrimaryDark);
+
         mFragmentManager.popBackStack();
 
+        processResponse(response, error);
 
-        final Card card;
-
-        if (cardOption != null) {
-            if (!TextUtils.isEmpty(cardOption.getToken())) {
-                card = new Card(cardOption.getToken(), cardOption.getCardCVV());
-            } else {
-                card = new Card(cardOption.getCardNumber(), cardOption.getCardExpiryMonth(), cardOption.getCardExpiryYear(), cardOption.getCardCVV(), cardOption.getCardHolderName(), cardOption.getCardType());
-            }
-
-            new GetBill(mMerchantBillUrl, mTransactionAmount, new Callback() {
-                @Override
-                public void onTaskexecuted(String billString, String error) {
-                    Bill bill = null;
-                    if (TextUtils.isEmpty(error)) {
-                        bill = new Bill(billString);
-                        // TODO: Use customer data from User to fill the data in the getCustomer.
-                        UserDetails userDetails = new UserDetails(getCustomer());
-
-                        PG paymentGateway = new PG(card, bill, userDetails);
-
-                        paymentGateway.charge(new Callback() {
-                            @Override
-                            public void onTaskexecuted(String success, String error) {
-                                processResponse(success, error);
-                            }
-                        });
-                    }
-                }
-            }).execute();
-
-
-            // Save the card if the user has opted to save the card.
-            if (cardOption.isSavePaymentOption()) {
-                saveCard(card);
-            }
-        }
     }
 }

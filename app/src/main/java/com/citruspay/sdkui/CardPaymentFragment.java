@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,14 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.citrus.asynch.Savecard;
+import com.citrus.card.Card;
+import com.citrus.mobile.Callback;
+import com.citrus.mobile.User;
+import com.citrus.payment.Bill;
+import com.citrus.payment.PG;
+import com.citrus.payment.UserDetails;
 import com.citrus.sdkui.CardOption;
 import com.citrus.sdkui.CreditCardOption;
 import com.citrus.sdkui.DebitCardOption;
@@ -31,7 +36,7 @@ import com.citrus.sdkui.DebitCardOption;
  * create an instance of this fragment.
  */
 public class CardPaymentFragment extends Fragment implements View.OnClickListener {
-    private OnCardPaymentListener mListener = null;
+    private ProcessPaymentListener mListener = null;
     private CitrusPaymentParams mPaymentParams = null;
 
     private RadioGroup mRadioGroup = null;
@@ -114,7 +119,7 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnCardPaymentListener) activity;
+            mListener = (ProcessPaymentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnCardPaymentListener");
@@ -160,11 +165,62 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
                 break;
         }
 
-        // TODO: Take the proper card type somehow.
-        // TODO: Also add the validations for every field, and validate the card here itself.
-
         cardOption.setSavePaymentOption(mSwitchToggleSaveCard.isChecked());
-        mListener.onCardPaymentSelected(cardOption);
+
+        processPayment(cardOption);
+    }
+
+    private void processPayment(CardOption cardOption) {
+
+        if (cardOption != null) {
+            final Card card = new Card(cardOption.getCardNumber(), cardOption.getCardExpiryMonth(), cardOption.getCardExpiryYear(), cardOption.getCardCVV(), cardOption.getCardHolderName(), cardOption.getCardType());
+
+            new GetBill(mPaymentParams.billUrl, mPaymentParams.transactionAmount, new Callback() {
+                @Override
+                public void onTaskexecuted(String billString, String error) {
+                    Bill bill = null;
+                    if (TextUtils.isEmpty(error)) {
+                        bill = new Bill(billString);
+                        // TODO: Use customer data from User to fill the data in the getCustomer.
+                        UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mPaymentParams.user));
+
+                        PG paymentGateway = new PG(card, bill, userDetails);
+
+                        paymentGateway.charge(new Callback() {
+                            @Override
+                            public void onTaskexecuted(String success, String error) {
+                                if (!TextUtils.isEmpty(success)) {
+                                    mListener.processPayment(success, error);
+                                } else {
+                                    Utils.showToast(getActivity(), error);
+                                }
+                            }
+                        });
+                    }
+                }
+            }).execute();
+
+
+            // Save the card if the user has opted to save the card.
+            if (cardOption.isSavePaymentOption()) {
+                saveCard(card);
+            }
+        }
+    }
+
+    private void saveCard(Card card) {
+        if (User.isUserLoggedIn(getActivity())) {
+            new Savecard(getActivity(), new Callback() {
+                @Override
+                public void onTaskexecuted(String success, String error) {
+                    if (!TextUtils.isEmpty(success)) {
+                        Utils.showToast(getActivity(), "Card Saved Successfully.");
+                    } else {
+                        Utils.showToast(getActivity(), "Error Occurred while saving the card.");
+                    }
+                }
+            }).execute(card);
+        }
     }
 
     private boolean validate(String cardName, String cardNumber, String cardCVV, String cardExpiryMonth, String cardExpiryYear, int selectedCardTypeId) {
@@ -194,7 +250,7 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
         }
 
         if (!valid) {
-            Toast.makeText(getActivity(), "Please enter valid card details!", Toast.LENGTH_SHORT).show();
+            Utils.showToast(getActivity(), "Please enter valid card details!");
         }
 
         return valid;
