@@ -12,9 +12,7 @@
 */
 package com.citrus.card;
 
-/**
- * Created by shardul on 19/11/14.
- */
+
 public class TextUtils {
     public static boolean hasAnyPrefix(String number, String... prefixes) {
         if (number == null) {

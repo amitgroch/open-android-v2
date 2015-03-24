@@ -9,7 +9,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
- */
+*/
 package com.citrus.mobile;
 
 import java.io.IOException;
@@ -22,152 +22,145 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
-/**
- * Created by shardul on 18/11/14.
- */
+
 public class OauthToken {
-	private static final String STORED_VALUES = "UserStorage";
+    private static final String STORED_VALUES = "UserStorage";
 
-	private static final String STORED_TOKEN = "StoredToken";
+    private Activity activity;
 
-	private Activity activity;
+    private JSONObject jsontoken;
 
-	private JSONObject jsontoken;
+    private SharedPreferences tokenPrefs;
 
-	private SharedPreferences tokenPrefs;
+    private String base_url, token_type;
 
-	private String base_url;
+    public OauthToken(Activity activity, String token_type) {
+        this.activity = activity;
+        tokenPrefs = this.activity.getSharedPreferences(STORED_VALUES, 0);
+        base_url = Config.getEnv();
+        this.token_type = token_type;
+    }
 
-	public OauthToken(Activity activity) {
-		this.activity = activity;
-		tokenPrefs = this.activity.getSharedPreferences(STORED_VALUES, 0);
-		base_url = Config.getEnv();
-	}
+    public boolean createToken(JSONObject usertoken) {
 
-	public boolean createToken(JSONObject usertoken) {
+        jsontoken = new JSONObject();
 
-		jsontoken = new JSONObject();
+        long expiry = new Date().getTime()/1000l;
 
-		long expiry = new Date().getTime() / 1000l;
+        try {
+            expiry += usertoken.getLong("expires_in");
+            jsontoken.put("expiry", expiry);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-		try {
-			expiry += usertoken.getLong("expires_in");
-			jsontoken.put("expiry", expiry);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+        for (Iterator<?> keys = usertoken.keys(); keys.hasNext();) {
+            String key = (String) keys.next();
 
-		for (Iterator<?> keys = usertoken.keys(); keys.hasNext();) {
-			String key = (String) keys.next();
+            try {
+                jsontoken.put(key, usertoken.get(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
-			try {
-				jsontoken.put(key, usertoken.get(key));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
+        return storeToken();
 
-		return storeToken();
+    }
 
-	}
+    private boolean storeToken() {
+        SharedPreferences.Editor editor = tokenPrefs.edit();
+        editor.putString(token_type, jsontoken.toString());
+        return editor.commit();
+    }
 
-	private boolean storeToken() {
-		SharedPreferences.Editor editor = tokenPrefs.edit();
-		editor.putString(STORED_TOKEN, jsontoken.toString());
-		return editor.commit();
-	}
+    public JSONObject getuserToken() {
+        JSONObject token = null;
+        try {
+        	if (tokenPrefs.contains(token_type)) {
+                token = new JSONObject(tokenPrefs.getString(token_type, null));
+        	}
+        	else {
+        		return null;
+        	}
+       
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-	/**
-	 * This function clears all the shared preferences
-	 */
+        if (token.has("refresh_token")) {
+            return refreshToken(token);
+        }
+        else {
+            return token;
+        }
 
-	public boolean clearToken() {
-		SharedPreferences.Editor editor = tokenPrefs.edit();
-		editor.clear();
-		return editor.commit();
-	}
+    }
 
-	public JSONObject getuserToken() {
-		JSONObject token = null;
+    private JSONObject refreshToken(JSONObject token) {
 
-		try {
-			token = new JSONObject(tokenPrefs.getString(STORED_TOKEN, null));
-			if (token.has("refresh_token")) {
-				token = refreshToken(token);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		catch (NullPointerException np) {
-			np.printStackTrace();
-		}
+        if (hasExpired(token)) {
+            try {
+                return refresh(token.getString("refresh_token"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
-		return token;
-	}
+        return token;
 
-	private JSONObject refreshToken(JSONObject token) {
+    }
 
-		if (hasExpired(token)) {
-			try {
-				return refresh(token.getString("refresh_token"));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
+    private boolean hasExpired(JSONObject token) {
+        try {
+            return token.getLong("expiry") <= (new Date().getTime() / 1000l);
+        } catch (JSONException e) {
+            return true;
+        }
+    }
 
-		return token;
+    private JSONObject refresh(String refreshToken) {
+        JSONObject response = new JSONObject();
 
-	}
+        JSONObject userJson = new JSONObject();
 
-	private boolean hasExpired(JSONObject token) {
-		try {
-			return token.getLong("expiry") <= (new Date().getTime() / 1000l);
-		} catch (JSONException e) {
-			return true;
-		}
-	}
+        try {
+            userJson.put("client_id", Config.getSigninId());
 
-	private JSONObject refresh(String refreshToken) {
-		JSONObject response = new JSONObject();
+            userJson.put("client_secret", Config.getSigninSecret());
 
-		JSONObject userJson = new JSONObject();
+            userJson.put("grant_type", "refresh_token");
 
-		try {
-			userJson.put("client_id", Config.getSigninId());
+            userJson.put("refresh_token", refreshToken);
 
-			userJson.put("client_secret", Config.getSigninSecret());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-			userJson.put("grant_type", "refresh_token");
+        JSONObject headers = new JSONObject();
 
-			userJson.put("refresh_token", refreshToken);
+        try {
+            headers.put("Content-Type", "application/x-www-form-urlencoded");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+        RESTclient restclient = new RESTclient("signin", base_url, userJson, headers);
 
-		JSONObject headers = new JSONObject();
+        try {
+            response = restclient.makePostrequest();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-		try {
-			headers.put("Content-Type", "application/x-www-form-urlencoded");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		RESTclient restclient = new RESTclient("signin", base_url, userJson,
-				headers);
-
-		try {
-			response = restclient.makePostrequest();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (response.has("access_token")) {
-			jsontoken = response;
-			storeToken();
-			return response;
-		} else {
-			return null;
-		}
-	}
+        if (response.has("access_token")) {
+            jsontoken = response;
+            storeToken();
+            return response;
+        }
+        else {
+            return null;
+        }
+    }
 }

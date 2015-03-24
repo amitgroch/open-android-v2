@@ -10,8 +10,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
 package com.citrus.asynch;
+
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -19,12 +20,9 @@ import android.os.AsyncTask;
 import com.citrus.mobile.Callback;
 import com.citrus.mobile.User;
 
-/**
- * Created by shardul on 20/11/14.
- */
 public class Binduser extends AsyncTask<String, Void, Void> {
 
-    boolean binderesult;
+    JSONObject binderesult;
     Activity activity;
     Callback callback;
     User user;
@@ -44,11 +42,16 @@ public class Binduser extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (binderesult) {
-            callback.onTaskexecuted("User Bound Successfully!", "");
-        }
-        else {
-            callback.onTaskexecuted("", "Could not bind user - check oauth details");
+        
+        if (binderesult != null) {
+        	
+        	if (binderesult.has("error")) {
+        		callback.onTaskexecuted("", binderesult.toString());	
+        	}
+        	else {
+        		callback.onTaskexecuted(binderesult.toString(), "");	
+        	}
+        	
         }
     }
 }

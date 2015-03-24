@@ -12,18 +12,12 @@
 */
 package com.citrus.netbank;
 
-/**
- * Created by shardul on 21/11/14.
- */
+
 public class Bank {
 
     private String cidnumber;
 
     private String bankName;
-    
-    private BankPaymentType bankPaymentType = null;
-    
-    private String bankToken = null;
 
     public Bank(String cidnumber) {
         this.cidnumber = cidnumber;
@@ -34,24 +28,11 @@ public class Bank {
         this.cidnumber = cidnumber;
     }
 
-    public Bank(String bankToken , BankPaymentType bankPaymentType) {
-    	this.bankToken = bankToken;
-    	this.bankPaymentType = bankPaymentType;
-    }
-    
     public String getBankName() {
         return this.bankName;
     }
 
     public String getCidnumber() {
         return this.cidnumber;
-    }
-    
-    public String getBankToken() {
-        return this.bankToken;
-    }
-    
-    public BankPaymentType getPaymentType() {
-    	return bankPaymentType;
     }
 }

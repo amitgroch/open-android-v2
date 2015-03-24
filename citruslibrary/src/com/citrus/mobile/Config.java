@@ -13,7 +13,7 @@
 package com.citrus.mobile;
 
 public class Config {
-    private static String env, signinId, signinSecret, signupId, signupSecret;
+    private static String env, signinId, signinSecret, signupId, signupSecret, prepaid_cookie = "";
 
     public static void setEnv(String sip) {
         env = sip;
@@ -34,7 +34,11 @@ public class Config {
     public static void setupSignupSecret(String secret) {
         signupSecret = secret;
     }
-
+    
+    public static void setupPrepaidCookie(String cookie) {
+    	prepaid_cookie = cookie;
+    }
+    
     public static String getEnv() {
         return env;
     }
@@ -53,5 +57,9 @@ public class Config {
 
     public static String getSignupSecret() {
         return signupSecret;
+    }
+    
+    public static String getPrepaidCookie() {
+    	return prepaid_cookie;
     }
 }

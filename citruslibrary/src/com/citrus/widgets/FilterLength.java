@@ -20,8 +20,7 @@ public enum FilterLength {
 	JCB("19"),
 	AMEX("18"),
 	DISCOVER("19");
-	
-	
+		
 	private String length;
 	
 	private FilterLength(String length) {

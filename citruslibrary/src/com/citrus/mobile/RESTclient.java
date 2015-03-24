@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -29,21 +30,23 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
-/**
- * Created by shardul on 18/11/14.
- */
+
 public class RESTclient {
     private JSONObject urls;
 
     private JSONObject params, headers;
 
     private String type, base_url;
+    
+    private HttpClient httpClient;
 
     private HttpResponse response;
 
@@ -64,9 +67,14 @@ public class RESTclient {
             urls.put("signin", "oauth/token");
             urls.put("wallet", "service/v2/profile/me/payment");
             urls.put("struct", "service/moto/authorize/struct/payment");
-
+            urls.put("prepaid", "prepaid/pg/_verify");
+            urls.put("balance", "service/v2/mycard");
+            urls.put("password", "service/v2/identity/me/password");
+            urls.put("specialbalance", "service/v2/prepayment/balance");
+            urls.put("resetpassword", "service/v2/identity/passwords/reset");
+            urls.put("prepaidbill", "service/v2/prepayment/load");
+            urls.put("paymentoptions", "service/v1/merchant/pgsetting");
         } catch (JSONException e) {
-            Log.d("exception", e.toString());
             return;
         }
         this.base_url = base_url;
@@ -74,13 +82,18 @@ public class RESTclient {
 
 
      public JSONObject makePostrequest() throws IOException {
-         HttpClient httpClient = new DefaultHttpClient();
+    	 HttpParams redirectparams = new BasicHttpParams();
+    	 redirectparams.setParameter("http.protocol.handle-redirects",false);
+    	 
+         httpClient = new DefaultHttpClient();
          HttpPost httpPost = null;
          try {
              httpPost = new HttpPost(urls.getString(base_url) + urls.getString(type));
+             httpPost.setParams(redirectparams);
          } catch (JSONException e) {
              e.printStackTrace();
          }
+
          List<NameValuePair> postData = new ArrayList<NameValuePair>(2);
          Iterator<String> iter = params.keys();
          while (iter.hasNext()) {
@@ -93,8 +106,8 @@ public class RESTclient {
              }
          }
 
-         
          httpPost.setEntity(new UrlEncodedFormEntity(postData));
+
          Iterator<String> iterhead = headers.keys();
          while (iterhead.hasNext()) {
              String key = iterhead.next();
@@ -102,9 +115,10 @@ public class RESTclient {
                  String value = headers.getString(key);
                  httpPost.addHeader(key, value);
              } catch (JSONException e) {
-                 Log.d("exception", e.toString());
+            	 return null;
              }
          }
+
          try {
              response = httpClient.execute(httpPost);
          } catch (IOException e) {
@@ -112,6 +126,54 @@ public class RESTclient {
          }
          return parseResponse(response);
      }
+    
+    public JSONObject makePutrequest() {
+    	HttpClient client = new DefaultHttpClient();
+
+        HttpPut put = null;
+        try {
+            put = new HttpPut(urls.getString(base_url) + urls.getString(type));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Iterator<String> iterhead = headers.keys();
+        while (iterhead.hasNext()) {
+            String key = iterhead.next();
+            try {
+                String value = headers.getString(key);
+                put.addHeader(key, value);
+            } catch (JSONException e) {
+            	e.printStackTrace();
+            }
+        }
+        
+        List<NameValuePair> putdata = new ArrayList<NameValuePair>(2);
+        Iterator<String> iter = params.keys();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            try {
+                String value = params.getString(key);
+                putdata.add(new BasicNameValuePair(key, value));
+            } catch (JSONException e) {
+                Log.d("exception", e.toString());
+            }
+        }
+        
+        try {
+            put.setEntity(new UrlEncodedFormEntity(putdata));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            response = client.execute(put);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return parseResponse(response);
+    }
 
     public JSONObject makePutrequest(JSONObject details) {
         HttpClient client = new DefaultHttpClient();
@@ -149,11 +211,11 @@ public class RESTclient {
         return parseResponse(response);
     }
 
-    public JSONObject makegetRequest() {
+    public JSONObject makegetRequest() throws JSONException {
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = null;
         try {
-            httpGet = new HttpGet(urls.getString(base_url) + urls.getString(type));
+        		httpGet = new HttpGet(urls.getString(base_url) + urls.getString(type));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -165,7 +227,7 @@ public class RESTclient {
                 String value = headers.getString(key);
                 httpGet.addHeader(key, value);
             } catch (JSONException e) {
-                Log.d("exception", e.toString());
+            	return new JSONObject().put("error", "unable to find headers");
             }
         }
 
@@ -210,6 +272,11 @@ public class RESTclient {
 
     private JSONObject parseResponse(HttpResponse response) {
         try {
+        	
+        	if (response == null) {
+        		return formError(600, "Null response - is your internet connection functional?");
+        	}
+        	
             switch (response.getStatusLine().getStatusCode()) {
                 case HttpStatus.SC_OK:
                     return new JSONObject(EntityUtils.toString(response.getEntity()));
@@ -219,10 +286,14 @@ public class RESTclient {
                     return formError(400, "badrequest");
                 case HttpStatus.SC_UNAUTHORIZED:
                     return formError(401, "unauthorized");
+                case HttpStatus.SC_FORBIDDEN:
+                    return formError(403, "access forbidden");
                 case HttpStatus.SC_SERVICE_UNAVAILABLE:
                     return formError(503, "unavailable");
                 case HttpStatus.SC_GATEWAY_TIMEOUT:
                     return formError(504, "gatewaytimeout");
+                case HttpStatus.SC_MOVED_TEMPORARILY:
+                	return getCookies(response);
 
                 default:
                     return formError(response.getStatusLine().getStatusCode(), "unknownerror");
@@ -237,7 +308,22 @@ public class RESTclient {
         }
 
     }
-
+    
+    private JSONObject getCookies(HttpResponse response) {
+    	Header[] headers = response.getAllHeaders();
+    	JSONObject cookies = new JSONObject();
+    	for (int i = 0; i < headers.length; i++) {
+    		Header h = headers[i];
+    		try {
+				cookies.put(h.getName(), h.getValue());
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+    	} 
+    	return cookies;
+    }
+    
     private JSONObject formError(int status, String message) {
         JSONObject error = new JSONObject();
         try {
@@ -249,7 +335,4 @@ public class RESTclient {
 
         return error;
     }
-    
-    
-   
 }

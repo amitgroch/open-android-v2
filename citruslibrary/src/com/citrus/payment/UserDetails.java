@@ -15,9 +15,7 @@ package com.citrus.payment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by shardul on 19/11/14.
- */
+
 public class UserDetails {
     JSONObject user;
 

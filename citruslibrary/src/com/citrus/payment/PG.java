@@ -13,35 +13,48 @@
 package com.citrus.payment;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.citrus.asynch.MakePayment;
 import com.citrus.card.Card;
+import com.citrus.cash.LoadMoney;
+import com.citrus.cash.Prepaid;
 import com.citrus.mobile.Callback;
+import com.citrus.mobile.Config;
+import com.citrus.mobile.Errorclass;
+import com.citrus.mobile.OauthToken;
+import com.citrus.mobile.RESTclient;
+import com.citrus.mobile.User;
 import com.citrus.netbank.Bank;
-import com.citrus.netbank.BankPaymentType;
 
 public class PG {
+	
+	Activity activity;
+	
     private Card card;
     private Bill bill;
     private UserDetails userDetails;
-    private Callback callback;
+    private Callback callback, internal;
 
     private JSONObject payment;
 
     private Bank bank;
+    
+    private Prepaid prepaid;
 
     private String paymenttype;
     
     private JSONObject customParameters = null;
+    
+    private LoadMoney loadmoney;
 
     ArrayList<String> mylist = new ArrayList<String>();
 
@@ -63,19 +76,73 @@ public class PG {
         this.bank = bank;
         this.bill = bill;
         this.userDetails = userDetails;
-        if(this.bank.getPaymentType()!=null)
-        	paymenttype = this.bank.getPaymentType().toString();
-        else
-            paymenttype = "netbank";
+        paymenttype = "netbank";
     }
-
+    
+    public PG(Prepaid prepaid, Bill bill, UserDetails userDetails) {
+         this.bill = bill;
+         this.userDetails = userDetails;
+         this.prepaid = prepaid;
+         paymenttype = "prepaid";
+    }
+    
+    public PG(Card card, LoadMoney load, UserDetails userDetails) {
+    	this.card = card;
+    	this.userDetails = userDetails;
+    	
+    	this.loadmoney = load;
+    	
+    	if (TextUtils.isEmpty(card.getCardNumber())) {
+            paymenttype = "cardtoken";
+        }
+        else {
+            paymenttype = "card";
+        }
+    	
+    }
+    
+    public PG(Bank bank, LoadMoney load, UserDetails userDetails) {
+    	this.bank = bank;
+    	this.userDetails = userDetails;
+    	this.loadmoney = load;
+    	paymenttype = "netbank";
+    }
+    
     public void charge(Callback callback) {
         this.callback = callback;
 
         validate();
 
     }
-
+    
+    public void load(Activity activity, Callback callback) {
+    	this.callback = callback;
+    	
+    	this.activity = activity;
+    	
+    	internal = new Callback() {
+			
+			@Override
+			public void onTaskexecuted(String success, String error) {
+				 if (!TextUtils.isEmpty(success)) {
+					 formprepaidBill(success);
+				 }
+				 else {
+					 PG.this.callback.onTaskexecuted("", error);
+				 }
+					  	
+			}
+		};
+		
+		new GetPrepaidbill()
+		.execute(new String[]{loadmoney.getAmount(), loadmoney.getReturl()});
+    }
+    
+    private void formprepaidBill(String prepaid_bill) {    	
+    	this.bill = new Bill(prepaid_bill, "prepaid");
+    	
+    	validate();
+    }
     
     public void setCustomParameters(JSONObject customParameters)
     {
@@ -156,6 +223,26 @@ public class PG {
             }
 
         }
+        
+        else if(TextUtils.equals(paymenttype.toString(), "prepaid")) {
+        	paymentmode = new JSONObject();
+            try {
+                paymentmode.put("cvv", "000");
+                paymentmode.put("holder", prepaid.getUserEmail());
+                paymentmode.put("number", "1234561234561234");
+                paymentmode.put("scheme", "CPAY");
+                paymentmode.put("type", "prepaid");
+                paymentmode.put("expiry", "04/2030");
+
+                paymentToken.put("type","paymentOptionToken");
+                paymentToken.put("paymentMode", paymentmode);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                callback.onTaskexecuted("", "Problem forming payment Json");
+                return;
+            }
+        }
+        
         else if (TextUtils.equals(paymenttype.toString(), "cardtoken")) {
             try {
                 paymentToken.put("type","paymentOptionIdToken");
@@ -169,17 +256,10 @@ public class PG {
         else {
             try {
                 paymentmode = new JSONObject();
-                if(paymenttype!=null && paymenttype.equalsIgnoreCase(BankPaymentType.TOKEN.toString())) { //tokenized bank payment
- 	                paymentToken.put("id", bank.getBankToken());
- 	                paymentToken.put("type", bank.getPaymentType().toString()); 
-                }
-                else { //bank payment with CID
-                	
-	                paymentmode.put("type", "netbanking");
-	                paymentmode.put("code", bank.getCidnumber());
-	                paymentToken.put("type", "paymentOptionToken");
-	                paymentToken.put("paymentMode", paymentmode); 
-                }
+                paymentmode.put("type", "netbanking");
+                paymentmode.put("code", bank.getCidnumber());
+                paymentToken.put("type", "paymentOptionToken");
+                paymentToken.put("paymentMode", paymentmode);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -220,6 +300,11 @@ public class PG {
 
         try {
             payment.put("returnUrl", bill.getReturnurl());
+            
+            if (bill.getNotifyurl() != null) {
+            	payment.put("notifyUrl", bill.getNotifyurl());
+            }
+            
             payment.put("amount", bill.getAmount());
             payment.put("merchantAccessKey", bill.getAccess_key());
             
@@ -247,8 +332,72 @@ public class PG {
             e.printStackTrace();
         }
 
-        
         new MakePayment(payment, headers, callback).execute();
 
     }
+    
+    private class GetPrepaidbill extends AsyncTask<String, Void, JSONObject> {
+    	JSONObject headers, params, response = null;
+    	@Override
+    	protected JSONObject doInBackground(String... params) {
+    		headers = new JSONObject();
+    		OauthToken token = new OauthToken(activity, User.PREPAID_TOKEN);
+    		try {
+    			JSONObject tokenjson = token.getuserToken();
+    			String access_token = null;
+    			if (tokenjson != null) {
+    				access_token = tokenjson.getString("access_token");
+    			}
+    			else {
+    				return Errorclass.addErrorFlag("Prepaid Oauth Token is missing - did you sign in the user?", null);
+    			}
+    			
+    			try {
+    	            headers.put("Authorization", "Bearer " + access_token);
+    	            headers.put("Content-Type", "application/x-www-form-urlencoded");
+    	        } catch (JSONException e) {
+    	            e.printStackTrace();
+    	        }
+    		} catch (JSONException e) {
+    			e.printStackTrace();
+    			return Errorclass.addErrorFlag("Prepaid Oauth Token is missing - did you sign in the user?", null);
+    		}
+    		
+    		try {
+    			this.params = new JSONObject();
+    			this.params.put("amount", params[0]);
+    			this.params.put("currency", "INR");
+    			this.params.put("redirect", params[1]);
+
+    		} catch (JSONException e) {
+    			e.printStackTrace();
+    			return Errorclass.addErrorFlag("Prepaid bill parameters are missing", null);
+    		}
+    		
+    		RESTclient restClient = new RESTclient("prepaidbill", Config.getEnv(), this.params, headers);
+    		
+    		try {
+    			response = restClient.makePostrequest();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    			return Errorclass.addErrorFlag("IO Exception - check if internet is working!", null);
+    		}
+    		
+    		return response;
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(JSONObject result) {
+    		super.onPostExecute(result);
+    		
+    		if (result.has("error")) {
+    			internal.onTaskexecuted("", result.toString());
+    		}
+    		
+    		else {
+    			internal.onTaskexecuted(result.toString(), "");
+    		}
+    	}
+    }
+    
 }

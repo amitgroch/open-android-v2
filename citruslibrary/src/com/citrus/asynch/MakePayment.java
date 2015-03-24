@@ -40,6 +40,11 @@ public class MakePayment extends AsyncTask<Void, Void, Void>{
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        callback.onTaskexecuted(response.toString(), "");
+        if (response.has("error")) {
+            callback.onTaskexecuted("", response.toString());
+        }
+        else {
+            callback.onTaskexecuted(response.toString(), "");
+        }
     }
 }

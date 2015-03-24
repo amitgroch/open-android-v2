@@ -19,11 +19,9 @@ import com.citrus.card.Card;
 import com.citrus.mobile.Callback;
 import com.citrus.wallet.Wallet;
 
-/**
- * Created by shardul on 20/11/14.
- */
+
 public class Savecard extends AsyncTask<Card,Void,Void> {
-    String savecardresult, error;
+    String savecardresult = "", error = "";
     Activity activity;
     Callback callback;
 
