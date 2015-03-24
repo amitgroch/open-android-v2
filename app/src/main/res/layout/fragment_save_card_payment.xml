@@ -50,7 +50,7 @@
                     android:layout_gravity="left|center_vertical"
                     android:layout_margin="@dimen/transaction_status_margin"
                     android:layout_weight="1"
-                    android:src="@drawable/visa"/>
+                    />
 
             </LinearLayout>
 
@@ -118,7 +118,6 @@
                     android:gravity="center_vertical|start"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingTop="2dp"
-                    android:text="Salil Godbole"
                     android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/white"
@@ -134,7 +133,6 @@
                     android:gravity="center_vertical"
                     android:paddingRight="@dimen/activity_vertical_margin"
                     android:paddingTop="2dp"
-                    android:text="12/19"
                     android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/white"

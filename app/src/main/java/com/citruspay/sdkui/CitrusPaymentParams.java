@@ -53,9 +53,9 @@ public final class CitrusPaymentParams implements Parcelable {
      */
     public String merchantName;
     // Following are the parameters used internally.
-    ArrayList<NetbankingOption> netbankingOptionList; // Netbanking options enabled for the merchant.
-    ArrayList<NetbankingOption> topNetbankingOptions; // List of top n banks. This list will contain 0 to 4 items depending upon the enabled netbanking options for the merchant.
-    ArrayList<PaymentOption> userSavedOptionList; // List of different payment options saved for the user.
+    ArrayList<NetbankingOption> netbankingOptionList = new ArrayList<>(); // Netbanking options enabled for the merchant.
+    ArrayList<NetbankingOption> topNetbankingOptions = new ArrayList<>(); // List of top n banks. This list will contain 0 to 4 items depending upon the enabled netbanking options for the merchant.
+    ArrayList<PaymentOption> userSavedOptionList =new ArrayList<>(); // List of different payment options saved for the user.
 
 
     public CitrusPaymentParams() {
@@ -77,9 +77,9 @@ public final class CitrusPaymentParams implements Parcelable {
         dest.writeDouble(this.transactionAmount);
         dest.writeString(this.vanity);
         dest.writeString(this.merchantName);
-        dest.writeSerializable(this.netbankingOptionList);
-        dest.writeSerializable(this.topNetbankingOptions);
-        dest.writeSerializable(this.userSavedOptionList);
+        dest.writeTypedList(this.netbankingOptionList);
+        dest.writeTypedList(this.topNetbankingOptions);
+        dest.writeTypedList(this.userSavedOptionList);
     }
 
     private CitrusPaymentParams(Parcel in) {
@@ -92,9 +92,10 @@ public final class CitrusPaymentParams implements Parcelable {
         this.transactionAmount = in.readDouble();
         this.vanity = in.readString();
         this.merchantName = in.readString();
-        this.netbankingOptionList = (ArrayList<NetbankingOption>) in.readSerializable();
-        this.topNetbankingOptions = (ArrayList<NetbankingOption>) in.readSerializable();
-        this.userSavedOptionList = (ArrayList<PaymentOption>) in.readSerializable();
+
+        in.readTypedList(this.netbankingOptionList, NetbankingOption.CREATOR);
+        in.readTypedList(this.topNetbankingOptions, NetbankingOption.CREATOR);
+        in.readTypedList(this.userSavedOptionList, PaymentOption.CREATOR);
     }
 
     public static final Creator<CitrusPaymentParams> CREATOR = new Creator<CitrusPaymentParams>() {

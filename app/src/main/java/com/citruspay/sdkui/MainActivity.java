@@ -20,12 +20,9 @@ import android.view.WindowManager;
 
 import com.android.volley.VolleyError;
 import com.citrus.asynch.InitSDK;
-import com.citrus.asynch.Savecard;
-import com.citrus.card.Card;
 import com.citrus.interfaces.InitListener;
 import com.citrus.mobile.Callback;
 import com.citrus.mobile.Config;
-import com.citrus.mobile.User;
 import com.citrus.netbank.Bank;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
@@ -154,11 +151,6 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         } else {
-           // Check whether the transaction response is not null and finish the activity, as the transaction has completed.
-            if (mTransactionResponse != null) {
-                sendResponse(mTransactionResponse);
-            }
-
             setActionBarBackground(mColorPrimary, mColorPrimaryDark);
 
             super.onBackPressed();
@@ -254,7 +246,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     }
 
     private void showSavedCardPaymentFragment(final CardOption cardOption) {
-        setActionBarBackground("#414A5A" ,"#2B313D");
+        setActionBarBackground("#414A5A", "#2B313D");
 
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -294,7 +286,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
                 R.id.container, PaymentStatusFragment.newInstance(transactionResponse, paymentParams));
-        ft.addToBackStack(null);
+        // No need to add this fragment to backstack as we do not need to show the payment options and directly go back to previous activity.
+//        ft.addToBackStack(null);
         ft.commit();
 
         mShowDialog = false;

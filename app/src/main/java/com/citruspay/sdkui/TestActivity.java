@@ -11,8 +11,8 @@ import com.citrus.mobile.Config;
 
 public class TestActivity extends ActionBarActivity {
 
-    private static final String SANDBOX_BILL_URL = "http://192.168.1.5:8080/billGenerator.orig.jsp";// host your bill url here
-    private static final String PROD_BILL_URL = "http://192.168.1.5:8080/billGenerator.prod.jsp";// host your bill url here
+    private static final String SANDBOX_BILL_URL = "http://192.168.1.173:8080/billGenerator.orig.jsp";// host your bill url here
+    private static final String PROD_BILL_URL = "http://192.168.1.173:8080/billGenerator.prod.jsp";// host your bill url here
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,6 @@ public class TestActivity extends ActionBarActivity {
         setContentView(R.layout.activity_test);
         init();
     }
-
 
     public void onPaySandboxButtonClicked(View view) {
 
@@ -75,9 +74,11 @@ public class TestActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        CitrusTransactionResponse transactionResponse = data.getParcelableExtra(Utils.INTENT_EXTRA_PAYMENT_RESPONSE);
-        if (transactionResponse != null) {
-            Log.e("Citrus", " transactionResponse : " + transactionResponse.toString());
+        if (data != null) {
+            CitrusTransactionResponse transactionResponse = data.getParcelableExtra(Utils.INTENT_EXTRA_PAYMENT_RESPONSE);
+            if (transactionResponse != null) {
+                Log.e("Citrus", " transactionResponse : " + transactionResponse.toString());
+            }
         }
     }
 

@@ -174,6 +174,23 @@ public abstract class CardOption extends PaymentOption {
     }
 
     /**
+     * Returns the no of digits of CVV for that particular card.
+     * <p/>
+     * Only AMEX has 4 digit CVV, else all cards have 3 digit CVV.
+     *
+     * @return
+     */
+    public int getCVVLength() {
+        int cvvLength = 3;
+
+        if ("AMEX".equalsIgnoreCase(cardScheme)) {
+            cvvLength = 4;
+        }
+
+        return cvvLength;
+    }
+
+    /**
      * Denotes the type of the card. i.e. Credit or Debit.
      */
     public static enum CardType {

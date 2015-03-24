@@ -3,6 +3,7 @@ package com.citruspay.sdkui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -50,7 +51,7 @@ public class SaveCardPaymentFragment extends Fragment {
     private EditText mEditCVVHidden = null;
     private Button mBtnPay = null;
     private String mCVV = ""; // This will store the CVV entered by the user.
-    private int mMaxDigitCVV = 3;
+    private int mCVVLength = Constants.CVV_LENGTH;
 
     public SaveCardPaymentFragment() {
         // Required empty public constructor
@@ -75,8 +76,11 @@ public class SaveCardPaymentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mSavedCard = getArguments().getParcelable(Constants.PARAM_SAVED_CARD);
             mPaymentParams = getArguments().getParcelable(Constants.INTENT_EXTRA_PAYMENT_PARAMS);
+            mSavedCard = getArguments().getParcelable(Constants.PARAM_SAVED_CARD);
+            if (mSavedCard != null) {
+                mCVVLength = mSavedCard.getCVVLength();
+            }
         }
     }
 
@@ -86,6 +90,7 @@ public class SaveCardPaymentFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_save_card_payment, container, false);
 
+        mImgCardType = (ImageView) view.findViewById(R.id.img_card_logo);
         mCardNumber = (TextView) view.findViewById(R.id.txt_card_number);
         mCardHolder = (TextView) view.findViewById(R.id.txt_card_holder);
         mCardExpiry = (TextView) view.findViewById(R.id.txt_card_expiry);
@@ -104,12 +109,18 @@ public class SaveCardPaymentFragment extends Fragment {
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mImgCardType.setBackground(mSavedCard.getOptionIcon(getActivity()));
+        } else {
+            mImgCardType.setBackgroundDrawable(mSavedCard.getOptionIcon(getActivity()));
+        }
+
 //        mCheckCVV1.setOnClickListener(onClickListener);
 //        mCheckCVV2.setOnClickListener(onClickListener);
 //        mCheckCVV3.setOnClickListener(onClickListener);
 //        mCheckCVV4.setOnClickListener(onClickListener);
 
-        if (mMaxDigitCVV == 4) {
+        if (mCVVLength == 4) {
             mCheckCVV4.setVisibility(View.VISIBLE);
         }
 
@@ -170,7 +181,7 @@ public class SaveCardPaymentFragment extends Fragment {
                 mCheckCVV3.setChecked(true);
 
                 // Check the maximum digits for most of the cards.
-                if (start == mMaxDigitCVV - 1) {
+                if (start == mCVVLength - 1) {
                     // Hide the keyboard.
 //                    hideKeyboard();
                 }
@@ -255,13 +266,6 @@ public class SaveCardPaymentFragment extends Fragment {
                     }
                 }
             }).execute();
-
-
-            // TODO: Save the card in case of this the card payment.
-//            // Save the card if the user has opted to save the card.
-//            if (cardOption.isSavePaymentOption()) {
-//                saveCard(card);
-//            }
         }
     }
 }
