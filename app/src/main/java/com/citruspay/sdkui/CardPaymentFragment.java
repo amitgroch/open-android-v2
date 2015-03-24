@@ -58,7 +58,6 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
      *
      * @return A new instance of fragment CardPaymentFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static CardPaymentFragment newInstance(CitrusPaymentParams paymentParams) {
 
         CardPaymentFragment fragment = new CardPaymentFragment();

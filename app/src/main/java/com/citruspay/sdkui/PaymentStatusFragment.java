@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static com.citruspay.sdkui.CitrusTransactionResponse.*;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -89,7 +91,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
 
             Log.i("Citrus", "Transaction Response :: " + mTransactionResponse);
 
-            if (mTransactionResponse.getTransactionStatus() == CitrusTransactionResponse.TransactionStatus.SUCCESS) {
+            if (mTransactionResponse.getTransactionStatus() == TransactionStatus.SUCCESS) {
                 // Set the icon for transaction status.
                 mImgTransactionStatus.setBackgroundResource(R.drawable.checkmark_green);
 

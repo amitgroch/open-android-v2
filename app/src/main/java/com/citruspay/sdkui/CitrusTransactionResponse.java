@@ -49,10 +49,12 @@ public class CitrusTransactionResponse implements Parcelable {
      *
      * @param transactionStatus
      * @param message
+     * @param transactionId
      */
-    CitrusTransactionResponse(TransactionStatus transactionStatus, String message) {
+    CitrusTransactionResponse(TransactionStatus transactionStatus, String message, String transactionId) {
         this.transactionStatus = transactionStatus;
         this.message = message;
+        this.transactionDetails = new TransactionDetails(transactionId);
     }
 
     /**
@@ -313,6 +315,14 @@ public class CitrusTransactionResponse implements Parcelable {
         private String issuerRefNo = null;
         private String transactionGateway = null;
         private String transactionDateTime = null;
+
+        /**
+         *
+         * @param transactionId
+         */
+        TransactionDetails(String transactionId) {
+            this.transactionId = transactionId;
+        }
 
         public TransactionDetails(String transactionId, String txRefNo, String pgTxnNo, String issuerRefNo, String transactionGateway, String transactionDateTime) {
             this.transactionId = transactionId;

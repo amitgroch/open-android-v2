@@ -98,9 +98,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         mProgressDialog = new ProgressDialog(this);
         mFragmentManager = getSupportFragmentManager();
 
-        new InitSDK(this, this, mUserEmail, mUserMobile);
-
-        showDialog("Processing Your Payment...", true);
+        init();
     }
 
     @Override
@@ -133,8 +131,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
                     dialog.dismiss();
 
-                    CitrusTransactionResponse transactionResponse = new CitrusTransactionResponse(TransactionStatus.FAIL, "Cancelled by the user.");
-                    sendResponse(transactionResponse);
+                    CitrusTransactionResponse transactionResponse = new CitrusTransactionResponse(TransactionStatus.FAIL, "Cancelled by the user.", "");
+                    showPaymentStatusFragment(transactionResponse, mPaymentParams);
                 }
             });
             builder.setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
@@ -156,6 +154,12 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
             super.onBackPressed();
             mShowDialog = true;
         }
+    }
+
+    private void init() {
+        new InitSDK(this, this, mUserEmail, mUserMobile);
+
+        showDialog("Processing Your Payment...", true);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -181,7 +185,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
                 JSONObject redirect = new JSONObject(response);
 
                 if (!TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
-                    showPaymentFragment(redirect.getString("redirectUrl"));
+                    showPaymentProcessingFragment(redirect.getString("redirectUrl"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -270,7 +274,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         mShowDialog = false;
     }
 
-    private void showPaymentFragment(String redirectUrl) {
+    private void showPaymentProcessingFragment(String redirectUrl) {
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
@@ -421,11 +425,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
     @Override
     public void onRetryTransaction() {
-//        FragmentTransaction ft = mFragmentManager.beginTransaction();
-//        ft.setCustomAnimations(android.R.anim.fade_out, android.R.anim.fade_in);
-//        ft.commit();
-
-        mFragmentManager.popBackStack(); // Remove the transaction status fragment.
+        init();
+//        showPaymentOptionsFragment();
     }
 
     @Override
