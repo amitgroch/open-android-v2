@@ -11,7 +11,8 @@ import com.citrus.mobile.Config;
 
 public class TestActivity extends ActionBarActivity {
 
-    private static final String SANDBOX_BILL_URL = "http://192.168.1.173:8080/billGenerator.orig.jsp";// host your bill url here
+    //private static final String SANDBOX_BILL_URL = "http://192.168.1.173:8080/billGenerator.orig.jsp";// host your bill url here
+    private static final String SANDBOX_BILL_URL = "http://192.168.1.173/bill.php";// host your bill url here
     private static final String PROD_BILL_URL = "http://192.168.1.173:8080/billGenerator.prod.jsp";// host your bill url here
 
     @Override

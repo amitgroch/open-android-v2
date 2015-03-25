@@ -2,6 +2,7 @@ package com.citruspay.sdkui;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.citrus.mobile.Callback;
 
@@ -37,8 +38,13 @@ class GetBill extends AsyncTask<Void, Void, String> {
 
             if (response.getStatusLine().getStatusCode() == 200) {
                 JSONObject jsonObject = new JSONObject(EntityUtils.toString(response.getEntity()));
-                if (jsonObject != null) {
+                // TODO: Add Log statement for bill json/response.
+
+                // Check whether bill json is not null and the amount object should be not null.
+                if (jsonObject != null && jsonObject.optJSONObject("amount") != null && !jsonObject.optJSONObject("amount").isNull("value")) {
                     return jsonObject.toString();
+                } else {
+                    return null;
                 }
             }
         } catch (JSONException e) {
@@ -54,10 +60,11 @@ class GetBill extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String response) {
+
         if (!TextUtils.isEmpty(response)) {
             callback.onTaskexecuted(response, "");
         } else {
-            callback.onTaskexecuted("", "Could not get the bill");
+            callback.onTaskexecuted("", "Invalid bill json or Amount in the bill should not be null.");
         }
     }
 }

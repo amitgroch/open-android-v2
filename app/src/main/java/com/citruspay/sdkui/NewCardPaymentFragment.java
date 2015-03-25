@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +33,10 @@ import com.citrus.sdkui.DebitCardOption;
  * Activities that contain this fragment must implement the
  * {@link com.citruspay.sdkui.OnPaymentOptionSelectedListener} interface
  * to handle interaction events.
- * Use the {@link CardPaymentFragment#newInstance} factory method to
+ * Use the {@link NewCardPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CardPaymentFragment extends Fragment implements View.OnClickListener {
+public class NewCardPaymentFragment extends Fragment implements View.OnClickListener {
     private ProcessPaymentListener mListener = null;
     private CitrusPaymentParams mPaymentParams = null;
 
@@ -48,7 +49,7 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
     private Spinner mSpinnerYear = null;
     private SwitchCompat mSwitchToggleSaveCard = null;
 
-    public CardPaymentFragment() {
+    public NewCardPaymentFragment() {
         // Required empty public constructor
     }
 
@@ -58,9 +59,9 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
      *
      * @return A new instance of fragment CardPaymentFragment.
      */
-    public static CardPaymentFragment newInstance(CitrusPaymentParams paymentParams) {
+    public static NewCardPaymentFragment newInstance(CitrusPaymentParams paymentParams) {
 
-        CardPaymentFragment fragment = new CardPaymentFragment();
+        NewCardPaymentFragment fragment = new NewCardPaymentFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
         fragment.setArguments(bundle);
@@ -81,7 +82,7 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_card_payment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_new_card_payment, container, false);
         mSpinnerMonth = (Spinner) rootView.findViewById(R.id.month);
         ArrayAdapter<CharSequence> monthAdapter = new ArrayAdapter<CharSequence>(
                 getActivity(), R.layout.customtextview, android.R.id.text1, getResources().getStringArray(R.array.months_array));
@@ -174,35 +175,42 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
         if (cardOption != null) {
             final Card card = new Card(cardOption.getCardNumber(), cardOption.getCardExpiryMonth(), cardOption.getCardExpiryYear(), cardOption.getCardCVV(), cardOption.getCardHolderName(), cardOption.getCardType());
 
-            new GetBill(mPaymentParams.billUrl, mPaymentParams.transactionAmount, new Callback() {
-                @Override
-                public void onTaskexecuted(String billString, String error) {
-                    Bill bill = null;
-                    if (TextUtils.isEmpty(error)) {
-                        bill = new Bill(billString);
-                        // TODO: Use customer data from User to fill the data in the getCustomer.
-                        UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mPaymentParams.user));
+            // Process card payment only if the card is valid.
+            if (card.validateCard()) {
+                // Get bill json
+                new GetBill(mPaymentParams.billUrl, mPaymentParams.transactionAmount, new Callback() {
+                    @Override
+                    public void onTaskexecuted(String billString, String error) {
+                        Bill bill = null;
+                        if (TextUtils.isEmpty(error)) {
+                            bill = new Bill(billString);
+                            // TODO: Use customer data from User to fill the data in the getCustomer.
+                            UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mPaymentParams.user));
 
-                        PG paymentGateway = new PG(card, bill, userDetails);
+                            PG paymentGateway = new PG(card, bill, userDetails);
 
-                        paymentGateway.charge(new Callback() {
-                            @Override
-                            public void onTaskexecuted(String success, String error) {
-                                if (!TextUtils.isEmpty(success)) {
-                                    mListener.processPayment(success, error);
-                                } else {
-                                    Utils.showToast(getActivity(), error);
+                            paymentGateway.charge(new Callback() {
+                                @Override
+                                public void onTaskexecuted(String success, String error) {
+                                    if (!TextUtils.isEmpty(success)) {
+                                        mListener.processPayment(success, error);
+                                    } else {
+                                        Utils.showToast(getActivity(), error);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            Log.e(Utils.TAG, error);
+                            Utils.showToast(getActivity(), error);
+                        }
                     }
+                }).execute();
+
+
+                // Save the card if the user has opted to save the card.
+                if (cardOption.isSavePaymentOption()) {
+                    saveCard(card);
                 }
-            }).execute();
-
-
-            // Save the card if the user has opted to save the card.
-            if (cardOption.isSavePaymentOption()) {
-                saveCard(card);
             }
         }
     }
@@ -215,7 +223,7 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
                     if (!TextUtils.isEmpty(success)) {
                         Utils.showToast(getActivity(), "Card Saved Successfully.");
                     } else {
-                        Utils.showToast(getActivity(), "Error Occurred while saving the card.");
+                        Utils.showToast(getActivity(), "Error saving the card.");
                     }
                 }
             }).execute(card);

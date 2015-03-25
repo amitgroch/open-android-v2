@@ -7,6 +7,7 @@ import android.widget.Toast;
  * Created by salil on 16/2/15.
  */
 public final class Utils {
+    public static final String TAG = "CitrusLibrary";
     public static final String INTENT_EXTRA_PAYMENT_URL = "INTENT_EXTRA_PAYMENT_URL";
 
     public static final String INTENT_EXTRA_PAYMENT_RESPONSE = "INTENT_EXTRA_PAYMENT_RESPONSE";

@@ -32,10 +32,10 @@ import com.citrus.sdkui.CardOption;
  * Activities that contain this fragment must implement the
  * {@link ProcessPaymentListener} interface
  * to handle interaction events.
- * Use the {@link SaveCardPaymentFragment#newInstance} factory method to
+ * Use the {@link SavedCardPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SaveCardPaymentFragment extends Fragment {
+public class SavedCardPaymentFragment extends Fragment {
     private ProcessPaymentListener mListener;
     private CardOption mSavedCard = null;
     private CitrusPaymentParams mPaymentParams;
@@ -51,9 +51,66 @@ public class SaveCardPaymentFragment extends Fragment {
     private EditText mEditCVVHidden = null;
     private Button mBtnPay = null;
     private String mCVV = ""; // This will store the CVV entered by the user.
-    private int mCVVLength = Constants.CVV_LENGTH;
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showKeyboard();
 
-    public SaveCardPaymentFragment() {
+            // Reset all the checkboxes.
+            mCheckCVV1.setChecked(false);
+            mCheckCVV2.setChecked(false);
+            mCheckCVV3.setChecked(false);
+            mCheckCVV4.setChecked(false);
+
+            // Reset the CVV.
+            mCVV = "";
+        }
+    };
+    private int mCVVLength = Constants.CVV_LENGTH;
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            if (start == 0 && before == 0) {
+                mCheckCVV1.setChecked(true);
+            } else if (start == 1 && before == 0) {
+                mCheckCVV2.setChecked(true);
+            } else if (start == 2 && before == 0) {
+                mCheckCVV3.setChecked(true);
+
+                // Check the maximum digits for most of the cards.
+                if (start == mCVVLength - 1) {
+                    // Hide the keyboard.
+//                    hideKeyboard();
+                }
+            } else if (start == 3 && before == 0) {
+                mCheckCVV4.setChecked(true);
+                // 4 digit CVV only for AMEX card.
+//                hideKeyboard();
+            }
+
+            if (start == 0 && before == 1) {
+                mCheckCVV1.setChecked(false);
+            } else if (start == 1 && before == 1) {
+                mCheckCVV2.setChecked(false);
+            } else if (start == 2 && before == 1) {
+                mCheckCVV3.setChecked(false);
+            } else if (start == 3 && before == 1) {
+                mCheckCVV4.setChecked(false);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            mCVV = s.toString(); // Assign the CVV.
+        }
+    };
+
+    public SavedCardPaymentFragment() {
         // Required empty public constructor
     }
 
@@ -63,8 +120,8 @@ public class SaveCardPaymentFragment extends Fragment {
      *
      * @return A new instance of fragment SaveCardPaymentFragment.
      */
-    public static SaveCardPaymentFragment newInstance(CardOption cardOption, CitrusPaymentParams paymentParams) {
-        SaveCardPaymentFragment fragment = new SaveCardPaymentFragment();
+    public static SavedCardPaymentFragment newInstance(CardOption cardOption, CitrusPaymentParams paymentParams) {
+        SavedCardPaymentFragment fragment = new SavedCardPaymentFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.PARAM_SAVED_CARD, cardOption);
         args.putParcelable(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
@@ -88,7 +145,7 @@ public class SaveCardPaymentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_save_card_payment, container, false);
+        View view = inflater.inflate(R.layout.fragment_saved_card_payment, container, false);
 
         mImgCardType = (ImageView) view.findViewById(R.id.img_card_logo);
         mCardNumber = (TextView) view.findViewById(R.id.txt_card_number);
@@ -165,65 +222,6 @@ public class SaveCardPaymentFragment extends Fragment {
         }
     }
 
-    private TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            if (start == 0 && before == 0) {
-                mCheckCVV1.setChecked(true);
-            } else if (start == 1 && before == 0) {
-                mCheckCVV2.setChecked(true);
-            } else if (start == 2 && before == 0) {
-                mCheckCVV3.setChecked(true);
-
-                // Check the maximum digits for most of the cards.
-                if (start == mCVVLength - 1) {
-                    // Hide the keyboard.
-//                    hideKeyboard();
-                }
-            } else if (start == 3 && before == 0) {
-                mCheckCVV4.setChecked(true);
-                // 4 digit CVV only for AMEX card.
-//                hideKeyboard();
-            }
-
-            if (start == 0 && before == 1) {
-                mCheckCVV1.setChecked(false);
-            } else if (start == 1 && before == 1) {
-                mCheckCVV2.setChecked(false);
-            } else if (start == 2 && before == 1) {
-                mCheckCVV3.setChecked(false);
-            } else if (start == 3 && before == 1) {
-                mCheckCVV4.setChecked(false);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            mCVV = s.toString(); // Assign the CVV.
-        }
-    };
-
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            showKeyboard();
-
-            // Reset all the checkboxes.
-            mCheckCVV1.setChecked(false);
-            mCheckCVV2.setChecked(false);
-            mCheckCVV3.setChecked(false);
-            mCheckCVV4.setChecked(false);
-
-            // Reset the CVV.
-            mCVV = "";
-        }
-    };
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -244,7 +242,7 @@ public class SaveCardPaymentFragment extends Fragment {
     private void processPayment(CardOption cardOption) {
 
         if (cardOption != null) {
-               final Card card = new Card(cardOption.getToken(), cardOption.getCardCVV());
+            final Card card = new Card(cardOption.getToken(), cardOption.getCardCVV());
 
             new GetBill(mPaymentParams.billUrl, mPaymentParams.transactionAmount, new Callback() {
                 @Override
@@ -263,6 +261,8 @@ public class SaveCardPaymentFragment extends Fragment {
                                 mListener.processPayment(success, error);
                             }
                         });
+                    } else {
+                        Utils.showToast(getActivity(), error);
                     }
                 }
             }).execute();
