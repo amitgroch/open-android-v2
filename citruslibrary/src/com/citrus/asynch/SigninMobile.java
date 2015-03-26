@@ -34,8 +34,7 @@ public class SigninMobile extends AsyncTask<Void, Void, JSONObject> {
 		if (userprofile.has("responseData")) {
 			JSONObject profilebyMobile = null;
 			try {
-				profilebyMobile = userprofile.getJSONObject("profileByMobile");
-				
+				profilebyMobile = userprofile.getJSONObject("responseData").getJSONObject("profileByMobile");
 				if (profilebyMobile.has("email")) {
 					response = citrususer.signinUser(profilebyMobile.getString("email"));
 				}

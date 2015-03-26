@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import com.citrus.mobile.Callback;
 import com.citrus.mobile.User;
@@ -35,7 +36,14 @@ public class Binduser extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
         user = new User(activity);
-        binderesult = user.binduser(params[0], params[1]);
+        String email;
+        if (TextUtils.isEmpty(params[0])) {
+        	email = params[1] + "@tinyowl-citruspay.com"; 
+        }
+        else {
+        	email = params[0];
+        }
+        binderesult = user.binduser(email, params[1]);
         return null;
     }
 

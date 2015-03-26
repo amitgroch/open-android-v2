@@ -74,6 +74,7 @@ public class RESTclient {
             urls.put("resetpassword", "service/v2/identity/passwords/reset");
             urls.put("prepaidbill", "service/v2/prepayment/load");
             urls.put("paymentoptions", "service/v1/merchant/pgsetting");
+            urls.put("umdetails", "service/um/profile/memberInfo");
         } catch (JSONException e) {
             return;
         }
@@ -127,6 +128,40 @@ public class RESTclient {
          return parseResponse(response);
      }
     
+     public JSONObject makePostrequest(JSONObject details) throws IOException {
+    	 HttpParams redirectparams = new BasicHttpParams();
+    	 redirectparams.setParameter("http.protocol.handle-redirects",false);
+    	 
+         httpClient = new DefaultHttpClient();
+         HttpPost httpPost = null;
+         try {
+             httpPost = new HttpPost(urls.getString(base_url) + urls.getString(type));
+             httpPost.setParams(redirectparams);
+         } catch (JSONException e) {
+             e.printStackTrace();
+         }
+
+         httpPost.setEntity(new StringEntity(details.toString()));
+         
+         Iterator<String> iterhead = headers.keys();
+         while (iterhead.hasNext()) {
+             String key = iterhead.next();
+             try {
+                 String value = headers.getString(key);
+                 httpPost.addHeader(key, value);
+             } catch (JSONException e) {
+            	 return null;
+             }
+         }
+
+         try {
+             response = httpClient.execute(httpPost);
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+         return parseResponse(response);
+     } 
+     
     public JSONObject makePutrequest() {
     	HttpClient client = new DefaultHttpClient();
 

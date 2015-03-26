@@ -17,19 +17,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.citrus.asynch.Binduser;
 import com.citrus.asynch.GetWallet;
 import com.citrus.asynch.Savecard;
+import com.citrus.asynch.SigninMobile;
 import com.citrus.card.Card;
 import com.citrus.mobile.Callback;
 import com.citrus.mobile.Config;
 
 public class MainActivity extends Activity {
 
-    Button bind, savecard, getWallet, paybutton, widgets;
+    Button bind, signin_mobile, savecard, getWallet, paybutton, widgets;
 
     Callback callback;
 
@@ -48,6 +50,8 @@ public class MainActivity extends Activity {
         };
 
         bind = (Button) this.findViewById(R.id.bind);
+       
+        signin_mobile = (Button) this.findViewById(R.id.signinmobile);
 
         savecard = (Button) this.findViewById(R.id.savecard);
 
@@ -96,10 +100,19 @@ public class MainActivity extends Activity {
             }
         });
         
+        signin_mobile.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				new SigninMobile(MainActivity.this, callback, "7875432990")
+				.execute();
+			}
+		});
+        
     }
 
     private void init() {
-        Config.setEnv("sandbox"); //replace it with "production" when you are ready
+        Config.setEnv("production"); //replace it with "production" when you are ready
         
         /*Replace following details with oauth details provided to you*/
         Config.setupSignupId("test-signup");
