@@ -3,6 +3,7 @@ package com.citruspay.sdkui;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,10 +14,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.citrus.asynch.InitSDK;
@@ -42,7 +48,7 @@ import static com.citruspay.sdkui.PaymentProcessingFragment.OnTransactionComplet
 import static com.citruspay.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
 
 
-public class MainActivity extends ActionBarActivity implements OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
+public class MainActivity extends ActionBarActivity implements OnActivityTitleChangeListener, OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
 
     private String mUserEmail = null;
     private String mUserMobile = null;
@@ -87,9 +93,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
 
             setActionBarBackground(mColorPrimary, mColorPrimaryDark);
 
-            if (mMerchantName != null) {
-                setTitle(mMerchantName + "\t \t " + mTransactionAmount);
-            }
+            setCustomTitleView();
         }
 
         // TODO Do not use static fields.
@@ -99,6 +103,18 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         mFragmentManager = getSupportFragmentManager();
 
         init();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // do something useful
+                onBackPressed();
+                return (true);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -151,8 +167,43 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         } else {
             setActionBarBackground(mColorPrimary, mColorPrimaryDark);
 
+            setCustomTitleView();
+
             super.onBackPressed();
             mShowDialog = true;
+        }
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        // Disable custom title.
+        mActionBar.setDisplayShowTitleEnabled(true);
+        mActionBar.setDisplayShowCustomEnabled(false);
+
+        super.setTitle(title);
+    }
+
+    public void setCustomTitleView() {
+        LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflator.inflate(R.layout.layout_action_bar_view, null);
+
+        if (mActionBar != null && mPaymentParams != null) {
+
+            TextView txtMerchantName = (TextView) view.findViewById(R.id.txt_merchant_name);
+            TextView txtTransactionAmount = (TextView) view.findViewById(R.id.txt_transaction_amount);
+
+            txtMerchantName.setText(mMerchantName);
+            txtMerchantName.setTextColor(Color.parseColor(mPaymentParams.textColorPrimary));
+
+            // &#x20B9; stands for Rupee symbol.
+            txtTransactionAmount.setText(Html.fromHtml("&#x20B9;" + mPaymentParams.transactionAmount));
+            txtTransactionAmount.setTextColor(Color.parseColor(mPaymentParams.textColorPrimary));
+
+            // Enable custom title.
+            mActionBar.setDisplayShowTitleEnabled(false);
+            mActionBar.setDisplayShowCustomEnabled(true);
+
+            mActionBar.setCustomView(view);
         }
     }
 
@@ -224,6 +275,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     }
 
     private void showPaymentOptionsFragment() {
+        setCustomTitleView();
+
         mPaymentParams.netbankingOptionList = Config.getBankList();
         mPaymentParams.topNetbankingOptions = Config.getTopBankList();
         mPaymentParams.userSavedOptionList = Config.getCitrusWallet();
@@ -252,6 +305,8 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     private void showSavedCardPaymentFragment(final CardOption cardOption) {
         setActionBarBackground("#414A5A", "#2B313D");
 
+        setTitle("256-bit secure encryption");
+
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
@@ -263,7 +318,7 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     }
 
     private void showNetbankingFragment() {
-        ArrayList netbankingOptionsList = Config.getBankList();
+        ArrayList<NetbankingOption> netbankingOptionsList = Config.getBankList();
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
@@ -349,6 +404,11 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     // Listeners
 
     @Override
+    public void onActivityTitleChanged(String title) {
+        setTitle(title);
+    }
+
+    @Override
     public void onOptionSelected(final PaymentOption paymentOption) {
 
         if (paymentOption != null) {
@@ -426,7 +486,6 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
     @Override
     public void onRetryTransaction() {
         init();
-//        showPaymentOptionsFragment();
     }
 
     @Override
@@ -443,6 +502,5 @@ public class MainActivity extends ActionBarActivity implements OnPaymentOptionSe
         mFragmentManager.popBackStack();
 
         processResponse(response, error);
-
     }
 }

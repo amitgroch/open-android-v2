@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 
 /**
@@ -109,6 +109,13 @@ public class PaymentProcessingFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
+        }
+
+        // Check whether the activity has implemented the OnActivityTitleChangeListener.
+        // Call the onActivityTitleChanged to change the title of the activity
+        if (activity instanceof OnActivityTitleChangeListener) {
+            Log.d("NewCardPaymentFragment", "onAttach (line 131): OnActivityTitleChangeListener");
+            ((OnActivityTitleChangeListener) activity).onActivityTitleChanged("Processing...");
         }
     }
 

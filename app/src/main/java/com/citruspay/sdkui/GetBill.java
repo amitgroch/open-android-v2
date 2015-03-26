@@ -2,7 +2,6 @@ package com.citruspay.sdkui;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.citrus.mobile.Callback;
 
@@ -31,7 +30,7 @@ class GetBill extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(billurl + "?amount=" + amount);
-        HttpResponse response = null;
+        HttpResponse response;
 
         try {
             response = httpClient.execute(httpGet);
@@ -41,7 +40,7 @@ class GetBill extends AsyncTask<Void, Void, String> {
                 // TODO: Add Log statement for bill json/response.
 
                 // Check whether bill json is not null and the amount object should be not null.
-                if (jsonObject != null && jsonObject.optJSONObject("amount") != null && !jsonObject.optJSONObject("amount").isNull("value")) {
+                if (jsonObject.optJSONObject("amount") != null && !jsonObject.optJSONObject("amount").isNull("value")) {
                     return jsonObject.toString();
                 } else {
                     return null;

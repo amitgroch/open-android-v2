@@ -1,6 +1,7 @@
 package com.citruspay.sdkui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,6 +40,7 @@ public class SavedCardPaymentFragment extends Fragment {
     private CardOption mSavedCard = null;
     private CitrusPaymentParams mPaymentParams;
 
+    private ProgressDialog mProgressDialog = null;
     private TextView mCardNumber = null;
     private TextView mCardHolder = null;
     private TextView mCardExpiry = null;
@@ -49,23 +50,8 @@ public class SavedCardPaymentFragment extends Fragment {
     private CheckBox mCheckCVV3 = null;
     private CheckBox mCheckCVV4 = null;
     private EditText mEditCVVHidden = null;
-    private Button mBtnPay = null;
+    private boolean mProcessPayment = false;
     private String mCVV = ""; // This will store the CVV entered by the user.
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            showKeyboard();
-
-            // Reset all the checkboxes.
-            mCheckCVV1.setChecked(false);
-            mCheckCVV2.setChecked(false);
-            mCheckCVV3.setChecked(false);
-            mCheckCVV4.setChecked(false);
-
-            // Reset the CVV.
-            mCVV = "";
-        }
-    };
     private int mCVVLength = Constants.CVV_LENGTH;
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -85,12 +71,18 @@ public class SavedCardPaymentFragment extends Fragment {
                 // Check the maximum digits for most of the cards.
                 if (start == mCVVLength - 1) {
                     // Hide the keyboard.
-//                    hideKeyboard();
+                    hideKeyboard();
+
+                    // Denote that payment can be processed now.
+                    mProcessPayment = true;
                 }
             } else if (start == 3 && before == 0) {
                 mCheckCVV4.setChecked(true);
                 // 4 digit CVV only for AMEX card.
-//                hideKeyboard();
+                hideKeyboard();
+
+                // Denote that payment can be processed now.
+                mProcessPayment = true;
             }
 
             if (start == 0 && before == 1) {
@@ -107,6 +99,11 @@ public class SavedCardPaymentFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
             mCVV = s.toString(); // Assign the CVV.
+
+            if (mProcessPayment) {
+                mSavedCard.setCardCVV(mCVV);
+                processPayment(mSavedCard);
+            }
         }
     };
 
@@ -147,6 +144,9 @@ public class SavedCardPaymentFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_saved_card_payment, container, false);
 
+
+        mProgressDialog = new ProgressDialog(getActivity());
+
         mImgCardType = (ImageView) view.findViewById(R.id.img_card_logo);
         mCardNumber = (TextView) view.findViewById(R.id.txt_card_number);
         mCardHolder = (TextView) view.findViewById(R.id.txt_card_holder);
@@ -156,26 +156,12 @@ public class SavedCardPaymentFragment extends Fragment {
         mCheckCVV3 = (CheckBox) view.findViewById(R.id.check_cvv_3);
         mCheckCVV4 = (CheckBox) view.findViewById(R.id.check_cvv_4);
         mEditCVVHidden = (EditText) view.findViewById(R.id.edit_cvv_hidden);
-        mBtnPay = (Button) view.findViewById(R.id.btn_pay);
-
-        mBtnPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSavedCard.setCardCVV(mCVV);
-                processPayment(mSavedCard);
-            }
-        });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             mImgCardType.setBackground(mSavedCard.getOptionIcon(getActivity()));
         } else {
             mImgCardType.setBackgroundDrawable(mSavedCard.getOptionIcon(getActivity()));
         }
-
-//        mCheckCVV1.setOnClickListener(onClickListener);
-//        mCheckCVV2.setOnClickListener(onClickListener);
-//        mCheckCVV3.setOnClickListener(onClickListener);
-//        mCheckCVV4.setOnClickListener(onClickListener);
 
         if (mCVVLength == 4) {
             mCheckCVV4.setVisibility(View.VISIBLE);
@@ -247,7 +233,7 @@ public class SavedCardPaymentFragment extends Fragment {
             new GetBill(mPaymentParams.billUrl, mPaymentParams.transactionAmount, new Callback() {
                 @Override
                 public void onTaskexecuted(String billString, String error) {
-                    Bill bill = null;
+                    Bill bill;
                     if (TextUtils.isEmpty(error)) {
                         bill = new Bill(billString);
                         // TODO: Use customer data from User to fill the data in the getCustomer.
@@ -259,6 +245,8 @@ public class SavedCardPaymentFragment extends Fragment {
                             @Override
                             public void onTaskexecuted(String success, String error) {
                                 mListener.processPayment(success, error);
+
+                                dismissDialog();
                             }
                         });
                     } else {
@@ -266,6 +254,23 @@ public class SavedCardPaymentFragment extends Fragment {
                     }
                 }
             }).execute();
+
+            showDialog("Processing Payment. Please wait...", false);
+        }
+    }
+
+    private void showDialog(String message, boolean cancelable) {
+        if (mProgressDialog != null) {
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setCancelable(cancelable);
+            mProgressDialog.setMessage(message);
+            mProgressDialog.show();
+        }
+    }
+
+    private void dismissDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
         }
     }
 }

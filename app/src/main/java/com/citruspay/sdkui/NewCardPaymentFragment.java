@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +46,6 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
     private EditText mEditCVV = null;
     private Spinner mSpinnerMonth = null;
     private Spinner mSpinnerYear = null;
-    private SwitchCompat mSwitchToggleSaveCard = null;
 
     public NewCardPaymentFragment() {
         // Required empty public constructor
@@ -109,8 +107,6 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
             mButtonPay.setBackgroundColor(Color.parseColor(mPaymentParams.colorPrimary));
         }
 
-        mSwitchToggleSaveCard = (SwitchCompat) rootView.findViewById(R.id.toggle_save_card);
-
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -123,6 +119,13 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnCardPaymentListener");
+        }
+
+        // Check whether the activity has implemented the OnActivityTitleChangeListener.
+        // Call the onActivityTitleChanged to change the title of the activity
+        if (activity instanceof OnActivityTitleChangeListener) {
+            Log.d("NewCardPaymentFragment", "onAttach (line 131): OnActivityTitleChangeListener");
+            ((OnActivityTitleChangeListener) activity).onActivityTitleChanged("Add Card");
         }
     }
 
@@ -139,7 +142,7 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
         String cardNumber = mEditCardNo.getText().toString();
         String cardCVV = mEditCVV.getText().toString();
         String cardExpiryYear = mSpinnerYear.getSelectedItem().toString();
-        String cardExpiryMonth = null;
+        String cardExpiryMonth;
 
         int expiryMonth = mSpinnerMonth.getSelectedItemPosition() + 1;
         if (expiryMonth < 10) {
@@ -165,8 +168,6 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
                 break;
         }
 
-        cardOption.setSavePaymentOption(mSwitchToggleSaveCard.isChecked());
-
         processPayment(cardOption);
     }
 
@@ -181,7 +182,7 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
                 new GetBill(mPaymentParams.billUrl, mPaymentParams.transactionAmount, new Callback() {
                     @Override
                     public void onTaskexecuted(String billString, String error) {
-                        Bill bill = null;
+                        Bill bill;
                         if (TextUtils.isEmpty(error)) {
                             bill = new Bill(billString);
                             // TODO: Use customer data from User to fill the data in the getCustomer.
@@ -206,8 +207,8 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
                     }
                 }).execute();
 
-
                 // Save the card if the user has opted to save the card.
+                // Currently we will be saving card every time, so this will always return true.
                 if (cardOption.isSavePaymentOption()) {
                     saveCard(card);
                 }
@@ -233,6 +234,7 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
     private boolean validate(String cardName, String cardNumber, String cardCVV, String cardExpiryMonth, String cardExpiryYear, int selectedCardTypeId) {
         boolean valid = true;
 
+        // TODO: Validation of the expiryMonth and expiryYear
         if (TextUtils.isEmpty(cardName)) {
             valid = false;
             mEditNameOnCard.setError("Please Enter Name On The Card.");

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static com.citruspay.sdkui.CitrusTransactionResponse.*;
+import static com.citruspay.sdkui.CitrusTransactionResponse.TransactionStatus;
 
 
 /**
@@ -145,11 +143,12 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
     }
 
     private void setTitle(String title) {
-        if (!TextUtils.isEmpty(title)) {
-            // TODO Do null checking
-//            getActivity().getActionBar().setTitle(title);
+        // Check whether the activity has implemented the OnActivityTitleChangeListener.
+        // Call the onActivityTitleChanged to change the title of the activity
+        if (getActivity() instanceof OnActivityTitleChangeListener) {
+            Log.d("NewCardPaymentFragment", "onAttach (line 131): OnActivityTitleChangeListener");
+            ((OnActivityTitleChangeListener) getActivity()).onActivityTitleChanged(title);
         }
-//        ActionBar actionBar = getActivity().getActionBar();
     }
 
     /**

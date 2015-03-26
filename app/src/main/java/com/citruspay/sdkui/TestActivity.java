@@ -11,8 +11,7 @@ import com.citrus.mobile.Config;
 
 public class TestActivity extends ActionBarActivity {
 
-    //private static final String SANDBOX_BILL_URL = "http://192.168.1.173:8080/billGenerator.orig.jsp";// host your bill url here
-    private static final String SANDBOX_BILL_URL = "http://192.168.1.173/bill.php";// host your bill url here
+    private static final String SANDBOX_BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.php";// host your bill url here
     private static final String PROD_BILL_URL = "http://192.168.1.173:8080/billGenerator.prod.jsp";// host your bill url here
 
     @Override
@@ -29,15 +28,14 @@ public class TestActivity extends ActionBarActivity {
         Intent intent = new Intent(TestActivity.this, MainActivity.class);
         CitrusPaymentParams paymentParams = new CitrusPaymentParams();
         paymentParams.billUrl = SANDBOX_BILL_URL;
-        paymentParams.merchantName = "Shopstore";
+        paymentParams.merchantName = "Nature First";
         paymentParams.transactionAmount = 5;
         paymentParams.vanity = "NativeSDK";
         paymentParams.colorPrimary = "#F9A323";
         paymentParams.colorPrimaryDark = "#E7961D";
         paymentParams.accentColor = "#64FFDA";
 
-        CitrusUser user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Developer", "Citrus", null);
-        paymentParams.user = user;
+        paymentParams.user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Developer", "Citrus", null);
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
 
         startActivityForResult(intent, Utils.REQUEST_CODE_PAYMENT_ACTIVITY);
@@ -51,15 +49,14 @@ public class TestActivity extends ActionBarActivity {
         Intent intent = new Intent(TestActivity.this, MainActivity.class);
         CitrusPaymentParams paymentParams = new CitrusPaymentParams();
         paymentParams.billUrl = PROD_BILL_URL;
-        paymentParams.merchantName = "Shopstore";
+        paymentParams.merchantName = "Nature First";
         paymentParams.transactionAmount = 5;
         paymentParams.vanity = "NativeSDK";
         paymentParams.colorPrimary = "#F9A323";
         paymentParams.colorPrimaryDark = "#E7961D";
         paymentParams.accentColor = "#64FFDA";
 
-        CitrusUser user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Salil", "Godbole", null);
-        paymentParams.user = user;
+        paymentParams.user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Salil", "Godbole", null);
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
 
         startActivityForResult(intent, Utils.REQUEST_CODE_PAYMENT_ACTIVITY);

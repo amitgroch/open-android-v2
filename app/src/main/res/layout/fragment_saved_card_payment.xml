@@ -1,14 +1,14 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#414A5A"
-              android:orientation="vertical"
-              tools:context="com.citruspay.sdkui.SavedCardPaymentFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#414A5A"
+                tools:context="com.citruspay.sdkui.SavedCardPaymentFragment">
 
     <!-- TODO: Add all the colors in xml files. -->
     <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_margin="16dp"
@@ -21,38 +21,32 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/layout_card_logo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/img_citrus_logo"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left|center_vertical"
-                    android:layout_margin="@dimen/transaction_status_margin"
-                    android:layout_weight="1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="@dimen/transaction_status_margin"
                     android:src="@drawable/ic_launcher"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="3"
-                    android:background="@android:color/transparent"/>
 
                 <!--Logo of the type of card i.e. VISA, MASTER etc.-->
                 <ImageView
                     android:id="@+id/img_card_logo"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left|center_vertical"
-                    android:layout_margin="@dimen/transaction_status_margin"
-                    android:layout_weight="1"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:src="@drawable/visa"
                     />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/txt_card_number"
@@ -60,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/layout_card_logo"
                 android:layout_margin="@dimen/transaction_status_margin"
-                android:gravity="center_horizontal|center"
+                android:gravity="left|center_vertical"
                 android:paddingLeft="@dimen/transaction_status_margin"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/white"
@@ -142,16 +136,20 @@
     </android.support.v7.widget.CardView>
 
     <TextView
+        android:id="@+id/txt_title_cvv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/card_view"
         android:gravity="center"
         android:text="ENTER CVV"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/white"/>
 
     <LinearLayout
+        android:id="@+id/layout_cvv_check"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/txt_title_cvv"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/transaction_status_margin">
@@ -207,10 +205,4 @@
         <requestFocus/>
     </EditText>
 
-    <Button
-        android:id="@+id/btn_pay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pay"/>
-
-</LinearLayout>
+</RelativeLayout>
