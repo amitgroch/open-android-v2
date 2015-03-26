@@ -150,6 +150,7 @@ public class PaymentProcessingFragment extends Fragment {
      * Handle all the Webview loading in custom webview client.
      */
     private class CitrusWebClient extends WebViewClient {
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 

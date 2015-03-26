@@ -23,6 +23,7 @@ public class CitrusTransactionResponse implements Parcelable {
             return new CitrusTransactionResponse[size];
         }
     };
+
     private String amount = null;
     private String currency = null;
     private String message = null;

@@ -34,6 +34,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
     private TextView mTxtTransactionId = null;
     private TextView mTxtTitleText2 = null;
     private TextView mTxtText2 = null;
+    private TextView mTxtMessageGratitude = null;
     private Button mBtnRetryTransaction = null;
     private Button mBtnDismiss = null;
 
@@ -79,6 +80,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
         mTxtTransactionId = (TextView) view.findViewById(R.id.txt_transaction_id);
         mTxtTitleText2 = (TextView) view.findViewById(R.id.txt_title_text2);
         mTxtText2 = (TextView) view.findViewById(R.id.txt_text2);
+        mTxtMessageGratitude = (TextView) view.findViewById(R.id.txt_message_gratitude);
         mBtnRetryTransaction = (Button) view.findViewById(R.id.btn_retry_transaction);
         mBtnDismiss = (Button) view.findViewById(R.id.btn_dismiss);
 
@@ -98,6 +100,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
                 mTxtTransactionId.setText(mTransactionResponse.getTransactionDetails().getTransactionId());
                 mTxtTitleText2.setText(getString(R.string.title_text2_success));
                 mTxtText2.setText(mTransactionResponse.getAmount());
+                mTxtMessageGratitude.setVisibility(View.VISIBLE);
 
                 setTitle(getString(R.string.fragment_title_transaction_success));
 

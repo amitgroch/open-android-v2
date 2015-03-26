@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Citruslibrary</string>
+    <string name="message_gratitude">Thanks! We'd love to see you again. :)</string>
+
 </resources>

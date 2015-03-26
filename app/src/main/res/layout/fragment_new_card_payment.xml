@@ -3,7 +3,6 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/white"
               android:orientation="vertical"
               android:paddingTop="20dp">
 
@@ -39,7 +38,7 @@
         </RadioGroup>
 
         <TextView
-            android:id="@+id/cardnumber"
+            android:id="@+id/txt_title_cardnumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -76,7 +75,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
-
                     android:text="@string/expiry"
                     android:textColor="@color/grey"/>
 
@@ -119,19 +117,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|start"
+                    android:layout_marginLeft="8dp"
                     android:text="@string/cvv"
-                    android:textColor="@color/grey"
-                    android:layout_marginLeft="8dp"/>
+                    android:textColor="@color/grey"/>
 
                 <EditText
                     android:id="@+id/edit_cvv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="3dp"
                     android:digits="0123456789"
-                    android:ems="3"
-                    android:layout_marginLeft="8dp"
+                    android:ems="4"
                     android:inputType="number"
                     android:maxLength="4"
                     android:singleLine="true"
@@ -167,6 +165,7 @@
             android:text="@string/save_card"
             android:textColor="@color/grey"/>
 
+        <!-- Currently we will be saving all the cards. Uncomment whenever we want to enable this feature.
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -198,6 +197,8 @@
 
         </LinearLayout>
     </LinearLayout>
+    -->
+    </LinearLayout>
 
     <Button
         android:id="@+id/button_pay"
@@ -209,4 +210,3 @@
         android:textColor="@android:color/white"/>
 
 </LinearLayout>
-

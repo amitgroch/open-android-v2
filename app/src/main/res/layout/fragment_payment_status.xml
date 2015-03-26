@@ -90,11 +90,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/transaction_status_margin"
+        android:background="@android:color/white"
         android:gravity="left|center_vertical"
         android:paddingBottom="@dimen/transaction_status_margin"
-        android:text="RETRY TRANSACTION"
-        android:background="@android:color/white"
         android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="RETRY TRANSACTION"
         />
 
     <Button
@@ -102,10 +102,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/transaction_status_margin"
-        android:gravity="left|center_vertical"
-        android:text="DISMISS"
         android:background="@android:color/white"
+        android:gravity="left|center_vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="DISMISS"
         />
+
+    <TextView
+        android:id="@+id/txt_message_gratitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:gravity="bottom|center_horizontal"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="@string/message_gratitude"
+        android:visibility="gone"/>
 
 </LinearLayout>
