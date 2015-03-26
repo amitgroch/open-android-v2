@@ -31,14 +31,12 @@ public class Card {
 		this.expYear = year;
 		this.crdr = crdr;
 	}
-
+	
 	public Card(String token, String cvv) {
 		this.token = token;
 		this.cardCVV = cvv;
 		this.cardnumber = null;
 	}
-
-
 
 	public CardType getCardType() {
 		return CardType.typeOf(cardnumber);
