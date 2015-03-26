@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				new SigninMobile(MainActivity.this, callback, "7875432990")
+				new SigninMobile(MainActivity.this, callback, "")
 				.execute();
 			}
 		});

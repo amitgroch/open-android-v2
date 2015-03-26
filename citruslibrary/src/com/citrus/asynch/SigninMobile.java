@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.citrus.mobile.Callback;
+import com.citrus.mobile.Errorclass;
 import com.citrus.mobile.User;
 
 import android.app.Activity;
@@ -31,6 +32,9 @@ public class SigninMobile extends AsyncTask<Void, Void, JSONObject> {
 		
 		JSONObject userprofile = citrususer.getuserProfile(mobile);
 		
+		if (userprofile.has("error")) 
+				response = userprofile;
+		
 		if (userprofile.has("responseData")) {
 			JSONObject profilebyMobile = null;
 			try {
@@ -38,10 +42,15 @@ public class SigninMobile extends AsyncTask<Void, Void, JSONObject> {
 				if (profilebyMobile.has("email")) {
 					response = citrususer.signinUser(profilebyMobile.getString("email"));
 				}
-				
+				else {
+					response = Errorclass.addErrorFlag("No User mapped against this number", null);
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		}
+		else {
+			Errorclass.addErrorFlag("Could not fetch user against mobile number", response);
 		}
 		
 		return response;
