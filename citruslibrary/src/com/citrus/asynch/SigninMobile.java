@@ -50,7 +50,7 @@ public class SigninMobile extends AsyncTask<Void, Void, JSONObject> {
 			}
 		}
 		else {
-			Errorclass.addErrorFlag("Could not fetch user against mobile number", response);
+			response = Errorclass.addErrorFlag("Could not fetch user against mobile number", null);
 		}
 		
 		return response;
