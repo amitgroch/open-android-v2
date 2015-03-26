@@ -282,7 +282,7 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
         mPaymentParams.userSavedOptionList = Config.getCitrusWallet();
 
         mFragmentManager.beginTransaction()
-                .add(R.id.container, PaymentOptionsFragment.newInstance(mPaymentParams))
+                .replace(R.id.container, PaymentOptionsFragment.newInstance(mPaymentParams))
                 .commit();
 
         dismissDialog();
@@ -439,10 +439,14 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
         }
     }
 
-
     @Override
     public void onSuccess(String response) {
         // Since the loading is complete display the payment options fragment
+        showPaymentOptionsFragment();
+    }
+
+    @Override
+    public void onNetbankingSuccess() {
         showPaymentOptionsFragment();
     }
 

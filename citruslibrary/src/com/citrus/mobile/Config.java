@@ -20,7 +20,6 @@ import com.citrus.sdkui.NetbankingOption;
 import com.citrus.sdkui.PaymentOption;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Config {
     //private static Context context;
@@ -127,24 +126,6 @@ public class Config {
 
     public static void initUser(Context context, InitListener initListener) {
         new InitSDK(context, initListener, null, null);
-    }
-
-    public static void setEnvironment(Environment environment) {
-        setEnv(environment.getEnvironment());
-    }
-
-    public enum Environment {
-        PRODUCTION {
-            String getEnvironment() {
-                return "production";
-            }
-        }, SANDBOX {
-            String getEnvironment() {
-                return "production";
-            }
-        };
-
-        abstract String getEnvironment();
     }
 
     public static final String INTENT_EXTRA_USER_EMAIL = "INTENT_EXTRA_USER_EMAIL";

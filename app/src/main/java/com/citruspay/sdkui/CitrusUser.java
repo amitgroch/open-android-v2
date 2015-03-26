@@ -17,6 +17,11 @@ public class CitrusUser implements Parcelable {
     private String mobileNo = null;
     private Address address = null;
 
+    public CitrusUser(String emailId, String mobileNo) {
+        this.emailId = emailId;
+        this.mobileNo = mobileNo;
+    }
+
     public CitrusUser(String emailId, String mobileNo, String firstName, String lastName, Address address) {
         this.emailId = emailId;
         this.mobileNo = mobileNo;
@@ -44,7 +49,7 @@ public class CitrusUser implements Parcelable {
     public static JSONObject toJSONObject(CitrusUser user) {
         JSONObject customer = null;
         // TODO: Need to put valid values from the user object passed
-		/*
+        /*
          * All the below mentioned parameters are mandatory - missing anyone of them may create errors Do not change the
 		 * key in the json below - only change the values
 		 */

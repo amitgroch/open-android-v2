@@ -12,7 +12,8 @@ import com.citrus.mobile.Config;
 public class TestActivity extends ActionBarActivity {
 
     private static final String SANDBOX_BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.php";// host your bill url here
-    private static final String PROD_BILL_URL = "http://192.168.1.173:8080/billGenerator.prod.jsp";// host your bill url here
+    private static final String PROD_BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.production.php";// host your bill url here
+    private static final String JSON_KEY_STORE = "{\"access_key\":\"06SLEEBYLVZELISZ5ECU\",\"signup-id\":\"kkizp9tsqg-signup\",\"signup-secret\":\"39c50a32eaabaf382223fdd05f331e1c\",\"signin-id\":\"kkizp9tsqg-signin\",\"signin-secret\":\"1fc1f57639ec87cf4d49920f6b3a2c9d\",\"vanity_Url\":\"https://www.citruspay.com/kkizp9tsqg\"}";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,42 +24,34 @@ public class TestActivity extends ActionBarActivity {
 
     public void onPaySandboxButtonClicked(View view) {
 
-        Config.setEnv("sandbox"); // replace it with production when you are ready
-
         Intent intent = new Intent(TestActivity.this, MainActivity.class);
-        CitrusPaymentParams paymentParams = new CitrusPaymentParams();
-        paymentParams.billUrl = SANDBOX_BILL_URL;
-        paymentParams.merchantName = "Nature First";
-        paymentParams.transactionAmount = 5;
-        paymentParams.vanity = "NativeSDK";
-        paymentParams.colorPrimary = "#F9A323";
-        paymentParams.colorPrimaryDark = "#E7961D";
-        paymentParams.accentColor = "#64FFDA";
+        CitrusUser user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Developer", "Citrus", null);
 
-        paymentParams.user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Developer", "Citrus", null);
+        CitrusPaymentParams paymentParams = CitrusPaymentParams
+                .builder(3.0, SANDBOX_BILL_URL, JSON_KEY_STORE)
+                .user(user)
+                .environment(CitrusPaymentParams.Environment.PRODUCTION)
+                .merchantName("Nature First")
+                .build();
+
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
-
         startActivityForResult(intent, Utils.REQUEST_CODE_PAYMENT_ACTIVITY);
     }
 
 
     public void onPayProductionButtonClicked(View view) {
 
-        Config.setEnv("production"); // replace it with production when you are ready
-
         Intent intent = new Intent(TestActivity.this, MainActivity.class);
-        CitrusPaymentParams paymentParams = new CitrusPaymentParams();
-        paymentParams.billUrl = PROD_BILL_URL;
-        paymentParams.merchantName = "Nature First";
-        paymentParams.transactionAmount = 5;
-        paymentParams.vanity = "NativeSDK";
-        paymentParams.colorPrimary = "#F9A323";
-        paymentParams.colorPrimaryDark = "#E7961D";
-        paymentParams.accentColor = "#64FFDA";
 
-        paymentParams.user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Salil", "Godbole", null);
+        CitrusUser user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Salil", "Godbole", null);
+        CitrusPaymentParams paymentParams = CitrusPaymentParams
+                .builder(3.0, PROD_BILL_URL, JSON_KEY_STORE)
+                .user(user)
+                .merchantName("Nature First")
+                .environment(CitrusPaymentParams.Environment.PRODUCTION)
+                .build();
+
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
-
         startActivityForResult(intent, Utils.REQUEST_CODE_PAYMENT_ACTIVITY);
     }
 

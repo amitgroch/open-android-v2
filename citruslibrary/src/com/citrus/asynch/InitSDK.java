@@ -2,7 +2,6 @@ package com.citrus.asynch;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,8 +29,8 @@ public class InitSDK {
     Callback walletCallBack;
     Response.Listener successListener;
     Response.ErrorListener errorListener;
-    String emailId = null;
-    String mobileNo = null;
+    String emailId = "";
+    String mobileNo = "";
 
     public InitSDK(Context context, InitListener initListener, String emailId, String mobileNo) {
         this.context = context;
@@ -43,8 +42,12 @@ public class InitSDK {
     }
 
     private void bindUser() {
+        Config.setCitrusWallet(null);
+        Config.setTopBankList(null);
+        Config.setBankList(null);
 
         new Binduser(context, bindCallBack).execute(emailId, mobileNo);
+        new GetNetBankingList(context, successListener, errorListener).getBankList();
     }
 
     private void initListeners() {
@@ -71,7 +74,6 @@ public class InitSDK {
                         JSONObject jsonObject = new JSONObject(response);
                         JSONArray paymentOptions = jsonObject.optJSONArray("paymentOptions");
 
-
                         if (paymentOptions != null) {
                             for (int i = 0; i < paymentOptions.length(); i++) {
                                 PaymentOption option = PaymentOption.fromJSONObject(paymentOptions.getJSONObject(i));
@@ -89,14 +91,13 @@ public class InitSDK {
                     Config.setCitrusWallet(walletList);
                 }
 
-                new GetNetBankingList(context, successListener, errorListener).getBankList();
+                initListener.onSuccess("SUCCESS");
             }
         };
 
         successListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 try {
                     ArrayList<NetbankingOption> bankDetails = new ArrayList<>();
                     ArrayList<NetbankingOption> topBankList = new ArrayList<>();
