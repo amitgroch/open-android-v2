@@ -35,7 +35,7 @@ public class TestActivity extends ActionBarActivity {
         CitrusPaymentParams paymentParams = CitrusPaymentParams
                 .builder(3.0, SANDBOX_BILL_URL, JSON_KEY_STORE_DEMO)
                 .user(user)
-                .environment(CitrusPaymentParams.Environment.PRODUCTION)
+                .environment(CitrusPaymentParams.Environment.SANDBOX)
                 .merchantName("Nature First")
                 .build();
 
