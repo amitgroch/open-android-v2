@@ -1,4 +1,4 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -59,7 +59,6 @@ public class CitrusTransactionResponse implements Parcelable {
     }
 
     /**
-     *
      * @param amount
      * @param currency
      * @param message
@@ -73,8 +72,8 @@ public class CitrusTransactionResponse implements Parcelable {
      * @param impsMmid
      * @param authIdCode
      * @param signature
-     * @param COD - cash on delivery.
-     * @param customParamsMap - custom parameters sent with request.
+     * @param COD                - cash on delivery.
+     * @param customParamsMap    - custom parameters sent with request.
      */
     public CitrusTransactionResponse(String amount, String currency, String message, String responseCode, TransactionStatus transactionStatus, TransactionDetails transactionDetails, CitrusUser citrusUser, PaymentMode paymentMode, String issuerCode, String impsMobileNumber, String impsMmid, String authIdCode, String signature, boolean COD, Map<String, String> customParamsMap) {
         this.amount = amount;
@@ -318,7 +317,6 @@ public class CitrusTransactionResponse implements Parcelable {
         private String transactionDateTime = null;
 
         /**
-         *
          * @param transactionId
          */
         TransactionDetails(String transactionId) {

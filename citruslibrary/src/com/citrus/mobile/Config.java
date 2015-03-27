@@ -12,25 +12,10 @@
 */
 package com.citrus.mobile;
 
-import android.content.Context;
-
-import com.citrus.asynch.InitSDK;
-import com.citrus.interfaces.InitListener;
-import com.citrus.sdkui.NetbankingOption;
-import com.citrus.sdkui.PaymentOption;
-
-import java.util.ArrayList;
-
 public class Config {
-    //private static Context context;
-
-    static ArrayList<PaymentOption> citrusWallet = null;
     private static String env, signinId, signinSecret, signupId, signupSecret;
-    private static String vanity;
     private static String emailID;
     private static String mobileNo;
-    private static ArrayList<NetbankingOption> bankList;
-    private static ArrayList<NetbankingOption> topBankList;
 
     public static void setupSignupId(String id) {
         signupId = id;
@@ -72,34 +57,6 @@ public class Config {
         return signupSecret;
     }
 
-
-    /*
-     * These methods are added for single screen ui.
-     */
-    public static ArrayList<NetbankingOption> getBankList() {
-        return bankList;
-    }
-
-    public static void setBankList(ArrayList<NetbankingOption> bankList) {
-        Config.bankList = bankList;
-    }
-
-    public static ArrayList<NetbankingOption> getTopBankList() {
-        return topBankList;
-    }
-
-    public static void setTopBankList(ArrayList<NetbankingOption> topBankList) {
-        Config.topBankList = topBankList;
-    }
-
-    public static String getVanity() {
-        return vanity;
-    }
-
-    public static void setVanity(String vanity) {
-        Config.vanity = vanity;
-    }
-
     public static String getEmailID() {
         return emailID;
     }
@@ -115,24 +72,4 @@ public class Config {
     public static void setMobileNo(String mobileNo) {
         Config.mobileNo = mobileNo;
     }
-
-    public static ArrayList<PaymentOption> getCitrusWallet() {
-        return citrusWallet;
-    }
-
-    public static void setCitrusWallet(ArrayList<PaymentOption> citrusWallet) {
-        Config.citrusWallet = citrusWallet;
-    }
-
-    public static void initUser(Context context, InitListener initListener) {
-        new InitSDK(context, initListener, null, null);
-    }
-
-    public static final String INTENT_EXTRA_USER_EMAIL = "INTENT_EXTRA_USER_EMAIL";
-    public static final String INTENT_EXTRA_USER_MOBILE = "INTENT_EXTRA_USER_MOBILE";
-    public static final String INTENT_EXTRA_MERCHANT_VANITY = "INTENT_EXTRA_MERCHANT_VANITY";
-    public static final String INTENT_EXTRA_MERCHANT_BILL_URL = "INTENT_EXTRA_MERCHANT_BILL_URL";
-    public static final String INTENT_EXTRA_TRANSACTION_AMOUNT = "INTENT_EXTRA_TRANSACTION_AMOUNT";
-    public static final String INTENT_EXTRA_MERCHANT_NAME = "INTENT_EXTRA_MERCHANT_NAME";
-
 }

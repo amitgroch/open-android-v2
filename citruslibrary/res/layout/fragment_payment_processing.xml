@@ -3,7 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="com.citruspay.sdkui.PaymentProcessingFragment">
+              tools:context="com.citrus.sdkui.PaymentProcessingFragment">
 
     <WebView
         android:id="@+id/webViewPayment"
@@ -18,7 +18,8 @@
         android:layout_weight="0"
         android:background="#37A8E8"
         android:gravity="center_vertical"
-        android:orientation="horizontal" android:visibility="gone">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView"

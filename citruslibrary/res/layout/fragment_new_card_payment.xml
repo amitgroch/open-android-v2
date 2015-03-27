@@ -45,14 +45,13 @@
             android:layout_marginTop="5dp"
             android:text="@string/cardnumber"
 
-            android:textColor="@color/grey"/>
+            android:textColor="@android:color/darker_gray"/>
 
         <com.citrus.widgets.CardNumberEditText
             android:id="@+id/edit_card_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:backgroundTint="@color/lightblue"
             android:inputType="number"
             android:textColor="@android:color/black"/>
 
@@ -76,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="@string/expiry"
-                    android:textColor="@color/grey"/>
+                    android:textColor="@android:color/darker_gray"/>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -88,7 +87,6 @@
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:backgroundTint="@color/lightblue"
                         android:textColor="@android:color/black"
                         tools:targetApi="11"/>
 
@@ -99,7 +97,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@+id/month"
-                        android:backgroundTint="@color/lightblue"
                         android:textColor="@android:color/black"
                         tools:targetApi="11"/>
                 </RelativeLayout>
@@ -119,7 +116,7 @@
                     android:layout_gravity="center_horizontal|start"
                     android:layout_marginLeft="8dp"
                     android:text="@string/cvv"
-                    android:textColor="@color/grey"/>
+                    android:textColor="@android:color/darker_gray"/>
 
                 <EditText
                     android:id="@+id/edit_cvv"
@@ -145,17 +142,17 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:text="@string/name_on_card"
-            android:textColor="@color/grey"/>
+            android:textColor="@android:color/darker_gray"/>
 
         <EditText
             android:id="@+id/edit_name_on_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:backgroundTint="@color/lightblue"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"/>
 
+        <!-- Currently we will be saving all the cards. Uncomment whenever we want to enable this feature.
         <TextView
             android:id="@+id/txt_title_save_card"
             android:layout_width="wrap_content"
@@ -163,9 +160,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:text="@string/save_card"
-            android:textColor="@color/grey"/>
+            android:textColor="@android:color/darker_gray"/>
 
-        <!-- Currently we will be saving all the cards. Uncomment whenever we want to enable this feature.
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

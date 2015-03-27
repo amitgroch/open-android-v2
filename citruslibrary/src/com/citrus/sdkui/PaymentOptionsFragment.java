@@ -1,4 +1,4 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,14 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.citrus.sdkui.CitrusCash;
-import com.citrus.sdkui.NetbankingOption;
-import com.citrus.sdkui.PaymentOption;
+import com.citruspay.citruslibrary.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.citruspay.sdkui.PaymentOptionsCardView.PaymentOptionsType;
 
 
 /**
@@ -22,7 +18,7 @@ import static com.citruspay.sdkui.PaymentOptionsCardView.PaymentOptionsType;
  * <p/>
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.citruspay.sdkui.OnPaymentOptionSelectedListener} interface
+ * {@link OnPaymentOptionSelectedListener} interface
  * to handle interaction events.
  * Use the {@link PaymentOptionsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -74,7 +70,7 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         mCardViewNetbanking = (PaymentOptionsCardView) view.findViewById(R.id.cardview_netbanking);
 
         // Citrus Cash CardView
-        PaymentOptionsType citrusCashCardsType = PaymentOptionsType.CITRUS_CASH;
+        PaymentOptionsCardView.PaymentOptionsType citrusCashCardsType = PaymentOptionsCardView.PaymentOptionsType.CITRUS_CASH;
         List<CitrusCash> citrusCashList = new ArrayList<>();
         citrusCashList.add(new CitrusCash("1400.00"));
         citrusCashCardsType.setHeaderText("Citrus Cash");
@@ -89,7 +85,7 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         // Saved Cards
         List<PaymentOption> userSavedOptionList = mPaymentParams.userSavedOptionList;
         if (userSavedOptionList != null && !userSavedOptionList.isEmpty()) {
-            PaymentOptionsType savedCardsType = PaymentOptionsType.SAVED_CARDS;
+            PaymentOptionsCardView.PaymentOptionsType savedCardsType = PaymentOptionsCardView.PaymentOptionsType.SAVED_CARDS;
             savedCardsType.setHeaderText("Saved Cards");
             savedCardsType.setFooterText("Add card");
             savedCardsType.setPaymentOptionList(userSavedOptionList);
@@ -100,7 +96,7 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         }
 
         // Debit or Credit Card
-        PaymentOptionsType debitCreditCardsType = PaymentOptionsType.DEBIT_CREDIT_CARDS;
+        PaymentOptionsCardView.PaymentOptionsType debitCreditCardsType = PaymentOptionsCardView.PaymentOptionsType.DEBIT_CREDIT_CARDS;
         debitCreditCardsType.setHeaderText("Credit/Debit Cards");
         debitCreditCardsType.setFooterText("Pay with credit or debit card");
         debitCreditCardsType.setPaymentOptionList(null); //Debit credit card does not have list.
@@ -110,7 +106,7 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         // Show only banks out of top banks which are enabled for the merchant.
         List<NetbankingOption> topNetbankingList = mPaymentParams.topNetbankingOptions;
         if (topNetbankingList != null && !topNetbankingList.isEmpty()) {
-            PaymentOptionsType netbankingCardType = PaymentOptionsType.NETBANKING;
+            PaymentOptionsCardView.PaymentOptionsType netbankingCardType = PaymentOptionsCardView.PaymentOptionsType.NETBANKING;
             netbankingCardType.setHeaderText("Netbanking");
             netbankingCardType.setFooterText("Select Other Bank");
             netbankingCardType.setPaymentOptionList(topNetbankingList);

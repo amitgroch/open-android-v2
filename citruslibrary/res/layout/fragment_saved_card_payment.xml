@@ -4,7 +4,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#414A5A"
-                tools:context="com.citruspay.sdkui.SavedCardPaymentFragment">
+                tools:context="com.citrus.sdkui.SavedCardPaymentFragment">
 
     <!-- TODO: Add all the colors in xml files. -->
     <android.support.v7.widget.CardView

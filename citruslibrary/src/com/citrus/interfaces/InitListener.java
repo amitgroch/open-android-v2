@@ -1,20 +1,22 @@
 package com.citrus.interfaces;
 
-import com.android.volley.VolleyError;
+import com.citrus.sdkui.NetbankingOption;
+import com.citrus.sdkui.PaymentOption;
+
+import java.util.ArrayList;
 
 /**
  * Created by MANGESH KADAM on 2/17/2015.
  */
-public abstract interface InitListener {
-    public abstract void onSuccess(String response);
+public interface InitListener {
 
-    public abstract void onNetbankingSuccess();
+    void onInitCompleted();
 
-    public abstract void onBindFailed(String response);
+    void onReceiveNetbankingList(ArrayList<NetbankingOption> listNetbanking, ArrayList<NetbankingOption> listTopNetbanking);
 
-    public abstract void onWalletLoadFailed(String response);
+    void onFailToReceiveNetbankingList(String errorMessage);
 
-    public abstract void onNetBankingListFailed(VolleyError error);
+    void onReceiveSavedOptions(ArrayList<PaymentOption> listSavedOption);
 
-    public abstract void onError(Exception e);
+    void onFailToReceiveSavedOptions(String errorMessage);
 }

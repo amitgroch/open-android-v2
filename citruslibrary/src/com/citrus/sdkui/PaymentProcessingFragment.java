@@ -1,4 +1,4 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -16,11 +16,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.citruspay.citruslibrary.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.citruspay.sdkui.PaymentProcessingFragment.OnTransactionCompleteListener} interface
+ * {@link PaymentProcessingFragment.OnTransactionCompleteListener} interface
  * to handle interaction events.
  * Use the {@link PaymentProcessingFragment#newInstance} factory method to
  * create an instance of this fragment.

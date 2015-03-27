@@ -1,4 +1,4 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,14 +12,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.citrus.sdkui.CardOption;
-import com.citrus.sdkui.CitrusCash;
-import com.citrus.sdkui.CreditCardOption;
-import com.citrus.sdkui.DebitCardOption;
-import com.citrus.sdkui.NetbankingOption;
-import com.citrus.sdkui.PaymentOption;
+import com.citruspay.citruslibrary.R;
 
 import java.util.List;
 
@@ -61,7 +55,7 @@ public class PaymentOptionsCardView extends CardView implements View.OnClickList
             colorPrimary = paymentParams.colorPrimary;
         }
 
-        inflate(mContext, R.layout.payment_option_cards_layout, this);  //correct way to inflate..
+        View.inflate(mContext, R.layout.payment_option_cards_layout, this);  //correct way to inflate..
         mTxtHeader = (TextView) findViewById(R.id.txt_card_header);
         mBtnFooter = (Button) findViewById(R.id.btn_footer);
         mBtnFooter.setOnClickListener(this);

@@ -1,4 +1,4 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -12,13 +12,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static com.citruspay.sdkui.CitrusTransactionResponse.TransactionStatus;
+import com.citruspay.citruslibrary.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.citruspay.sdkui.PaymentStatusFragment.OnTransactionResponseListener} interface
+ * {@link PaymentStatusFragment.OnTransactionResponseListener} interface
  * to handle interaction events.
  * Use the {@link PaymentStatusFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -46,7 +46,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param transactionResponse Object of {@link com.citruspay.sdkui.CitrusTransactionResponse}
+     * @param transactionResponse Object of {@link CitrusTransactionResponse}
      * @return A new instance of fragment PaymentStatusFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -91,7 +91,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
 
             Log.i("Citrus", "Transaction Response :: " + mTransactionResponse);
 
-            if (mTransactionResponse.getTransactionStatus() == TransactionStatus.SUCCESS) {
+            if (mTransactionResponse.getTransactionStatus() == CitrusTransactionResponse.TransactionStatus.SUCCESS) {
                 // Set the icon for transaction status.
                 mImgTransactionStatus.setBackgroundResource(R.drawable.checkmark_green);
 
@@ -161,15 +161,11 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
      */
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_retry_transaction:
-                mListener.onRetryTransaction();
-
-                break;
-            case R.id.btn_dismiss:
-                mListener.onDismiss();
-
-                break;
+        int id = v.getId();
+        if (id == R.id.btn_retry_transaction) {
+            mListener.onRetryTransaction();
+        } else if (id == R.id.btn_dismiss) {
+            mListener.onDismiss();
         }
     }
 

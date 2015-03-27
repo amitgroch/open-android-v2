@@ -1,4 +1,4 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -24,35 +24,27 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.citrus.asynch.InitSDK;
 import com.citrus.interfaces.InitListener;
 import com.citrus.mobile.Callback;
-import com.citrus.mobile.Config;
 import com.citrus.netbank.Bank;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
-import com.citrus.sdkui.CardOption;
-import com.citrus.sdkui.CitrusCash;
-import com.citrus.sdkui.NetbankingOption;
-import com.citrus.sdkui.PaymentOption;
+import com.citruspay.citruslibrary.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.citruspay.sdkui.CitrusTransactionResponse.TransactionStatus;
-import static com.citruspay.sdkui.PaymentProcessingFragment.OnTransactionCompleteListener;
-import static com.citruspay.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
+import static com.citrus.sdkui.CitrusTransactionResponse.TransactionStatus;
+import static com.citrus.sdkui.PaymentProcessingFragment.OnTransactionCompleteListener;
+import static com.citrus.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
 
 
 public class MainActivity extends ActionBarActivity implements OnActivityTitleChangeListener, OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
 
-    private String mUserEmail = null;
-    private String mUserMobile = null;
-    private String mMerchantVanity = null;
     private String mMerchantName = null;
     private String mMerchantBillUrl = null;
     private double mTransactionAmount = 0.0;
@@ -78,13 +70,6 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
         if (mPaymentParams != null) {
             mTransactionAmount = mPaymentParams.transactionAmount;
 
-            CitrusUser user = mPaymentParams.user;
-            if (user != null) {
-                mUserEmail = user.getEmailId();
-                mUserMobile = user.getMobileNo();
-            }
-
-            mMerchantVanity = mPaymentParams.vanity;
             mMerchantBillUrl = mPaymentParams.billUrl;
             mMerchantName = mPaymentParams.merchantName;
 
@@ -95,9 +80,6 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
 
             setCustomTitleView();
         }
-
-        // TODO Do not use static fields.
-        Config.setVanity(mMerchantVanity);
 
         mProgressDialog = new ProgressDialog(this);
         mFragmentManager = getSupportFragmentManager();
@@ -124,11 +106,8 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
         dismissDialog();
         mProgressDialog = null;
         mFragmentManager = null;
-        mUserEmail = null;
-        mUserMobile = null;
         mColorPrimaryDark = null;
         mColorPrimary = null;
-        mMerchantVanity = null;
         mMerchantBillUrl = null;
         mPaymentParams = null;
     }
@@ -208,7 +187,7 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
     }
 
     private void init() {
-        new InitSDK(this, this, mUserEmail, mUserMobile);
+        new InitSDK(this, this, mPaymentParams);
 
         showDialog("Processing Your Payment...", true);
     }
@@ -229,6 +208,7 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
     }
 
     private void processResponse(String response, String error) {
+        dismissDialog();
 
         if (!TextUtils.isEmpty(response)) {
             try {
@@ -237,6 +217,9 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
 
                 if (!TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
                     showPaymentProcessingFragment(redirect.getString("redirectUrl"));
+                }
+                {
+                    Utils.showToast(getApplicationContext(), response);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -277,10 +260,6 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
     private void showPaymentOptionsFragment() {
         setCustomTitleView();
 
-        mPaymentParams.netbankingOptionList = Config.getBankList();
-        mPaymentParams.topNetbankingOptions = Config.getTopBankList();
-        mPaymentParams.userSavedOptionList = Config.getCitrusWallet();
-
         mFragmentManager.beginTransaction()
                 .replace(R.id.container, PaymentOptionsFragment.newInstance(mPaymentParams))
                 .commit();
@@ -318,7 +297,7 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
     }
 
     private void showNetbankingFragment() {
-        ArrayList<NetbankingOption> netbankingOptionsList = Config.getBankList();
+        ArrayList<NetbankingOption> netbankingOptionsList = mPaymentParams.netbankingOptionList;
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
@@ -353,6 +332,8 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
     }
 
     private void processNebankingPayment(final NetbankingOption netbankingOption) {
+        showDialog("Redirecting to bank's page.", false);
+
         new GetBill(mMerchantBillUrl, mTransactionAmount, new Callback() {
             @Override
             public void onTaskexecuted(String billString, String error) {
@@ -440,40 +421,29 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
     }
 
     @Override
-    public void onSuccess(String response) {
-        // Since the loading is complete display the payment options fragment
+    public void onInitCompleted() {
         showPaymentOptionsFragment();
     }
 
     @Override
-    public void onNetbankingSuccess() {
-        showPaymentOptionsFragment();
+    public void onReceiveNetbankingList(ArrayList<NetbankingOption> listNetbanking, ArrayList<NetbankingOption> listTopNetbanking) {
+        mPaymentParams.netbankingOptionList = listNetbanking;
+        mPaymentParams.topNetbankingOptions = listTopNetbanking;
     }
 
     @Override
-    public void onBindFailed(String response) {
-        Log.i("citrus", "onBindFailed");
-        // Since the loading is complete display the payment options fragment
-        showPaymentOptionsFragment();
+    public void onFailToReceiveNetbankingList(String errorMessage) {
+        Log.d(Utils.TAG, errorMessage);
     }
 
     @Override
-    public void onWalletLoadFailed(String response) {
-        Log.i("citrus", "onWalletLoadFailed");
-        // Since the loading is complete display the payment options fragment
-        showPaymentOptionsFragment();
+    public void onReceiveSavedOptions(ArrayList<PaymentOption> listSavedOption) {
+        mPaymentParams.userSavedOptionList = listSavedOption;
     }
 
     @Override
-    public void onNetBankingListFailed(VolleyError error) {
-        Log.i("citrus", "onNetBankingListFailed");
-        // Since the loading is complete display the payment options fragment
-        showPaymentOptionsFragment();
-    }
-
-    @Override
-    public void onError(Exception e) {
-        Log.i("citrus", "onError");
+    public void onFailToReceiveSavedOptions(String errorMessage) {
+        Log.d(Utils.TAG, errorMessage);
     }
 
     @Override

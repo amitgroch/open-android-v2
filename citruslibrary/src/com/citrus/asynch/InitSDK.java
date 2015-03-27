@@ -7,8 +7,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.citrus.interfaces.InitListener;
 import com.citrus.mobile.Callback;
-import com.citrus.mobile.Config;
 import com.citrus.sdkui.CardOption;
+import com.citrus.sdkui.CitrusPaymentParams;
+import com.citrus.sdkui.CitrusUser;
 import com.citrus.sdkui.NetbankingOption;
 import com.citrus.sdkui.PaymentOption;
 
@@ -23,52 +24,101 @@ import java.util.ArrayList;
  */
 public class InitSDK {
 
-    InitListener initListener;
-    Context context;
-    Callback bindCallBack;
-    Callback walletCallBack;
-    Response.Listener successListener;
-    Response.ErrorListener errorListener;
-    String emailId = "";
-    String mobileNo = "";
+    private InitListener mListener;
+    private Context mContext;
+    private String mEmailId;
+    private String mMobileNo;
+    private String mVanity;
 
-    public InitSDK(Context context, InitListener initListener, String emailId, String mobileNo) {
-        this.context = context;
-        this.initListener = initListener;
-        this.emailId = emailId;
-        this.mobileNo = mobileNo;
-        initListeners();
-        bindUser();
+    public InitSDK(Context context, InitListener listener, CitrusPaymentParams paymentParams) {
+        mContext = context;
+        mListener = listener;
+
+        CitrusUser user = null;
+        if (paymentParams != null && ((user = paymentParams.getUser()) != null)) {
+            mEmailId = user.getEmailId();
+            mMobileNo = user.getMobileNo();
+
+            mVanity = paymentParams.getVanity();
+        }
+
+        fetchBankList();
+    }
+
+    private void fetchBankList() {
+        new GetNetBankingList(mContext, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                ArrayList<NetbankingOption> listNetbankingOptions = new ArrayList<>();
+                ArrayList<NetbankingOption> listTopNetbanking = new ArrayList<>();
+                try {
+                    JSONObject pgSetting = new JSONObject(response);
+                    JSONArray bankArray = pgSetting.getJSONArray("netBanking");
+                    int size = bankArray.length();
+                    for (int i = 0; i < size; i++) {
+                        JSONObject bankOption = bankArray.getJSONObject(i);
+                        String bankName = bankOption.optString("bankName");
+                        String issuerCode = bankOption.getString("issuerCode");
+                        if (!TextUtils.isEmpty(bankName) && !TextUtils.isEmpty(issuerCode)) {
+                            NetbankingOption netbankingOption = new NetbankingOption(bankName, issuerCode);
+
+                            // Check whether the bank is from top bank list or other bank
+                            // Currently the top banks are AXIS (CID002), ICICI (CID001), SBI (CID005) and HDFC (CID010).
+                            if ("CID002".equalsIgnoreCase(issuerCode) || "CID001".equalsIgnoreCase(issuerCode) || "CID005".equalsIgnoreCase(issuerCode) || "CID010".equalsIgnoreCase(issuerCode)) {
+                                listTopNetbanking.add(netbankingOption);
+                            } else {
+                                listNetbankingOptions.add(netbankingOption);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                mListener.onReceiveNetbankingList(listNetbankingOptions, listTopNetbanking);
+
+                bindUser();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mListener.onFailToReceiveNetbankingList(error.getMessage());
+            }
+        }).getBankList(mVanity);
     }
 
     private void bindUser() {
-        Config.setCitrusWallet(null);
-        Config.setTopBankList(null);
-        Config.setBankList(null);
 
-        new Binduser(context, bindCallBack).execute(emailId, mobileNo);
-        new GetNetBankingList(context, successListener, errorListener).getBankList();
+        // Call only if the email id is provided.
+        if (!TextUtils.isEmpty(mEmailId)) {
+            new Binduser(mContext, new Callback() {
+                @Override
+                public void onTaskexecuted(String response, String error) {
+                    if (response.equalsIgnoreCase("User Bound Successfully!")) {
+                        fetchWallet();
+                    } else {
+                        mListener.onFailToReceiveSavedOptions(error);
+                        mListener.onInitCompleted();
+                    }
+                }
+            }).execute(mEmailId, mMobileNo);
+        } else {
+            mListener.onFailToReceiveSavedOptions("Email id and mobile no should not be blank for processing member payment.");
+            mListener.onInitCompleted();
+        }
     }
 
-    private void initListeners() {
-        bindCallBack = new Callback() {
-            @Override
-            public void onTaskexecuted(String response, String error) {
-                if (response.equalsIgnoreCase("User Bound Successfully!")) {
-                    new GetWallet(context, walletCallBack).execute();
-                } else {
-                    initListener.onBindFailed(error);
-                }
-            }
-        };
 
-        walletCallBack = new Callback() {
+    private void fetchWallet() {
+
+        new GetWallet(mContext, new Callback() {
             @Override
             public void onTaskexecuted(String response, String error) {
                 if (TextUtils.isEmpty(response)) {
-                    initListener.onWalletLoadFailed(error);
+                    mListener.onFailToReceiveSavedOptions(error);
+                    mListener.onInitCompleted();
                 } else {
-                    ArrayList<PaymentOption> walletList = new ArrayList<PaymentOption>();
+                    ArrayList<PaymentOption> walletList = new ArrayList<>();
                     try {
 
                         JSONObject jsonObject = new JSONObject(response);
@@ -88,53 +138,12 @@ public class InitSDK {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Config.setCitrusWallet(walletList);
+
+                    mListener.onReceiveSavedOptions(walletList);
                 }
 
-                initListener.onSuccess("SUCCESS");
+                mListener.onInitCompleted();
             }
-        };
-
-        successListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    ArrayList<NetbankingOption> bankDetails = new ArrayList<>();
-                    ArrayList<NetbankingOption> topBankList = new ArrayList<>();
-                    JSONObject pgSetting = new JSONObject(response);
-                    JSONArray bankArray = pgSetting.getJSONArray("netBanking");
-                    int size = bankArray.length();
-                    for (int i = 0; i < size; i++) {
-                        JSONObject bankOption = bankArray.getJSONObject(i);
-                        String bankName = bankOption.optString("bankName");
-                        String issuerCode = bankOption.getString("issuerCode");
-                        if (!TextUtils.isEmpty(bankName) && !TextUtils.isEmpty(issuerCode)) {
-                            NetbankingOption netbankingOption = new NetbankingOption(bankName, issuerCode);
-
-                            // Check whether the bank is from top bank list or other bank
-                            // Currently the top banks are AXIS (CID002), ICICI (CID001), SBI (CID005) and HDFC (CID010).
-                            if ("CID002".equalsIgnoreCase(issuerCode) || "CID001".equalsIgnoreCase(issuerCode) || "CID005".equalsIgnoreCase(issuerCode) || "CID010".equalsIgnoreCase(issuerCode)) {
-                                topBankList.add(netbankingOption);
-                            } else {
-                                bankDetails.add(netbankingOption);
-                            }
-                        }
-                    }
-                    // Set the bank lists.
-                    Config.setBankList(bankDetails);
-                    Config.setTopBankList(topBankList);
-
-                    initListener.onSuccess("SUCCESS");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                initListener.onNetBankingListFailed(error);
-            }
-        };
+        }).execute();
     }
 }

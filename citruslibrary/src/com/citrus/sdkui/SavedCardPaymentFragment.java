@@ -1,4 +1,4 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -24,7 +24,7 @@ import com.citrus.mobile.Callback;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
-import com.citrus.sdkui.CardOption;
+import com.citruspay.citruslibrary.R;
 
 
 /**

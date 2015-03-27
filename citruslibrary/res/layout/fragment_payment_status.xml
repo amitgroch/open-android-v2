@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:background="#EEEEEE"
               android:orientation="vertical"
-              tools:context="com.citruspay.sdkui.PaymentStatusFragment">
+              tools:context="com.citrus.sdkui.PaymentStatusFragment">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"

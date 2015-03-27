@@ -1,12 +1,10 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.citrus.mobile.Config;
-import com.citrus.sdkui.NetbankingOption;
-import com.citrus.sdkui.PaymentOption;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -114,10 +112,16 @@ public final class CitrusPaymentParams implements Parcelable {
             String vanity = keyStore.getString("vanity_Url");
             // If vanity is in the form of https://www.citruspay.com/vanity
             // take only vanity part else as it is.
-            if (vanity.startsWith("http")) {
-                vanity = vanity.substring(vanity.lastIndexOf("/"));
+            if (vanity.startsWith("http") || vanity.startsWith("https")) {
+                vanity = vanity.substring(vanity.lastIndexOf("/") + 1);
             }
             this.vanity = vanity;
+
+            // Set merchant keys.
+            Config.setupSignupId(signupId);
+            Config.setupSignupSecret(signupSecret);
+            Config.setSigninId(signinId);
+            Config.setSigninSecret(signinSecret);
 
         } catch (JSONException ex) {
             throw new IllegalArgumentException("The json keystore is not a valid json.");
@@ -175,6 +179,12 @@ public final class CitrusPaymentParams implements Parcelable {
 
     public CitrusPaymentParams user(CitrusUser user) {
         this.user = user;
+
+        if (user != null) {
+            Config.setEmailID(user.getEmailId());
+            Config.setMobileNo(user.getMobileNo());
+        }
+
         return this;
     }
 
@@ -188,6 +198,70 @@ public final class CitrusPaymentParams implements Parcelable {
         }
 
         return this;
+    }
+
+    public CitrusUser getUser() {
+        return user;
+    }
+
+    public String getBillUrl() {
+        return billUrl;
+    }
+
+    public String getColorPrimaryDark() {
+        return colorPrimaryDark;
+    }
+
+    public String getColorPrimary() {
+        return colorPrimary;
+    }
+
+    public String getTextColorPrimary() {
+        return textColorPrimary;
+    }
+
+    public String getAccentColor() {
+        return accentColor;
+    }
+
+    public double getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public String getVanity() {
+        return vanity;
+    }
+
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    public String getSigninId() {
+        return signinId;
+    }
+
+    public String getSigninSecret() {
+        return signinSecret;
+    }
+
+    public String getSignupId() {
+        return signupId;
+    }
+
+    public String getSignupSecret() {
+        return signupSecret;
+    }
+
+    public String getJsonKeyStore() {
+        return jsonKeyStore;
     }
 
     public CitrusPaymentParams build() {

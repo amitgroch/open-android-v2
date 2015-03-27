@@ -1,6 +1,7 @@
-package com.citruspay.sdkui;
+package com.citrus.sdkui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,14 +24,12 @@ import com.citrus.mobile.User;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
-import com.citrus.sdkui.CardOption;
-import com.citrus.sdkui.CreditCardOption;
-import com.citrus.sdkui.DebitCardOption;
+import com.citruspay.citruslibrary.R;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.citruspay.sdkui.OnPaymentOptionSelectedListener} interface
+ * {@link OnPaymentOptionSelectedListener} interface
  * to handle interaction events.
  * Use the {@link NewCardPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -46,6 +45,7 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
     private EditText mEditCVV = null;
     private Spinner mSpinnerMonth = null;
     private Spinner mSpinnerYear = null;
+    private ProgressDialog mProgressDialog = null;
 
     public NewCardPaymentFragment() {
         // Required empty public constructor
@@ -107,6 +107,8 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
             mButtonPay.setBackgroundColor(Color.parseColor(mPaymentParams.colorPrimary));
         }
 
+        mProgressDialog = new ProgressDialog(getActivity());
+
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -158,14 +160,10 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
 
         CardOption cardOption = null;
 
-        switch (selectedCardTypeId) {
-            case R.id.radio_credit_card:
-                cardOption = new CreditCardOption(cardName, cardNumber, cardCVV, cardExpiryMonth, cardExpiryYear);
-                break;
-
-            case R.id.radio_debit_card:
-                cardOption = new DebitCardOption(cardName, cardNumber, cardCVV, cardExpiryMonth, cardExpiryYear);
-                break;
+        if (selectedCardTypeId == R.id.radio_credit_card) {
+            cardOption = new CreditCardOption(cardName, cardNumber, cardCVV, cardExpiryMonth, cardExpiryYear);
+        } else if (selectedCardTypeId == R.id.radio_debit_card) {
+            cardOption = new DebitCardOption(cardName, cardNumber, cardCVV, cardExpiryMonth, cardExpiryYear);
         }
 
         processPayment(cardOption);
@@ -176,8 +174,11 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
         if (cardOption != null) {
             final Card card = new Card(cardOption.getCardNumber(), cardOption.getCardExpiryMonth(), cardOption.getCardExpiryYear(), cardOption.getCardCVV(), cardOption.getCardHolderName(), cardOption.getCardType());
 
+            showDialog("Processing your payment", false);
+
             // Process card payment only if the card is valid.
             if (card.validateCard()) {
+
                 // Get bill json
                 new GetBill(mPaymentParams.billUrl, mPaymentParams.transactionAmount, new Callback() {
                     @Override
@@ -193,6 +194,8 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
                             paymentGateway.charge(new Callback() {
                                 @Override
                                 public void onTaskexecuted(String success, String error) {
+                                    dismissDialog();
+
                                     if (!TextUtils.isEmpty(success)) {
                                         mListener.processPayment(success, error);
                                     } else {
@@ -212,6 +215,9 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
                 if (cardOption.isSavePaymentOption()) {
                     saveCard(card);
                 }
+            } else {
+                dismissDialog();
+                Utils.showToast(getActivity(), "Invalid Card. Please check card details.");
             }
         }
     }
@@ -263,5 +269,21 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
         }
 
         return valid;
+    }
+
+
+    private void showDialog(String message, boolean cancelable) {
+        if (mProgressDialog != null) {
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setCancelable(cancelable);
+            mProgressDialog.setMessage(message);
+            mProgressDialog.show();
+        }
+    }
+
+    private void dismissDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
     }
 }

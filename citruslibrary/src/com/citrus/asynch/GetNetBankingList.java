@@ -7,7 +7,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.citrus.mobile.Config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,18 +30,14 @@ public class GetNetBankingList {
         queue = Volley.newRequestQueue(context);
     }
 
-    public GetNetBankingList() {
-
-    }
-
-    public void getBankList() {
+    public void getBankList(final String vanity) {
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, URL, successListener, errorListener
         ) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("vanity", Config.getVanity());
+                params.put("vanity", vanity);
                 return params;
             }
         };

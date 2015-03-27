@@ -1,5 +1,81 @@
 <resources>
     <string name="app_name">Citruslibrary</string>
     <string name="message_gratitude">Thanks! We\'d love to see you again. :)</string>
+    <string name="text_button_pay">Pay \u20B9 100</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_citrus3_dsecure">Payment</string>
+
+    <string name="fragment_title_transaction_success">All Done!</string>
+    <string name="fragment_title_transaction_error">Error</string>
+
+    <string name="message_payment_error">Payment Failed</string>
+    <string name="message_payment_successful">Payment Successful</string>
+
+    <string name="title_transaction_id_success">Transaction ID</string>
+    <string name="title_transaction_id_error">Error ID</string>
+
+    <string name="title_text2_success">Amount Paid</string>
+    <string name="title_text2_error">Error Message</string>
+
+    <string name="title_activity_otpwait">OTPWaitActivity</string>
+
+    <string name="message_transaction_cancel">Do you want to cancel the transaction?</string>
+    <string name="message_title_transaction_cancel">Cancel Transaction</string>
+    <string name="message_yes">Yes</string>
+    <string name="message_no">No</string>
+
+    <string name="credit">Credit</string>
+    <string name="debit">Debit</string>
+    <string name="cardnumber">CARD NUMBER</string>
+    <string name="expiry">EXPIRY</string>
+    <string name="cvv">CVV</string>
+    <string name="name_on_card">NAME AS ON CARD</string>
+    <string name="save_card">SAVE THIS CARD</string>
+    <string name="save_card_message">Save this card and you won\'t have to enter these details again</string>
+    <string name="pay">PAY</string>
+    <string-array name="months_array">
+        <item>JAN</item>
+        <item>FEB</item>
+        <item>MAR</item>
+        <item>APR</item>
+        <item>MAY</item>
+        <item>JUN</item>
+        <item>JUL</item>
+        <item>AUG</item>
+        <item>SEP</item>
+        <item>OCT</item>
+        <item>NOV</item>
+        <item>DEC</item>
+    </string-array>
+
+    <string-array name="years_array">
+        <item>2015</item>
+        <item>2016</item>
+        <item>2017</item>
+        <item>2018</item>
+        <item>2019</item>
+        <item>2020</item>
+        <item>2021</item>
+        <item>2022</item>
+        <item>2023</item>
+        <item>2024</item>
+        <item>2025</item>
+        <item>2026</item>
+        <item>2027</item>
+        <item>2028</item>
+        <item>2029</item>
+        <item>2030</item>
+        <item>2031</item>
+        <item>2032</item>
+        <item>2033</item>
+        <item>2034</item>
+        <item>2035</item>
+        <item>2036</item>
+        <item>2037</item>
+        <item>2038</item>
+        <item>2039</item>
+        <item>2040</item>
+    </string-array>
 
 </resources>
