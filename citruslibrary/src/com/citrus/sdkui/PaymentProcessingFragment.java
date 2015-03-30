@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -81,6 +82,9 @@ public class PaymentProcessingFragment extends Fragment {
             mWebviewPayment.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         mWebviewPayment.addJavascriptInterface(new JsInterface(), "CitrusResponse");
+
+        mWebviewPayment.setWebChromeClient(new WebChromeClient());
+
         mWebviewPayment.setWebViewClient(new CitrusWebClient());
         // Load the bank's or card payment url
         mWebviewPayment.loadUrl(mUrl);
