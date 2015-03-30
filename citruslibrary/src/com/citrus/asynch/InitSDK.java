@@ -38,9 +38,9 @@ public class InitSDK {
         if (paymentParams != null && ((user = paymentParams.getUser()) != null)) {
             mEmailId = user.getEmailId();
             mMobileNo = user.getMobileNo();
-
-            mVanity = paymentParams.getVanity();
         }
+
+        mVanity = paymentParams.getVanity();
 
         fetchBankList();
     }
@@ -73,16 +73,18 @@ public class InitSDK {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } finally {
+                    mListener.onReceiveNetbankingList(listNetbankingOptions, listTopNetbanking);
+                    bindUser();
                 }
-
-                mListener.onReceiveNetbankingList(listNetbankingOptions, listTopNetbanking);
-
-                bindUser();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 mListener.onFailToReceiveNetbankingList(error.getMessage());
+
+                // Try binding the user
+                bindUser();
             }
         }).getBankList(mVanity);
     }

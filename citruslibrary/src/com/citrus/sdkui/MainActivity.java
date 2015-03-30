@@ -402,7 +402,7 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
 
     @Override
     public void onFailToReceiveNetbankingList(String errorMessage) {
-        Log.d(Utils.TAG, errorMessage);
+        Log.d(Utils.TAG, "Failed to receive netbanking list " + errorMessage);
     }
 
     @Override
