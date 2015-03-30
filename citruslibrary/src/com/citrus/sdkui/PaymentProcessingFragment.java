@@ -28,7 +28,7 @@ import com.citruspay.citruslibrary.R;
  * Use the {@link PaymentProcessingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PaymentProcessingFragment extends Fragment {
+public final class PaymentProcessingFragment extends Fragment {
 
     private OnTransactionCompleteListener mListener;
     private WebView mWebviewPayment = null;

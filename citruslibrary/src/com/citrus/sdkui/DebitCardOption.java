@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by salil on 13/2/15.
  */
-public class DebitCardOption extends CardOption implements Parcelable {
+public final class DebitCardOption extends CardOption implements Parcelable {
 
     public static final Creator<DebitCardOption> CREATOR = new Creator<DebitCardOption>() {
         public DebitCardOption createFromParcel(Parcel source) {

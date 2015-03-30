@@ -36,7 +36,7 @@ import com.citruspay.citruslibrary.R;
  * Use the {@link NewCardPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewCardPaymentFragment extends Fragment implements View.OnClickListener {
+public final class NewCardPaymentFragment extends Fragment implements View.OnClickListener {
     private ProcessPaymentListener mListener = null;
     private CitrusPaymentParams mPaymentParams = null;
 

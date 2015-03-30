@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by salil on 2/3/15.
  */
-public class PaymentOptionsCardView extends CardView implements View.OnClickListener {
+public final class PaymentOptionsCardView extends CardView implements View.OnClickListener {
 
     private Context mContext = null;
     private TextView mTxtHeader = null;

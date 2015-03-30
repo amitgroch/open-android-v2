@@ -8,15 +8,18 @@ import android.os.Parcelable;
 /**
  * Created by salil on 13/2/15.
  */
-public class NetbankingOption extends PaymentOption implements Parcelable {
+public final class NetbankingOption extends PaymentOption implements Parcelable {
 
-    public static final NetbankingOption DEFAULT_BANK = new NetbankingOption(){
-        @Override
-        public String toString() {
-            return "DEFAULT_BANK";
+    public static final NetbankingOption DEFAULT_BANK = new NetbankingOption();
+    public static final Parcelable.Creator<NetbankingOption> CREATOR = new Parcelable.Creator<NetbankingOption>() {
+        public NetbankingOption createFromParcel(Parcel source) {
+            return new NetbankingOption(source);
+        }
+
+        public NetbankingOption[] newArray(int size) {
+            return new NetbankingOption[size];
         }
     };
-
     private String bankName = null;
     private String bankCID = null;
 
@@ -29,6 +32,7 @@ public class NetbankingOption extends PaymentOption implements Parcelable {
         this.bankCID = bankCID;
     }
 
+
     /**
      * @param name     - Human readable names for banks. e.g. Net Banking - AXIS BANK
      * @param token    - Token for netbanking payment.
@@ -39,6 +43,12 @@ public class NetbankingOption extends PaymentOption implements Parcelable {
         this.bankName = bankName;
     }
 
+    private NetbankingOption(Parcel in) {
+        this.bankName = in.readString();
+        this.bankCID = in.readString();
+        this.name = in.readString();
+        this.token = in.readString();
+    }
 
     public String getBankName() {
         return bankName;
@@ -136,7 +146,6 @@ public class NetbankingOption extends PaymentOption implements Parcelable {
         return bankName;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -149,21 +158,4 @@ public class NetbankingOption extends PaymentOption implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.token);
     }
-
-    private NetbankingOption(Parcel in) {
-        this.bankName = in.readString();
-        this.bankCID = in.readString();
-        this.name = in.readString();
-        this.token = in.readString();
-    }
-
-    public static final Parcelable.Creator<NetbankingOption> CREATOR = new Parcelable.Creator<NetbankingOption>() {
-        public NetbankingOption createFromParcel(Parcel source) {
-            return new NetbankingOption(source);
-        }
-
-        public NetbankingOption[] newArray(int size) {
-            return new NetbankingOption[size];
-        }
-    };
 }

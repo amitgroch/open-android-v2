@@ -43,7 +43,7 @@ import static com.citrus.sdkui.PaymentProcessingFragment.OnTransactionCompleteLi
 import static com.citrus.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
 
 
-public class MainActivity extends ActionBarActivity implements OnActivityTitleChangeListener, OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
+public final class MainActivity extends ActionBarActivity implements OnActivityTitleChangeListener, OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
 
     private String mMerchantName = null;
     private String mMerchantBillUrl = null;

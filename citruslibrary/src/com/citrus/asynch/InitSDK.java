@@ -22,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by MANGESH KADAM on 2/17/2015.
  */
-public class InitSDK {
+public final class InitSDK {
 
     private InitListener mListener;
     private Context mContext;
@@ -34,8 +34,12 @@ public class InitSDK {
         mContext = context;
         mListener = listener;
 
-        CitrusUser user = null;
-        if (paymentParams != null && ((user = paymentParams.getUser()) != null)) {
+        if (listener == null || paymentParams == null) {
+            throw new IllegalArgumentException("PaymentParams or Listener can not be null");
+        }
+
+        CitrusUser user;
+        if ((user = paymentParams.getUser()) != null) {
             mEmailId = user.getEmailId();
             mMobileNo = user.getMobileNo();
         }

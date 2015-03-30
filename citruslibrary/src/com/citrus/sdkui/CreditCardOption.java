@@ -5,7 +5,7 @@ import android.os.Parcel;
 /**
  * Created by salil on 13/2/15.
  */
-public class CreditCardOption extends CardOption implements android.os.Parcelable {
+public final class CreditCardOption extends CardOption implements android.os.Parcelable {
 
     public CreditCardOption() {
     }

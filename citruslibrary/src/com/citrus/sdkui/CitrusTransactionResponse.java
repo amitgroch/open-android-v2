@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by salil on 16/2/15.
  */
-public class CitrusTransactionResponse implements Parcelable {
+public final class CitrusTransactionResponse implements Parcelable {
 
     public static final Parcelable.Creator<CitrusTransactionResponse> CREATOR = new Parcelable.Creator<CitrusTransactionResponse>() {
         public CitrusTransactionResponse createFromParcel(Parcel source) {

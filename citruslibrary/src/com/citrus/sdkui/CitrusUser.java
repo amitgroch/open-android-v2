@@ -10,7 +10,7 @@ import org.json.JSONObject;
 /**
  * Created by salil on 16/2/15.
  */
-public class CitrusUser implements Parcelable {
+public final class CitrusUser implements Parcelable {
 
     public static final Parcelable.Creator<CitrusUser> CREATOR = new Parcelable.Creator<CitrusUser>() {
         public CitrusUser createFromParcel(Parcel source) {

@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Use the {@link NetbankingPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NetbankingPaymentFragment extends Fragment {
+public final class NetbankingPaymentFragment extends Fragment {
 
     private OnPaymentOptionSelectedListener mListener;
 

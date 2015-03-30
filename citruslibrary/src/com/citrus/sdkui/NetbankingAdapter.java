@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by salil on 27/2/15.
  */
-public class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public final class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<NetbankingOption> mNetbankingOptionList = null;
 

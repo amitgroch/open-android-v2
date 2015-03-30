@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 /**
  * Created by salil on 4/3/15.
  */
-public class CitrusCash extends PaymentOption {
+public final class CitrusCash extends PaymentOption {
 
     private String amount = null;
 
