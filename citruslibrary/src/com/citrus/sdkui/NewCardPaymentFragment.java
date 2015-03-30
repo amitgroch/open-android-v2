@@ -1,8 +1,10 @@
 package com.citrus.sdkui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -76,6 +78,7 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,7 +86,7 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
         View rootView = inflater.inflate(R.layout.fragment_new_card_payment, container, false);
         mSpinnerMonth = (Spinner) rootView.findViewById(R.id.month);
         ArrayAdapter<CharSequence> monthAdapter = new ArrayAdapter<CharSequence>(
-                getActivity(), R.layout.customtextview, android.R.id.text1, getResources().getStringArray(R.array.months_array));
+                getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, getResources().getStringArray(R.array.months_array));
 
         // Specify the layout to use when the list of choices appears
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -91,7 +94,7 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
         mSpinnerMonth.setAdapter(monthAdapter);
         mSpinnerYear = (Spinner) rootView.findViewById(R.id.year);
         ArrayAdapter<CharSequence> yearAdapter = new ArrayAdapter<CharSequence>(
-                getActivity(), R.layout.customtextview, android.R.id.text1, getResources().getStringArray(R.array.years_array));
+                getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, getResources().getStringArray(R.array.years_array));
         // Specify the layout to use when the list of choices appears
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -101,6 +104,14 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
         mEditNameOnCard = (EditText) rootView.findViewById(R.id.edit_name_on_card);
         mEditCVV = (EditText) rootView.findViewById(R.id.edit_cvv);
         mButtonPay = (Button) rootView.findViewById(R.id.button_pay);
+
+        // TODO Setting color tint for views.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mPaymentParams != null && mPaymentParams.accentColor != null) {
+//            mEditCardNo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(mPaymentParams.accentColor)));
+//            mEditNameOnCard.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(mPaymentParams.accentColor)));
+//            mEditCVV.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(mPaymentParams.accentColor)));
+//            mRadioGroup.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(mPaymentParams.accentColor)));
+//        }
 
         mButtonPay.setOnClickListener(this);
         if (mPaymentParams != null) {

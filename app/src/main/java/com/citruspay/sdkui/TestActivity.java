@@ -37,6 +37,7 @@ public class TestActivity extends ActionBarActivity {
                 .user(user)
                 .environment(CitrusPaymentParams.Environment.SANDBOX)
                 .merchantName("Nature First")
+                .accentColor("#E6EE9C")
                 .build();
 
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
@@ -54,6 +55,7 @@ public class TestActivity extends ActionBarActivity {
                 .user(user)
                 .merchantName("Nature First")
                 .environment(CitrusPaymentParams.Environment.PRODUCTION)
+                .accentColor("#E6EE9C")
                 .build();
 
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
