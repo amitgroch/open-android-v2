@@ -38,7 +38,6 @@ public class NetbankingPaymentFragment extends Fragment {
      *
      * @return A new instance of fragment NetbankingPaymetFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static NetbankingPaymentFragment newInstance(ArrayList<NetbankingOption> netbankingOptionsList) {
         NetbankingPaymentFragment fragment = new NetbankingPaymentFragment();
         Bundle args = new Bundle();

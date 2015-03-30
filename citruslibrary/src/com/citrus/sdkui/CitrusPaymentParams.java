@@ -129,9 +129,9 @@ public final class CitrusPaymentParams implements Parcelable {
     }
 
     private CitrusPaymentParams(Parcel in) {
-        this.netbankingOptionList = (ArrayList<NetbankingOption>) in.readSerializable();
-        this.topNetbankingOptions = (ArrayList<NetbankingOption>) in.readSerializable();
-        this.userSavedOptionList = (ArrayList<PaymentOption>) in.readSerializable();
+        in.readTypedList(this.netbankingOptionList, NetbankingOption.CREATOR);
+        in.readTypedList(this.topNetbankingOptions, NetbankingOption.CREATOR);
+        in.readTypedList(this.userSavedOptionList, CardOption.CREATOR);
         this.user = in.readParcelable(CitrusUser.class.getClassLoader());
         this.billUrl = in.readString();
         this.colorPrimaryDark = in.readString();
@@ -275,9 +275,9 @@ public final class CitrusPaymentParams implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(this.netbankingOptionList);
-        dest.writeSerializable(this.topNetbankingOptions);
-        dest.writeSerializable(this.userSavedOptionList);
+        dest.writeTypedList(this.netbankingOptionList);
+        dest.writeTypedList(this.topNetbankingOptions);
+        dest.writeTypedList(this.userSavedOptionList);
         dest.writeParcelable(this.user, 0);
         dest.writeString(this.billUrl);
         dest.writeString(this.colorPrimaryDark);

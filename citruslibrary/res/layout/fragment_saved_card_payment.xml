@@ -1,10 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#414A5A"
-    tools:context="com.citrus.sdkui.SavedCardPaymentFragment">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#414A5A"
+                tools:context="com.citrus.sdkui.SavedCardPaymentFragment">
 
     <!-- TODO: Add all the colors in xml files. -->
     <LinearLayout
@@ -41,7 +40,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:src="@drawable/visa"
                     />
 
             </RelativeLayout>

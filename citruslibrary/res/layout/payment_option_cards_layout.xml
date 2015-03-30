@@ -9,19 +9,18 @@
         android:id="@+id/txt_card_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="saved cards"
-        android:textAllCaps="true"
-        android:paddingBottom="8dp"/>
+        android:textAllCaps="true"/>
 
     <LinearLayout
         android:id="@+id/layout_payment_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:animateLayoutChanges="true"
-        />
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"/>
 
     <Button
         android:id="@+id/btn_footer"

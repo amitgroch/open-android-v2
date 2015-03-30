@@ -197,7 +197,6 @@ public class NewCardPaymentFragment extends Fragment implements View.OnClickList
                         Bill bill;
                         if (TextUtils.isEmpty(error)) {
                             bill = new Bill(billString);
-                            // TODO: Use customer data from User to fill the data in the getCustomer.
                             UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mPaymentParams.user));
 
                             PG paymentGateway = new PG(card, bill, userDetails);

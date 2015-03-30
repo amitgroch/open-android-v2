@@ -217,8 +217,7 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
 
                 if (!TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
                     showPaymentProcessingFragment(redirect.getString("redirectUrl"));
-                }
-                {
+                } else {
                     Utils.showToast(getApplicationContext(), response);
                 }
             } catch (JSONException e) {
@@ -227,34 +226,6 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
         } else {
             Utils.showToast(getApplicationContext(), error);
         }
-    }
-
-    private JSONObject getCustomer() {
-
-        JSONObject customer = null;
-
-		/*
-         * All the below mentioned parameters are mandatory - missing anyone of them may create errors Do not change the
-		 * key in the json below - only change the values
-		 */
-
-        try {
-            customer = new JSONObject();
-            customer.put("firstName", "Tester");
-            customer.put("lastName", "Citrus");
-            customer.put("email", "tester@gmail.com");
-            customer.put("mobileNo", "9170164284");
-            customer.put("street1", "streetone");
-            customer.put("street2", "streettwo");
-            customer.put("city", "Mumbai");
-            customer.put("state", "Maharashtra");
-            customer.put("country", "India");
-            customer.put("zip", "400052");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return customer;
     }
 
     private void showPaymentOptionsFragment() {
@@ -344,8 +315,7 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
                 // TODO Make token payment for bank
                 // Token payment for bank may not be needed till we show saved netbanking options.
 
-                // TODO: Use customer data from User to fill the data in the getCustomer.
-                UserDetails userDetails = new UserDetails(getCustomer());
+                UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mPaymentParams.getUser()));
 
                 PG paymentgateway = new PG(netbank, bill, userDetails);
 
@@ -375,7 +345,6 @@ public class MainActivity extends ActionBarActivity implements OnActivityTitleCh
     }
 
     private void sendResponse(CitrusTransactionResponse transactionResponse) {
-        // TODO: Set the result and return the transaction response.
         Intent intent = new Intent();
         intent.putExtra(Utils.INTENT_EXTRA_PAYMENT_RESPONSE, transactionResponse);
         setResult(Utils.REQUEST_CODE_PAYMENT_ACTIVITY, intent);

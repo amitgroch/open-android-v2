@@ -42,7 +42,6 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
      *
      * @return A new instance of fragment PaymentOptionsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static PaymentOptionsFragment newInstance(CitrusPaymentParams paymentParams) {
         PaymentOptionsFragment fragment = new PaymentOptionsFragment();
         Bundle args = new Bundle();

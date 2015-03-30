@@ -49,7 +49,6 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
      * @param transactionResponse Object of {@link CitrusTransactionResponse}
      * @return A new instance of fragment PaymentStatusFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static PaymentStatusFragment newInstance(CitrusTransactionResponse transactionResponse, CitrusPaymentParams paymentParams) {
         PaymentStatusFragment fragment = new PaymentStatusFragment();
         Bundle args = new Bundle();

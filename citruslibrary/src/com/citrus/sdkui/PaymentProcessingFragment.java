@@ -47,7 +47,6 @@ public class PaymentProcessingFragment extends Fragment {
      * @param redirectUrl - Url of the bank or Card acquirer.
      * @return A new instance of fragment PaymentProcessingFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static PaymentProcessingFragment newInstance(String redirectUrl) {
         PaymentProcessingFragment fragment = new PaymentProcessingFragment();
         Bundle args = new Bundle();

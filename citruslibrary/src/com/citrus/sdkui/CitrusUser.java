@@ -2,6 +2,7 @@ package com.citrus.sdkui;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +12,15 @@ import org.json.JSONObject;
  */
 public class CitrusUser implements Parcelable {
 
+    public static final Parcelable.Creator<CitrusUser> CREATOR = new Parcelable.Creator<CitrusUser>() {
+        public CitrusUser createFromParcel(Parcel source) {
+            return new CitrusUser(source);
+        }
+
+        public CitrusUser[] newArray(int size) {
+            return new CitrusUser[size];
+        }
+    };
     private String firstName = null;
     private String lastName = null;
     private String emailId = null;
@@ -28,6 +38,14 @@ public class CitrusUser implements Parcelable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
+    }
+
+    private CitrusUser(Parcel in) {
+        this.firstName = in.readString();
+        this.lastName = in.readString();
+        this.emailId = in.readString();
+        this.mobileNo = in.readString();
+        this.address = in.readParcelable(Address.class.getClassLoader());
     }
 
     public static CitrusUser fromJSONObject(JSONObject response) {
@@ -48,7 +66,6 @@ public class CitrusUser implements Parcelable {
 
     public static JSONObject toJSONObject(CitrusUser user) {
         JSONObject customer = null;
-        // TODO: Need to put valid values from the user object passed
         /*
          * All the below mentioned parameters are mandatory - missing anyone of them may create errors Do not change the
 		 * key in the json below - only change the values
@@ -56,16 +73,67 @@ public class CitrusUser implements Parcelable {
 
         try {
             customer = new JSONObject();
-            customer.put("firstName", "Tester");
-            customer.put("lastName", "Citrus");
-            customer.put("email", "tester@gmail.com");
-            customer.put("mobileNo", "9170164284");
-            customer.put("street1", "streetone");
-            customer.put("street2", "streettwo");
-            customer.put("city", "Mumbai");
-            customer.put("state", "Maharashtra");
-            customer.put("country", "India");
-            customer.put("zip", "400052");
+
+            // Check whether the values are set then set the given values, else set default values.
+
+            if (user == null || TextUtils.isEmpty(user.firstName)) {
+                customer.put("firstName", "Tester");
+            } else {
+                customer.put("firstName", user.firstName);
+            }
+            if (user == null || TextUtils.isEmpty(user.firstName)) {
+                customer.put("lastName", "Citrus");
+            } else {
+                customer.put("lastName", user.lastName);
+            }
+
+            if (user == null || TextUtils.isEmpty(user.emailId)) {
+                customer.put("email", "tester@gmail.com");
+            } else {
+                customer.put("email", user.emailId);
+            }
+
+            if (user == null || TextUtils.isEmpty(user.mobileNo)) {
+                customer.put("mobileNo", "9170164284");
+            } else {
+                customer.put("mobileNo", user.lastName);
+            }
+
+            if (user == null || user.address == null || TextUtils.isEmpty(user.address.street1)) {
+                customer.put("street1", "streetone");
+            } else {
+                customer.put("street1", user.address.street1);
+            }
+
+            if (user == null || user.address == null || TextUtils.isEmpty(user.address.street2)) {
+                customer.put("street2", "streettwo");
+            } else {
+                customer.put("street2", user.address.street2);
+            }
+
+            if (user == null || user.address == null || TextUtils.isEmpty(user.address.city)) {
+                customer.put("city", "Mumbai");
+            } else {
+                customer.put("city", user.address.city);
+            }
+
+            if (user == null || user.address == null || TextUtils.isEmpty(user.address.state)) {
+                customer.put("state", "Maharashtra");
+            } else {
+                customer.put("state", user.address.state);
+            }
+
+            if (user == null || user.address == null || TextUtils.isEmpty(user.address.country)) {
+                customer.put("country", "India");
+            } else {
+                customer.put("country", user.address.country);
+            }
+
+            if (user == null || user.address == null || TextUtils.isEmpty(user.address.zip)) {
+                customer.put("zip", "400052");
+            } else {
+                customer.put("zip", user.address.zip);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -104,8 +172,31 @@ public class CitrusUser implements Parcelable {
                 '}';
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.firstName);
+        dest.writeString(this.lastName);
+        dest.writeString(this.emailId);
+        dest.writeString(this.mobileNo);
+        dest.writeParcelable(this.address, flags);
+    }
+
     public static class Address implements Parcelable {
 
+        public static final Creator<Address> CREATOR = new Creator<Address>() {
+            public Address createFromParcel(Parcel source) {
+                return new Address(source);
+            }
+
+            public Address[] newArray(int size) {
+                return new Address[size];
+            }
+        };
         private String street1 = null;
         private String street2 = null;
         private String city = null;
@@ -120,6 +211,15 @@ public class CitrusUser implements Parcelable {
             this.state = state;
             this.country = country;
             this.zip = zip;
+        }
+
+        private Address(Parcel in) {
+            this.street1 = in.readString();
+            this.street2 = in.readString();
+            this.city = in.readString();
+            this.state = in.readString();
+            this.country = in.readString();
+            this.zip = in.readString();
         }
 
         public static Address fromJSONObject(JSONObject response) {
@@ -175,7 +275,6 @@ public class CitrusUser implements Parcelable {
                     '}';
         }
 
-
         @Override
         public int describeContents() {
             return 0;
@@ -190,57 +289,5 @@ public class CitrusUser implements Parcelable {
             dest.writeString(this.country);
             dest.writeString(this.zip);
         }
-
-        private Address(Parcel in) {
-            this.street1 = in.readString();
-            this.street2 = in.readString();
-            this.city = in.readString();
-            this.state = in.readString();
-            this.country = in.readString();
-            this.zip = in.readString();
-        }
-
-        public static final Creator<Address> CREATOR = new Creator<Address>() {
-            public Address createFromParcel(Parcel source) {
-                return new Address(source);
-            }
-
-            public Address[] newArray(int size) {
-                return new Address[size];
-            }
-        };
     }
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.firstName);
-        dest.writeString(this.lastName);
-        dest.writeString(this.emailId);
-        dest.writeString(this.mobileNo);
-        dest.writeParcelable(this.address, flags);
-    }
-
-    private CitrusUser(Parcel in) {
-        this.firstName = in.readString();
-        this.lastName = in.readString();
-        this.emailId = in.readString();
-        this.mobileNo = in.readString();
-        this.address = in.readParcelable(Address.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<CitrusUser> CREATOR = new Parcelable.Creator<CitrusUser>() {
-        public CitrusUser createFromParcel(Parcel source) {
-            return new CitrusUser(source);
-        }
-
-        public CitrusUser[] newArray(int size) {
-            return new CitrusUser[size];
-        }
-    };
 }

@@ -158,6 +158,7 @@ public class PaymentOptionsCardView extends CardView implements View.OnClickList
                             NetbankingOption netbankingOption = (NetbankingOption) paymentOptionsList.get(i);
 
                             RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.payment_options_layout, null, false);
+
                             ((TextView) relativeLayout.findViewById(R.id.txt_payment_name)).setText(netbankingOption.getBankName());
                             // Hide the secondary field in case of banks
                             relativeLayout.findViewById(R.id.txt_bank_name).setVisibility(View.GONE);
