@@ -26,6 +26,8 @@ import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
 import com.citruspay.citruslibrary.R;
 
+import java.util.Locale;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -185,7 +187,9 @@ public class SavedCardPaymentFragment extends Fragment {
         String s4 = s.substring(12, s.length());
 
         mCardNumber.setText(s1 + " " + s2 + " " + s3 + " " + s4);
-        mCardHolder.setText(mSavedCard.getCardHolderName());
+        if (!TextUtils.isEmpty(mSavedCard.getCardHolderName())) {
+            mCardHolder.setText(mSavedCard.getCardHolderName().toUpperCase(Locale.getDefault()));
+        }
         mCardExpiry.setText(mSavedCard.getCardExpiryMonth() + "/" + mSavedCard.getCardExpiryYear());
 
         return view;
