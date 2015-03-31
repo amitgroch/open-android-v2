@@ -23,9 +23,6 @@ import java.util.List;
 public final class PaymentOptionsCardView extends CardView implements View.OnClickListener {
 
     private Context mContext = null;
-    private TextView mTxtHeader = null;
-    private Button mBtnFooter = null;
-    private LinearLayout mLayoutPaymentOptions = null;
     private OnPaymentOptionSelectedListener mListener = null;
 
     public PaymentOptionsCardView(Context context) {
@@ -56,21 +53,21 @@ public final class PaymentOptionsCardView extends CardView implements View.OnCli
         }
 
         View.inflate(mContext, R.layout.payment_option_cards_layout, this);  //correct way to inflate..
-        mTxtHeader = (TextView) findViewById(R.id.txt_card_header);
-        mBtnFooter = (Button) findViewById(R.id.btn_footer);
-        mBtnFooter.setOnClickListener(this);
-        mLayoutPaymentOptions = (LinearLayout) findViewById(R.id.layout_payment_options);
+        TextView txtHeader = (TextView) findViewById(R.id.txt_card_header);
+        Button btnFooter = (Button) findViewById(R.id.btn_footer);
+        btnFooter.setOnClickListener(this);
+        LinearLayout layoutPaymentOptions = (LinearLayout) findViewById(R.id.layout_payment_options);
 
         // Initialize the card view for the particular payment option.
         if (paymentOptionsCardType != null) {
             List<? extends PaymentOption> paymentOptionsList;
 
-            mTxtHeader.setText(paymentOptionsCardType.getHeaderText());
-            mBtnFooter.setText(paymentOptionsCardType.getFooterText());
+            txtHeader.setText(paymentOptionsCardType.getHeaderText());
+            btnFooter.setText(paymentOptionsCardType.getFooterText());
 
             // Set the app theme color.
             if (colorPrimary != null) {
-                mBtnFooter.setTextColor(Color.parseColor(colorPrimary));
+                btnFooter.setTextColor(Color.parseColor(colorPrimary));
             }
 
             // Initializing the list of payment options
@@ -89,17 +86,17 @@ public final class PaymentOptionsCardView extends CardView implements View.OnCli
                         relativeLayout.findViewById(R.id.img_payment_logo).setBackgroundColor(Color.WHITE);
                         // Set the icon image
                         setBackgroundImage(relativeLayout.findViewById(R.id.img_payment_logo), citrusCash.getOptionIcon(mContext));
-                        mLayoutPaymentOptions.addView(relativeLayout);
+                        layoutPaymentOptions.addView(relativeLayout);
 
                         // Set the listener and add tag for pay now button.
-                        mBtnFooter.setTag(citrusCash);
-                        mBtnFooter.setOnClickListener(this);
+                        btnFooter.setTag(citrusCash);
+                        btnFooter.setOnClickListener(this);
                     } else {
                         TextView textView = new TextView(mContext);
                         textView.setPadding(16, 8, 0, 0);
                         // TODO: Need to change the message.
                         textView.setText("Seems you do not have Citrus Cash account!");
-                        mLayoutPaymentOptions.addView(textView);
+                        layoutPaymentOptions.addView(textView);
                     }
                     break;
 
@@ -126,29 +123,29 @@ public final class PaymentOptionsCardView extends CardView implements View.OnCli
                             relativeLayout.setOnClickListener(this);
                             // Set the tag
                             relativeLayout.setTag(paymentOption);
-                            mLayoutPaymentOptions.addView(relativeLayout);
+                            layoutPaymentOptions.addView(relativeLayout);
                         }
                     } else {
                         TextView textView = new TextView(mContext);
                         textView.setPadding(16, 8, 0, 0);
                         // TODO: Need to change the message.
                         textView.setText("You have not saved any card for faster checkout!");
-                        mLayoutPaymentOptions.addView(textView);
+                        layoutPaymentOptions.addView(textView);
                     }
 
                     // Set the listener for default and add card.
-                    mBtnFooter.setTag(CardOption.DEFAULT_CARD);
-                    mBtnFooter.setOnClickListener(this);
+                    btnFooter.setTag(CardOption.DEFAULT_CARD);
+                    btnFooter.setOnClickListener(this);
                     break;
 
                 case DEBIT_CREDIT_CARDS:
                     // In case of credit and debit card, there will be no elements in the list.
                     // Hide the layout
-                    mLayoutPaymentOptions.setVisibility(View.GONE);
+                    layoutPaymentOptions.setVisibility(View.GONE);
 
                     // Set the listener for default and add card.
-                    mBtnFooter.setTag(CardOption.DEFAULT_CARD);
-                    mBtnFooter.setOnClickListener(this);
+                    btnFooter.setTag(CardOption.DEFAULT_CARD);
+                    btnFooter.setOnClickListener(this);
                     break;
 
                 case NETBANKING:
@@ -168,19 +165,19 @@ public final class PaymentOptionsCardView extends CardView implements View.OnCli
                             relativeLayout.setOnClickListener(this);
                             // Set the tag
                             relativeLayout.setTag(netbankingOption);
-                            mLayoutPaymentOptions.addView(relativeLayout);
+                            layoutPaymentOptions.addView(relativeLayout);
                         }
                     } else {
                         TextView textView = new TextView(mContext);
                         textView.setPadding(16, 8, 0, 0);
                         // TODO: Need to change the message.
                         textView.setText("Merchant does not support netbanking payment.");
-                        mLayoutPaymentOptions.addView(textView);
+                        layoutPaymentOptions.addView(textView);
                     }
 
                     // Set the listener for default and add card.
-                    mBtnFooter.setTag(NetbankingOption.DEFAULT_BANK);
-                    mBtnFooter.setOnClickListener(this);
+                    btnFooter.setTag(NetbankingOption.DEFAULT_BANK);
+                    btnFooter.setOnClickListener(this);
                     break;
             }
         }
@@ -323,9 +320,9 @@ public final class PaymentOptionsCardView extends CardView implements View.OnCli
             }
         };
 
-        protected String headerText = null;
-        protected String footerText = null;
-        protected List<? extends PaymentOption> paymentOptionList = null;
+        String headerText = null;
+        String footerText = null;
+        List<? extends PaymentOption> paymentOptionList = null;
 
         public abstract String getHeaderText();
 

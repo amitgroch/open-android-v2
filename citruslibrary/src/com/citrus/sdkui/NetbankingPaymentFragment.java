@@ -26,10 +26,7 @@ public final class NetbankingPaymentFragment extends Fragment {
 
     private OnPaymentOptionSelectedListener mListener;
 
-    private RecyclerView mRecylerViewNetbanking;
-    private NetbankingAdapter mAdapter;
     private ArrayList<NetbankingOption> mNetbankingOptionsList;
-    private RecyclerView.LayoutManager mLayoutManager;
 
 
     /**
@@ -64,20 +61,20 @@ public final class NetbankingPaymentFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_netbanking_payment, container, false);
 
-        mAdapter = new NetbankingAdapter(mNetbankingOptionsList);
+        NetbankingAdapter netbankingAdapter = new NetbankingAdapter(mNetbankingOptionsList);
 
-        mRecylerViewNetbanking = (RecyclerView) view.findViewById(R.id.recycler_view_netbanking);
-        mRecylerViewNetbanking.setAdapter(mAdapter);
+        RecyclerView recylerViewNetbanking = (RecyclerView) view.findViewById(R.id.recycler_view_netbanking);
+        recylerViewNetbanking.setAdapter(netbankingAdapter);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        mRecylerViewNetbanking.setHasFixedSize(true);
+        recylerViewNetbanking.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecylerViewNetbanking.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recylerViewNetbanking.setLayoutManager(mLayoutManager);
 
-        mRecylerViewNetbanking.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new OnItemClickListener()));
+        recylerViewNetbanking.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new OnItemClickListener()));
         return view;
     }
 
@@ -91,7 +88,6 @@ public final class NetbankingPaymentFragment extends Fragment {
                     + " must implement OnPaymentOptionSelectedListener");
         }
     }
-
 
     @Override
     public void onDetach() {

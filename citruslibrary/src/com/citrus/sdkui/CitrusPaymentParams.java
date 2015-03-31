@@ -25,7 +25,7 @@ public final class CitrusPaymentParams implements Parcelable {
             return new CitrusPaymentParams[size];
         }
     };
-    ;
+
     // Following are the parameters used internally.
     ArrayList<NetbankingOption> netbankingOptionList = new ArrayList<>(); // Netbanking options enabled for the merchant.
     ArrayList<NetbankingOption> topNetbankingOptions = new ArrayList<>(); // List of top n banks. This list will contain 0 to 4 items depending upon the enabled netbanking options for the merchant.
@@ -38,7 +38,7 @@ public final class CitrusPaymentParams implements Parcelable {
      * Bill url. This page will be hosted on your server. Host pages depending upon your backend technology.
      * It is required to authenticate the transaction. The merchant needs to sign the particular transaction.
      */
-    String billUrl;
+    final String billUrl;
     /**
      * Accent color for the app, in the form of #123456.
      * This is the color of the status bar when the is opened.
@@ -56,11 +56,11 @@ public final class CitrusPaymentParams implements Parcelable {
     /**
      * Accent color for the app, will be used to display common actions.
      */
-    String accentColor;
+    private String accentColor;
     /**
      * Transaction amount.
      */
-    double transactionAmount;
+    final double transactionAmount;
     /**
      * Name of the merchant. For the display purpose.
      */
@@ -76,26 +76,26 @@ public final class CitrusPaymentParams implements Parcelable {
      * "vanity_Url":"https://www.citruspay.com/kkizp9tsqg"
      * }
      */
-    String jsonKeyStore;
+    private final String jsonKeyStore;
     /**
      * Merchant vanity to fetch the available payment options.
      */
-    String vanity;
+    private String vanity;
     /**
      * Merchant accessKey found on merchant portal.
      */
-    String accessKey;
+    private String accessKey;
     /**
      * Merchant keys required for user signin and signup.
      */
-    String signinId;
-    String signinSecret;
-    String signupId;
-    String signupSecret;
+    private String signinId;
+    private String signinSecret;
+    private String signupId;
+    private String signupSecret;
 
-    Environment environment = Environment.SANDBOX;
+    private Environment environment = Environment.SANDBOX;
 
-    CitrusPaymentParams(double transactionAmount, String billUrl, String jsonKeyStore) {
+    private CitrusPaymentParams(double transactionAmount, String billUrl, String jsonKeyStore) {
         this.transactionAmount = transactionAmount;
         this.billUrl = billUrl;
         this.jsonKeyStore = jsonKeyStore;

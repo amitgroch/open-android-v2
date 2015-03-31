@@ -162,7 +162,7 @@ public final class MainActivity extends ActionBarActivity implements OnActivityT
         super.setTitle(title);
     }
 
-    public void setCustomTitleView() {
+    void setCustomTitleView() {
         LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflator.inflate(R.layout.layout_action_bar_view, null);
 

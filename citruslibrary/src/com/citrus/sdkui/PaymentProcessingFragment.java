@@ -179,11 +179,6 @@ public final class PaymentProcessingFragment extends Fragment {
             // Dismiss the progress/message dialog.
             dismissDialog();
         }
-
-        @Override
-        public void onLoadResource(WebView view, String url) {
-            super.onLoadResource(view, url);
-        }
     }
 
     /**

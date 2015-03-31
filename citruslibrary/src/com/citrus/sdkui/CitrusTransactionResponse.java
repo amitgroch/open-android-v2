@@ -41,7 +41,7 @@ public final class CitrusTransactionResponse implements Parcelable {
     private Map<String, String> customParamsMap = null;
     private String jsonResponse = null;
 
-    public CitrusTransactionResponse() {
+    private CitrusTransactionResponse() {
 
     }
 
@@ -75,7 +75,7 @@ public final class CitrusTransactionResponse implements Parcelable {
      * @param COD                - cash on delivery.
      * @param customParamsMap    - custom parameters sent with request.
      */
-    public CitrusTransactionResponse(String amount, String currency, String message, String responseCode, TransactionStatus transactionStatus, TransactionDetails transactionDetails, CitrusUser citrusUser, PaymentMode paymentMode, String issuerCode, String impsMobileNumber, String impsMmid, String authIdCode, String signature, boolean COD, Map<String, String> customParamsMap) {
+    private CitrusTransactionResponse(String amount, String currency, String message, String responseCode, TransactionStatus transactionStatus, TransactionDetails transactionDetails, CitrusUser citrusUser, PaymentMode paymentMode, String issuerCode, String impsMobileNumber, String impsMmid, String authIdCode, String signature, boolean COD, Map<String, String> customParamsMap) {
         this.amount = amount;
         this.currency = currency;
         this.message = message;
@@ -217,7 +217,7 @@ public final class CitrusTransactionResponse implements Parcelable {
         return jsonResponse;
     }
 
-    public void setJsonResponse(String jsonResponse) {
+    void setJsonResponse(String jsonResponse) {
         this.jsonResponse = jsonResponse;
     }
 

@@ -43,17 +43,12 @@ public class SavedCardPaymentFragment extends Fragment {
     private CitrusPaymentParams mPaymentParams;
 
     private ProgressDialog mProgressDialog = null;
-    private TextView mCardNumber = null;
-    private TextView mCardHolder = null;
-    private TextView mCardExpiry = null;
-    private ImageView mImgCardType = null;
     private CheckBox mCheckCVV1 = null;
     private CheckBox mCheckCVV2 = null;
     private CheckBox mCheckCVV3 = null;
     private CheckBox mCheckCVV4 = null;
     private EditText mEditCVVHidden = null;
     private boolean mProcessPayment = false;
-    private String mCVV = ""; // This will store the CVV entered by the user.
     private int mCVVLength = Constants.CVV_LENGTH;
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -100,7 +95,7 @@ public class SavedCardPaymentFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
-            mCVV = s.toString(); // Assign the CVV.
+            String mCVV = s.toString();
 
             if (mProcessPayment) {
                 mSavedCard.setCardCVV(mCVV);
@@ -149,10 +144,11 @@ public class SavedCardPaymentFragment extends Fragment {
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mImgCardType = (ImageView) view.findViewById(R.id.img_card_logo);
-        mCardNumber = (TextView) view.findViewById(R.id.txt_card_number);
-        mCardHolder = (TextView) view.findViewById(R.id.txt_card_holder);
-        mCardExpiry = (TextView) view.findViewById(R.id.txt_card_expiry);
+        ImageView imgCardType = (ImageView) view.findViewById(R.id.img_card_logo);
+        TextView cardNumber = (TextView) view.findViewById(R.id.txt_card_number);
+        TextView cardHolder = (TextView) view.findViewById(R.id.txt_card_holder);
+        TextView cardExpiry = (TextView) view.findViewById(R.id.txt_card_expiry);
+
         mCheckCVV1 = (CheckBox) view.findViewById(R.id.check_cvv_1);
         mCheckCVV2 = (CheckBox) view.findViewById(R.id.check_cvv_2);
         mCheckCVV3 = (CheckBox) view.findViewById(R.id.check_cvv_3);
@@ -160,9 +156,9 @@ public class SavedCardPaymentFragment extends Fragment {
         mEditCVVHidden = (EditText) view.findViewById(R.id.edit_cvv_hidden);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mImgCardType.setBackground(mSavedCard.getOptionIcon(getActivity()));
+            imgCardType.setBackground(mSavedCard.getOptionIcon(getActivity()));
         } else {
-            mImgCardType.setBackgroundDrawable(mSavedCard.getOptionIcon(getActivity()));
+            imgCardType.setBackgroundDrawable(mSavedCard.getOptionIcon(getActivity()));
         }
 
         if (mCVVLength == 4) {
@@ -176,9 +172,9 @@ public class SavedCardPaymentFragment extends Fragment {
 
         // Set the font
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/ocraextended.ttf");
-        mCardNumber.setTypeface(tf);
-        mCardExpiry.setTypeface(tf);
-        mCardHolder.setTypeface(tf);
+        cardNumber.setTypeface(tf);
+        cardExpiry.setTypeface(tf);
+        cardHolder.setTypeface(tf);
 
         String s = mSavedCard.getCardNumber();
         String s1 = s.substring(0, 4);
@@ -186,11 +182,11 @@ public class SavedCardPaymentFragment extends Fragment {
         String s3 = s.substring(8, 12);
         String s4 = s.substring(12, s.length());
 
-        mCardNumber.setText(s1 + " " + s2 + " " + s3 + " " + s4);
+        cardNumber.setText(s1 + " " + s2 + " " + s3 + " " + s4);
         if (!TextUtils.isEmpty(mSavedCard.getCardHolderName())) {
-            mCardHolder.setText(mSavedCard.getCardHolderName().toUpperCase(Locale.getDefault()));
+            cardHolder.setText(mSavedCard.getCardHolderName().toUpperCase(Locale.getDefault()));
         }
-        mCardExpiry.setText(mSavedCard.getCardExpiryMonth() + "/" + mSavedCard.getCardExpiryYear());
+        cardExpiry.setText(mSavedCard.getCardExpiryMonth() + "/" + mSavedCard.getCardExpiryYear());
 
         return view;
     }
@@ -226,7 +222,14 @@ public class SavedCardPaymentFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
         mListener = null;
+        mProgressDialog = null;
+        mCheckCVV1 = null;
+        mCheckCVV2 = null;
+        mCheckCVV3 = null;
+        mCheckCVV4 = null;
+        mEditCVVHidden = null;
     }
 
     private void processPayment(CardOption cardOption) {

@@ -27,9 +27,7 @@ public final class CitrusCash extends PaymentOption {
 
     @Override
     public Drawable getOptionIcon(Context context) {
-        Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("citrus_cash", "drawable", context.getPackageName()));
-
-        return drawable;
+        return context.getResources().getDrawable(context.getResources().getIdentifier("citrus_cash", "drawable", context.getPackageName()));
     }
 
     public String getAmount() {

@@ -14,14 +14,14 @@ import java.util.Map;
 /**
  * Created by MANGESH KADAM on 2/16/2015.
  */
-public class GetNetBankingList {
+class GetNetBankingList {
 
-    Context context;
-    RequestQueue queue;
-    final String URL = "https://sandboxadmin.citruspay.com/service/v1/merchant/pgsetting";
+    private Context context;
+    private RequestQueue queue;
+    private final String URL = "https://sandboxadmin.citruspay.com/service/v1/merchant/pgsetting";
     String response = null;
-    Response.Listener successListener;
-    Response.ErrorListener errorListener;
+    private Response.Listener successListener;
+    private Response.ErrorListener errorListener;
 
     public GetNetBankingList(Context context, Response.Listener successListener, Response.ErrorListener errorListener) {
         this.context = context;

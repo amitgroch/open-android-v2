@@ -28,15 +28,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
     private OnTransactionResponseListener mListener;
     private CitrusTransactionResponse mTransactionResponse = null;
     private CitrusPaymentParams mPaymentParams = null;
-    private ImageView mImgTransactionStatus = null;
-    private TextView mTxtTransactionMessage = null;
-    private TextView mTxtTitleTransactionId = null;
-    private TextView mTxtTransactionId = null;
-    private TextView mTxtTitleText2 = null;
-    private TextView mTxtText2 = null;
-    private TextView mTxtMessageGratitude = null;
-    private Button mBtnRetryTransaction = null;
-    private Button mBtnDismiss = null;
+    private ImageView imgTransactionStatus = null;
 
     public PaymentStatusFragment() {
         // Required empty public constructor
@@ -73,18 +65,18 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_payment_status, container, false);
 
-        mImgTransactionStatus = (ImageView) view.findViewById(R.id.img_transaction_status);
-        mTxtTransactionMessage = (TextView) view.findViewById(R.id.txt_transaction_message);
-        mTxtTitleTransactionId = (TextView) view.findViewById(R.id.txt_title_transaction_id);
-        mTxtTransactionId = (TextView) view.findViewById(R.id.txt_transaction_id);
-        mTxtTitleText2 = (TextView) view.findViewById(R.id.txt_title_text2);
-        mTxtText2 = (TextView) view.findViewById(R.id.txt_text2);
-        mTxtMessageGratitude = (TextView) view.findViewById(R.id.txt_message_gratitude);
-        mBtnRetryTransaction = (Button) view.findViewById(R.id.btn_retry_transaction);
-        mBtnDismiss = (Button) view.findViewById(R.id.btn_dismiss);
+        imgTransactionStatus = (ImageView) view.findViewById(R.id.img_transaction_status);
+        TextView txtTransactionMessage = (TextView) view.findViewById(R.id.txt_transaction_message);
+        TextView txtTitleTransactionId = (TextView) view.findViewById(R.id.txt_title_transaction_id);
+        TextView txtTransactionId = (TextView) view.findViewById(R.id.txt_transaction_id);
+        TextView txtTitleText2 = (TextView) view.findViewById(R.id.txt_title_text2);
+        TextView txtText2 = (TextView) view.findViewById(R.id.txt_text2);
+        TextView txtMessageGratitude = (TextView) view.findViewById(R.id.txt_message_gratitude);
+        Button btnRetryTransaction = (Button) view.findViewById(R.id.btn_retry_transaction);
+        Button btnDismiss = (Button) view.findViewById(R.id.btn_dismiss);
 
-        mBtnRetryTransaction.setOnClickListener(this);
-        mBtnDismiss.setOnClickListener(this);
+        btnRetryTransaction.setOnClickListener(this);
+        btnDismiss.setOnClickListener(this);
 
         if (mTransactionResponse != null && mTransactionResponse.getTransactionDetails() != null) {
 
@@ -92,32 +84,32 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
 
             if (mTransactionResponse.getTransactionStatus() == CitrusTransactionResponse.TransactionStatus.SUCCESS) {
                 // Set the icon for transaction status.
-                mImgTransactionStatus.setBackgroundResource(R.drawable.checkmark_green);
+                imgTransactionStatus.setBackgroundResource(R.drawable.checkmark_green);
 
-                mTxtTransactionMessage.setText(getString(R.string.message_payment_successful));
-                mTxtTitleTransactionId.setText(getString(R.string.title_transaction_id_success));
-                mTxtTransactionId.setText(mTransactionResponse.getTransactionDetails().getTransactionId());
-                mTxtTitleText2.setText(getString(R.string.title_text2_success));
-                mTxtText2.setText(mTransactionResponse.getAmount());
-                mTxtMessageGratitude.setVisibility(View.VISIBLE);
+                txtTransactionMessage.setText(getString(R.string.message_payment_successful));
+                txtTitleTransactionId.setText(getString(R.string.title_transaction_id_success));
+                txtTransactionId.setText(mTransactionResponse.getTransactionDetails().getTransactionId());
+                txtTitleText2.setText(getString(R.string.title_text2_success));
+                txtText2.setText(mTransactionResponse.getAmount());
+                txtMessageGratitude.setVisibility(View.VISIBLE);
 
                 setTitle(getString(R.string.fragment_title_transaction_success));
 
                 // Hide the retry and dismiss buttons.
-                mBtnRetryTransaction.setVisibility(View.GONE);
-                mBtnDismiss.setVisibility(View.GONE);
+                btnRetryTransaction.setVisibility(View.GONE);
+                btnDismiss.setVisibility(View.GONE);
             } else {
                 // Set the icon for transaction status
-                mImgTransactionStatus.setBackgroundResource(R.drawable.cross_red);
+                imgTransactionStatus.setBackgroundResource(R.drawable.cross_red);
 
-                mTxtTransactionMessage.setText(getString(R.string.message_payment_error));
-                mTxtTitleTransactionId.setText(getString(R.string.title_transaction_id_error));
-                mTxtTransactionId.setText(mTransactionResponse.getTransactionDetails().getTransactionId());
-                mTxtTitleText2.setText(getString(R.string.title_text2_error));
-                mTxtText2.setText(mTransactionResponse.getMessage());
+                txtTransactionMessage.setText(getString(R.string.message_payment_error));
+                txtTitleTransactionId.setText(getString(R.string.title_transaction_id_error));
+                txtTransactionId.setText(mTransactionResponse.getTransactionDetails().getTransactionId());
+                txtTitleText2.setText(getString(R.string.title_text2_error));
+                txtText2.setText(mTransactionResponse.getMessage());
 
                 if (mPaymentParams != null) {
-                    mBtnRetryTransaction.setTextColor(Color.parseColor(mPaymentParams.colorPrimary));
+                    btnRetryTransaction.setTextColor(Color.parseColor(mPaymentParams.colorPrimary));
                 }
 
                 setTitle(getString(R.string.fragment_title_transaction_error));
@@ -142,6 +134,8 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mTransactionResponse = null;
+        mPaymentParams = null;
     }
 
     private void setTitle(String title) {

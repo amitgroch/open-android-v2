@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by salil on 27/2/15.
  */
-public final class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+final class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<NetbankingOption> mNetbankingOptionList = null;
 
@@ -26,9 +26,7 @@ public final class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.V
                 from(viewGroup.getContext()).
                 inflate(android.R.layout.simple_list_item_1, viewGroup, false);
 
-        RecyclerView.ViewHolder holder = new NetbankingViewHolder(itemView);
-
-        return holder;
+        return new NetbankingViewHolder(itemView);
     }
 
     @Override
@@ -77,7 +75,7 @@ public final class NetbankingAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public static class NetbankingViewHolder extends RecyclerView.ViewHolder {
-        protected TextView txtBankName;
+        final TextView txtBankName;
 
         public NetbankingViewHolder(View v) {
             super(v);

@@ -41,7 +41,6 @@ public final class NewCardPaymentFragment extends Fragment implements View.OnCli
     private CitrusPaymentParams mPaymentParams = null;
 
     private RadioGroup mRadioGroup = null;
-    private Button mButtonPay = null;
     private EditText mEditNameOnCard = null;
     private EditText mEditCardNo = null;
     private EditText mEditCVV = null;
@@ -103,7 +102,7 @@ public final class NewCardPaymentFragment extends Fragment implements View.OnCli
         mEditCardNo = (EditText) rootView.findViewById(R.id.edit_card_no);
         mEditNameOnCard = (EditText) rootView.findViewById(R.id.edit_name_on_card);
         mEditCVV = (EditText) rootView.findViewById(R.id.edit_cvv);
-        mButtonPay = (Button) rootView.findViewById(R.id.button_pay);
+        Button buttonPay = (Button) rootView.findViewById(R.id.button_pay);
 
         // TODO Setting color tint for views.
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mPaymentParams != null && mPaymentParams.accentColor != null) {
@@ -113,9 +112,9 @@ public final class NewCardPaymentFragment extends Fragment implements View.OnCli
 //            mRadioGroup.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(mPaymentParams.accentColor)));
 //        }
 
-        mButtonPay.setOnClickListener(this);
+        buttonPay.setOnClickListener(this);
         if (mPaymentParams != null) {
-            mButtonPay.setBackgroundColor(Color.parseColor(mPaymentParams.colorPrimary));
+            buttonPay.setBackgroundColor(Color.parseColor(mPaymentParams.colorPrimary));
         }
 
         mProgressDialog = new ProgressDialog(getActivity());

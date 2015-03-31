@@ -11,6 +11,7 @@ import com.citruspay.citruslibrary.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -61,6 +62,9 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Locale locale = Locale.getDefault();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_payment_options, container, false);
         mCardViewCitrusCash = (PaymentOptionsCardView) view.findViewById(R.id.cardview_citrus_cash);
@@ -72,7 +76,7 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         PaymentOptionsCardView.PaymentOptionsType citrusCashCardsType = PaymentOptionsCardView.PaymentOptionsType.CITRUS_CASH;
         List<CitrusCash> citrusCashList = new ArrayList<>();
         citrusCashList.add(new CitrusCash("1400.00"));
-        citrusCashCardsType.setHeaderText("Citrus Cash");
+        citrusCashCardsType.setHeaderText("Citrus Cash".toUpperCase(locale));
         citrusCashCardsType.setFooterText("Pay Now");
         // TODO: Need to add button for add and pay now.
         citrusCashCardsType.setPaymentOptionList(citrusCashList);
@@ -85,8 +89,8 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         List<PaymentOption> userSavedOptionList = mPaymentParams.userSavedOptionList;
         if (userSavedOptionList != null && !userSavedOptionList.isEmpty()) {
             PaymentOptionsCardView.PaymentOptionsType savedCardsType = PaymentOptionsCardView.PaymentOptionsType.SAVED_CARDS;
-            savedCardsType.setHeaderText("Saved Cards");
-            savedCardsType.setFooterText("Add card");
+            savedCardsType.setHeaderText("Saved Cards".toUpperCase(locale));
+            savedCardsType.setFooterText("Add card".toUpperCase(locale));
             savedCardsType.setPaymentOptionList(userSavedOptionList);
             mCardViewSavedCards.init(this, savedCardsType, mPaymentParams);
         } else {
@@ -96,8 +100,8 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
 
         // Debit or Credit Card
         PaymentOptionsCardView.PaymentOptionsType debitCreditCardsType = PaymentOptionsCardView.PaymentOptionsType.DEBIT_CREDIT_CARDS;
-        debitCreditCardsType.setHeaderText("Credit/Debit Cards");
-        debitCreditCardsType.setFooterText("Pay with credit or debit card");
+        debitCreditCardsType.setHeaderText("Credit/Debit Cards".toUpperCase(locale));
+        debitCreditCardsType.setFooterText("Pay with credit or debit card".toUpperCase(locale));
         debitCreditCardsType.setPaymentOptionList(null); //Debit credit card does not have list.
         mCardViewDebitCreditCards.init(this, debitCreditCardsType, mPaymentParams);
 
@@ -106,8 +110,8 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
         List<NetbankingOption> topNetbankingList = mPaymentParams.topNetbankingOptions;
         if (topNetbankingList != null && !topNetbankingList.isEmpty()) {
             PaymentOptionsCardView.PaymentOptionsType netbankingCardType = PaymentOptionsCardView.PaymentOptionsType.NETBANKING;
-            netbankingCardType.setHeaderText("Netbanking");
-            netbankingCardType.setFooterText("Select Other Bank");
+            netbankingCardType.setHeaderText("Netbanking".toUpperCase(locale));
+            netbankingCardType.setFooterText("Select Other Bank".toUpperCase(locale));
             netbankingCardType.setPaymentOptionList(topNetbankingList);
             mCardViewNetbanking.init(this, netbankingCardType, mPaymentParams);
         } else {

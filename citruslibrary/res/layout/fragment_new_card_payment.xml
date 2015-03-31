@@ -58,16 +58,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
-            android:paddingRight="15dp">
+            android:paddingTop="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_weight="0"
+                android:baselineAligned="false"
                 android:orientation="vertical"
-                android:paddingRight="15dp">
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <TextView
                     android:id="@+id/expiry"
@@ -79,23 +81,22 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical">
 
                     <Spinner
                         android:id="@+id/month"
                         style="@android:style/Widget.Holo.Light.Spinner"
-                        android:layout_width="80dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:textColor="@android:color/black"
                         tools:targetApi="11"/>
 
                     <Spinner
                         android:id="@+id/year"
                         style="@android:style/Widget.Holo.Light.Spinner"
-                        android:layout_width="80dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:layout_toRightOf="@+id/month"
                         android:textColor="@android:color/black"
                         tools:targetApi="11"/>
@@ -104,9 +105,9 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:baselineAligned="false"
                 android:orientation="vertical">
 
                 <TextView
@@ -121,7 +122,7 @@
                 <EditText
                     android:id="@+id/edit_cvv"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="3dp"
@@ -130,7 +131,7 @@
                     android:inputType="number"
                     android:maxLength="4"
                     android:singleLine="true"
-                    android:textSize="14dp"/>
+                    android:textSize="14sp"/>
             </LinearLayout>
 
         </LinearLayout>

@@ -19,13 +19,13 @@ public abstract class CardOption extends PaymentOption {
         }
     };
 
-    protected String cardHolderName = null;
-    protected String cardNumber = null;
-    protected String cardCVV = null;
-    protected String cardExpiry = null;
-    protected String cardExpiryMonth = null;
-    protected String cardExpiryYear = null;
-    protected String cardScheme = null;
+    String cardHolderName = null;
+    String cardNumber = null;
+    String cardCVV = null;
+    String cardExpiry = null;
+    String cardExpiryMonth = null;
+    String cardExpiryYear = null;
+    String cardScheme = null;
 
     CardOption() {
     }
@@ -36,7 +36,7 @@ public abstract class CardOption extends PaymentOption {
      * @param cardCVV        - CVV of the card. We do not store CVV at our end.
      * @param cardExpiry     - Expiry date in MM/YY format.
      */
-    public CardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiry) {
+    CardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiry) {
         this.cardHolderName = cardHolderName;
         this.cardNumber = cardNumber;
         this.cardCVV = cardCVV;
@@ -58,7 +58,7 @@ public abstract class CardOption extends PaymentOption {
      * @param cardExpiryMonth - Card Expiry Month 01 to 12 e.g. 01 for January.
      * @param cardExpiryYear  - Card Expiry Year in the form of YYYY e.g. 2015.
      */
-    public CardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiryMonth, String cardExpiryYear) {
+    CardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiryMonth, String cardExpiryYear) {
         this.cardHolderName = cardHolderName;
         this.cardNumber = cardNumber;
         this.cardCVV = cardCVV;
@@ -81,7 +81,7 @@ public abstract class CardOption extends PaymentOption {
      * @param cardScheme     - Card scheme e.g. VISA, MASTER etc.
      * @param cardExpiry     - Card expiry date. In MMYYYY format.
      */
-    public CardOption(String name, String token, String cardHolderName, String cardNumber, String cardScheme, String cardExpiry) {
+    CardOption(String name, String token, String cardHolderName, String cardNumber, String cardScheme, String cardExpiry) {
         super(name, token);
         this.cardHolderName = cardHolderName;
         this.cardNumber = cardNumber;
