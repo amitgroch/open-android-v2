@@ -21,6 +21,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -72,6 +73,8 @@ public class WebPage extends Activity {
                 return false;
             }
         });
+        
+        webView.setWebChromeClient(new WebChromeClient());
                 
         webView.loadUrl(url);
 

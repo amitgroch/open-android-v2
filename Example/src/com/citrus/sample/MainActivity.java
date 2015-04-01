@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ import com.citrus.mobile.Config;
 
 public class MainActivity extends Activity {
 
-    Button bind, savecard, getWallet, paybutton, widgets;
+    Button bind, savecard, getWallet, paybutton, widgets, testcard;
 
     Callback callback;
 
@@ -56,6 +57,8 @@ public class MainActivity extends Activity {
         paybutton = (Button) this.findViewById(R.id.paybutton);
         
         widgets = (Button) this.findViewById(R.id.widgets);
+        
+        testcard = (Button) this.findViewById(R.id.testcardpay);
 
         bind.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +99,14 @@ public class MainActivity extends Activity {
             }
         });
         
+        testcard.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, TestCard.class);
+                startActivity(intent);
+			}
+		});
     }
 
     private void init() {

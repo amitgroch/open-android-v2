@@ -12,5 +12,6 @@
     <string name="title_activity_walletpay">Walletpay</string>
     <string name="title_activity_test_webview">TestWebview</string>
     <string name="title_activity_prepaid_functions">PrepaidFunctions</string>
+    <string name="title_activity_test_card">TestCard</string>
 
 </resources>

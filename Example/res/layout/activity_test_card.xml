@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.citrus.sample.TestCard" >
+
+    <RadioGroup android:id="@+id/radiogroup"
+        		android:layout_width="match_parent"
+        		android:layout_height="wrap_content"
+        		android:orientation="horizontal"
+        		android:layout_margin="20dp">
+        
+        <RadioButton android:id="@+id/credit"
+            		 android:layout_height="wrap_content"
+            		 android:layout_width="wrap_content"
+            		 android:text="Credit Card"/>
+        
+        <RadioButton android:id="@+id/debit"
+            		 android:layout_height="wrap_content"
+            		 android:layout_width="wrap_content"
+            		 android:text="Debit Card"/>
+        
+    </RadioGroup>
+    
+    <com.citrus.widgets.CardNumberEditText 
+        android:id="@+id/cardnum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:inputType="number|none"
+        android:hint="Card number - 4111.."/>
+    
+    <com.citrus.widgets.ExpiryDate 
+        android:id="@+id/expdate"
+        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_margin="20dp"
+        android:maxLength="5"
+        android:inputType="number|none"
+        android:hint="Exp Date - MM/YY"/>
+    
+    <EditText android:id="@+id/cvv"
+        	  android:layout_width="100dp"
+        	  android:layout_height="wrap_content"
+        	  android:maxLength="4"
+        	  android:layout_margin="20dp"
+        	  android:inputType="number|none"
+        	  android:hint="CVV - 330"/>
+    
+    <EditText android:id="@+id/nameoncard"
+        	  android:layout_width="match_parent"
+        	  android:layout_height="wrap_content"
+        	  android:layout_margin="20dp"
+        	  android:hint="Name on card - Tony Stark"/>
+    
+    <Button android:id="@+id/paybutton"
+        	android:layout_width="match_parent"
+        	android:layout_height="50dp"
+        	android:layout_margin="20dp"
+        	android:text="Pay Rs 21"/>
+
+</LinearLayout>
