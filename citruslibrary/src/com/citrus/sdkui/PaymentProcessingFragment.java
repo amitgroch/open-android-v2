@@ -118,9 +118,9 @@ public final class PaymentProcessingFragment extends Fragment {
 
         // Check whether the activity has implemented the OnActivityTitleChangeListener.
         // Call the onActivityTitleChanged to change the title of the activity
-        if (activity instanceof OnActivityTitleChangeListener) {
+        if (activity instanceof FragmentEventsListeners) {
             Log.d("NewCardPaymentFragment", "onAttach (line 131): OnActivityTitleChangeListener");
-            ((OnActivityTitleChangeListener) activity).onActivityTitleChanged("Processing...");
+            ((FragmentEventsListeners) activity).onActivityTitleChanged("Processing...");
         }
     }
 
@@ -131,6 +131,10 @@ public final class PaymentProcessingFragment extends Fragment {
         dismissDialog();
 
         mListener = null;
+        if (mWebviewPayment != null) {
+            mWebviewPayment.stopLoading();
+            mWebviewPayment.destroy();
+        }
         mWebviewPayment = null;
         mUrl = null;
         mContext = null;

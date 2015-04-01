@@ -3,4 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="transaction_status_margin">8dp</dimen>
+    <dimen name="cardview_margin">16dp</dimen>
+    <dimen name="cardview_width">300dp</dimen>
+    <dimen name="cardview_height">200dp</dimen>
 </resources>

@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -43,7 +44,7 @@ import static com.citrus.sdkui.PaymentProcessingFragment.OnTransactionCompleteLi
 import static com.citrus.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
 
 
-public final class MainActivity extends ActionBarActivity implements OnActivityTitleChangeListener, OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
+public final class MainActivity extends ActionBarActivity implements FragmentEventsListeners, OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
 
     private String mMerchantName = null;
     private String mMerchantBillUrl = null;
@@ -56,12 +57,16 @@ public final class MainActivity extends ActionBarActivity implements OnActivityT
     private ActionBar mActionBar = null;
     private CitrusTransactionResponse mTransactionResponse;
     private boolean mShowDialog = false;
+    private boolean mNewCardAdded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        // Restrict the activity orientation to portrait only.
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mActionBar = getSupportActionBar();
         mPaymentParams = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS);
@@ -359,6 +364,11 @@ public final class MainActivity extends ActionBarActivity implements OnActivityT
     }
 
     @Override
+    public void onNewCardAdded(boolean cardAdded) {
+        mNewCardAdded = cardAdded;
+    }
+
+    @Override
     public void onOptionSelected(final PaymentOption paymentOption) {
 
         if (paymentOption != null) {
@@ -428,7 +438,13 @@ public final class MainActivity extends ActionBarActivity implements OnActivityT
 
     @Override
     public void onRetryTransaction() {
-        init();
+
+        // Fetch the saved cards since new card has been added.
+        if (mNewCardAdded) {
+            init();
+        } else {
+            showPaymentOptionsFragment();
+        }
     }
 
     @Override

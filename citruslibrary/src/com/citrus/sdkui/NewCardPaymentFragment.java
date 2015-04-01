@@ -38,6 +38,7 @@ import com.citruspay.citruslibrary.R;
  */
 public final class NewCardPaymentFragment extends Fragment implements View.OnClickListener {
     private ProcessPaymentListener mListener = null;
+    private FragmentEventsListeners mFragmentEventsListeners = null;
     private CitrusPaymentParams mPaymentParams = null;
 
     private RadioGroup mRadioGroup = null;
@@ -135,9 +136,9 @@ public final class NewCardPaymentFragment extends Fragment implements View.OnCli
 
         // Check whether the activity has implemented the OnActivityTitleChangeListener.
         // Call the onActivityTitleChanged to change the title of the activity
-        if (activity instanceof OnActivityTitleChangeListener) {
-            Log.d("NewCardPaymentFragment", "onAttach (line 131): OnActivityTitleChangeListener");
-            ((OnActivityTitleChangeListener) activity).onActivityTitleChanged("Add Card");
+        if (activity instanceof FragmentEventsListeners) {
+            mFragmentEventsListeners = ((FragmentEventsListeners) activity);
+            mFragmentEventsListeners.onActivityTitleChanged("Add Card");
         }
     }
 
@@ -223,6 +224,11 @@ public final class NewCardPaymentFragment extends Fragment implements View.OnCli
                 // Currently we will be saving card every time, so this will always return true.
                 if (cardOption.isSavePaymentOption()) {
                     saveCard(card);
+                }
+
+                // Notify the activity that new card has been added.
+                if (mFragmentEventsListeners != null) {
+                    mFragmentEventsListeners.onNewCardAdded(true);
                 }
             } else {
                 dismissDialog();
