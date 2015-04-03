@@ -31,7 +31,7 @@ import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
 
 public class PaymentPage extends Activity {
-    public static final String BILL_URL = "http://yourwebsite.com/billGenerator.jsp";
+    public static final String BILL_URL = "http://yourwebsite.com/bill.php";
 
     Button cardpayment, tokenpayment, bankpay;
 
