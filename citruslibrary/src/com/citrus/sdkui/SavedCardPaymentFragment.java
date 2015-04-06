@@ -261,7 +261,7 @@ public class SavedCardPaymentFragment extends Fragment {
                 }
             }).execute();
 
-            showDialog("Processing Payment. Please wait...", false);
+            showDialog("Processing Payment. Please wait...", true);
         }
     }
 
