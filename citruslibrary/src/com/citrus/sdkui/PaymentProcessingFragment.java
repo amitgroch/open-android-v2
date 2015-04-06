@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,7 +118,6 @@ public final class PaymentProcessingFragment extends Fragment {
         // Check whether the activity has implemented the OnActivityTitleChangeListener.
         // Call the onActivityTitleChanged to change the title of the activity
         if (activity instanceof FragmentEventsListeners) {
-            Log.d("NewCardPaymentFragment", "onAttach (line 131): OnActivityTitleChangeListener");
             ((FragmentEventsListeners) activity).onActivityTitleChanged("Processing...");
         }
     }
