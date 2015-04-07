@@ -163,4 +163,10 @@ public class OauthToken {
             return null;
         }
     }
+	
+	public boolean clearToken() {
+		SharedPreferences.Editor editor = tokenPrefs.edit();
+		editor.clear();
+		return editor.commit();
+	}
 }

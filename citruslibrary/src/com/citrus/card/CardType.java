@@ -23,7 +23,7 @@ public enum CardType {
             "67"),
             
     MCRD("5"),
-    DINERCLUB("30", "36", "38", "39"),
+    DINERS("30", "36", "38", "39"),
     JCB("35"),
     AMEX("34", "37"),
     DISCOVER("60", "62", "64", "65"),
@@ -52,8 +52,8 @@ public enum CardType {
 			return "MCRD";
 		case MTRO:
 			return "MTRO";
-		case DINERCLUB:
-			return "DINERCLUB";
+		case DINERS:
+			return "DINERS";
 		case JCB:
 			return "JCB";
 		case AMEX:

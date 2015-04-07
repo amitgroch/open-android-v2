@@ -204,6 +204,20 @@ public class User {
         return response;
     }
     
+	public final static boolean logoutUser(Activity activity) {
+		OauthToken token = new OauthToken(activity, "");
+		return token.clearToken();
+	}
+	
+	public final static boolean isUserLoggedIn(Activity activity) {
+		OauthToken token = new OauthToken(activity, SIGNIN_TOKEN);
+		if(token.getuserToken() == null)
+			return false;
+		else
+			return true;
+	}
+	
+	
     private JSONObject fetchuserProfile(String mobile, OauthToken signuptoken) {
     	JSONObject response = new JSONObject();
 

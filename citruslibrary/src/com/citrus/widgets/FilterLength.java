@@ -16,7 +16,7 @@ public enum FilterLength {
 	VISA("19"),
 	MCRD("19"),
 	MTRO("23"),
-	DINERCLUB("19"),
+	DINERS("19"),
 	JCB("19"),
 	AMEX("18"),
 	DISCOVER("19");

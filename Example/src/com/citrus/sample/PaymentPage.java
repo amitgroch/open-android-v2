@@ -147,20 +147,20 @@ public class PaymentPage extends Activity {
         /*All the below mentioned parameters are mandatory - missing anyone of them may create errors
         * Do not change the key in the json below - only change the values*/
 
-        try {
-            customer.put("firstName", "Tester");
-            customer.put("lastName", "Citrus");
-            customer.put("email", "testeremail@mailinator.com");
-            customer.put("mobileNo", "9787543290");
-            customer.put("street1", "streetone");
-            customer.put("street2", "streettwo");
-            customer.put("city", "Mumbai");
-            customer.put("state", "Maharashtra");
-            customer.put("country", "India");
-            customer.put("zip", "400052");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+		try {
+			customer.put("firstName", "Tester");
+			customer.put("lastName", "Citrus");
+			customer.put("email", "tester@gmail.com");
+			customer.put("mobileNo", "9170164284");
+			customer.put("street1", "streetone");
+			customer.put("street2", "streettwo");
+			customer.put("city", "Mumbai");
+			customer.put("state", "Maharashtra");
+			customer.put("country", "India");
+			customer.put("zip", "400052");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
     }
 
