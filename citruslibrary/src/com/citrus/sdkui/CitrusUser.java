@@ -96,7 +96,7 @@ public final class CitrusUser implements Parcelable {
             if (user == null || TextUtils.isEmpty(user.mobileNo)) {
                 customer.put("mobileNo", "9170164284");
             } else {
-                customer.put("mobileNo", user.lastName);
+                customer.put("mobileNo", user.mobileNo);
             }
 
             if (user == null || user.address == null || TextUtils.isEmpty(user.address.street1)) {
