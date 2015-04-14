@@ -12,11 +12,20 @@
 */
 package com.citrus.mobile;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -24,6 +33,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -191,7 +201,7 @@ public class RESTclient {
                 String value = params.getString(key);
                 putdata.add(new BasicNameValuePair(key, value));
             } catch (JSONException e) {
-                Log.d("exception", e.toString());
+
             }
         }
         
@@ -275,7 +285,96 @@ public class RESTclient {
         return parseResponse(response);
 
     }
+    
+    public JSONObject deletecard(String num, String scheme) {
+    	URL url = null;
+		try {
+			try {
+				url = new URL(urls.getString(base_url) + urls.getString(type) + "/" + num + ":" + scheme);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return formError(600, "Could not find base_url or type");
+			}
+		} catch (MalformedURLException e) {
+			return formError(600, "Incorrect delete url");
+		}
+		
+    	HttpURLConnection httpCon = null;
+    	
+		try {
+			httpCon = (HttpURLConnection) url.openConnection();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+			return formError(600, "Check your internet connection - IO Exception");
+		}
+    	//httpCon.setDoOutput(true);
+    	
+    	Iterator<String> iterhead = headers.keys();
+        while (iterhead.hasNext()) {
+            String key = iterhead.next();
+            try {
+                String value = headers.getString(key);
+                httpCon.addRequestProperty(key, value);
+            } catch (JSONException e) {
+            	return Errorclass.addErrorFlag("Could not fetch proper headers", null);
+            }
+        }
+    	
+    	try {
+			httpCon.setRequestMethod("DELETE");
+	    	httpCon.connect();
+		} catch (ProtocolException e1) {
+			e1.printStackTrace();
+			return formError(600, "Protocol Exception");
+		} catch (IOException e) {
+			e.printStackTrace();
+			return formError(600, "Check your internet connection - IO Exception");
+		}
+    	
+    	
+    /*	Iterator<String> iterhead = headers.keys();
+        while (iterhead.hasNext()) {
+            String key = iterhead.next();
+            try {
+                String value = headers.getString(key);
+                httpConnection.addRequestProperty(key, value);
+            } catch (JSONException e) {
+            	return Errorclass.addErrorFlag("Could not fetch proper headers", null);
+            }
+        }
+    	    	
+        try {
+        	httpConnection.setDoOutput(true);
+			httpConnection.setRequestMethod("DELETE");
+		} catch (ProtocolException e) {
+			e.printStackTrace();
+			return formError(600, "Protocol Exception");
+		}
+    	
+		try {
+			httpConnection = (HttpURLConnection) url.openConnection();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			return formError(600, "Check internet connection - IO Exception");
+		}*/
+    	
+    	
+    	try {
+			if (httpCon.getResponseCode() == HttpsURLConnection.HTTP_NO_CONTENT) {
+				return SuccessCall.successMessage("Card Deleted Successfully", null);
+			}
+			else {
+				return formError(httpCon.getResponseCode(), "Could not delete the card");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return formError(600, "Check your internet connection - IO Exception");
 
+		}
+    	
+    	
+    }
+    
     public JSONObject postPayment(JSONObject payment) {
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = null;

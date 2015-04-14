@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.citrus.asynch.Binduser;
+import com.citrus.asynch.DeleteCard;
 import com.citrus.asynch.GetWallet;
 import com.citrus.asynch.Savecard;
 import com.citrus.asynch.SigninMobile;
@@ -31,7 +32,7 @@ import com.citrus.mobile.Config;
 
 public class MainActivity extends Activity {
 
-    Button bind, signin_mobile, savecard, getWallet, paybutton, widgets;
+    Button bind, signin_mobile, savecard, getWallet, paybutton, widgets, deletecard;
 
     Callback callback;
 
@@ -60,11 +61,13 @@ public class MainActivity extends Activity {
         paybutton = (Button) this.findViewById(R.id.paybutton);
         
         widgets = (Button) this.findViewById(R.id.widgets);
+        
+        deletecard = (Button) this.findViewById(R.id.deletecard);
 
         bind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Binduser(MainActivity.this, callback).execute("tester46@gmail.com", "9020184710");
+                new Binduser(MainActivity.this, callback).execute("monish.correia@gmail.com", "9020184710");
             }
         });
 
@@ -109,17 +112,26 @@ public class MainActivity extends Activity {
 			}
 		});
         
+        deletecard.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				new DeleteCard(MainActivity.this, callback)
+				.execute(new String[]{"1117", "VISA"});
+			}
+		});
+        
     }
 
     private void init() {
-        Config.setEnv("production"); //replace it with "production" when you are ready
+        Config.setEnv("sandbox"); //replace it with "production" when you are ready
         
         /*Replace following details with oauth details provided to you*/
         Config.setupSignupId("test-signup");
         Config.setupSignupSecret("c78ec84e389814a05d3ae46546d16d2e");
 
-        Config.setSigninId("test-signin");
-        Config.setSigninSecret("52f7e15efd4208cf5345dd554443fd99");
+        Config.setSigninId("tinyowl-signin");
+        Config.setSigninSecret("034ba979ac2f17174b0fc19f34d190cb");
     }
 
     private void showToast(String message, String error) {
