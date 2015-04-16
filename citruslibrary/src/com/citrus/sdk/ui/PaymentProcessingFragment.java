@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -16,6 +16,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.citrus.sdk.Utils;
+import com.citrus.sdk.ui.listeners.FragmentEventsListeners;
 import com.citruspay.citruslibrary.R;
 
 

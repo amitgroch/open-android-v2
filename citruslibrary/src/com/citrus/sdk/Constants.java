@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk;
 
 /**
  * Created by salil on 9/3/15.

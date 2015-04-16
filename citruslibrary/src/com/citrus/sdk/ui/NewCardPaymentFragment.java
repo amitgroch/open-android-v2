@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -26,15 +26,21 @@ import com.citrus.mobile.User;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
-import com.citrus.sdkui.classes.CardOption;
-import com.citrus.sdkui.classes.CreditCardOption;
-import com.citrus.sdkui.classes.DebitCardOption;
+import com.citrus.sdk.Constants;
+import com.citrus.sdk.Utils;
+import com.citrus.sdk.ui.classes.CardOption;
+import com.citrus.sdk.ui.classes.CitrusUser;
+import com.citrus.sdk.ui.classes.CreditCardOption;
+import com.citrus.sdk.ui.classes.DebitCardOption;
+import com.citrus.sdk.ui.daemons.GetBill;
+import com.citrus.sdk.ui.listeners.FragmentEventsListeners;
+import com.citrus.sdk.ui.listeners.ProcessPaymentListener;
 import com.citruspay.citruslibrary.R;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnPaymentOptionSelectedListener} interface
+ * {@link com.citrus.sdk.ui.listeners.OnPaymentOptionSelectedListener} interface
  * to handle interaction events.
  * Use the {@link NewCardPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.

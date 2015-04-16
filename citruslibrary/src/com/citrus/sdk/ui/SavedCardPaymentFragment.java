@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -24,7 +24,12 @@ import com.citrus.mobile.Callback;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
-import com.citrus.sdkui.classes.CardOption;
+import com.citrus.sdk.Constants;
+import com.citrus.sdk.Utils;
+import com.citrus.sdk.ui.classes.CardOption;
+import com.citrus.sdk.ui.classes.CitrusUser;
+import com.citrus.sdk.ui.daemons.GetBill;
+import com.citrus.sdk.ui.listeners.ProcessPaymentListener;
 import com.citruspay.citruslibrary.R;
 
 import java.util.Locale;
@@ -33,7 +38,7 @@ import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ProcessPaymentListener} interface
+ * {@link com.citrus.sdk.ui.listeners.ProcessPaymentListener} interface
  * to handle interaction events.
  * Use the {@link SavedCardPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.

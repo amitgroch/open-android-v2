@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk;
 
 import android.content.Context;
 import android.widget.Toast;

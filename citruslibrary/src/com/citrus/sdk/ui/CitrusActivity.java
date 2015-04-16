@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -26,16 +26,23 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.citrus.asynch.InitSDK;
-import com.citrus.interfaces.InitListener;
 import com.citrus.mobile.Callback;
 import com.citrus.netbank.Bank;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
-import com.citrus.sdkui.classes.CardOption;
-import com.citrus.sdkui.classes.CitrusCash;
-import com.citrus.sdkui.classes.NetbankingOption;
-import com.citrus.sdkui.classes.PaymentOption;
+import com.citrus.sdk.Constants;
+import com.citrus.sdk.Utils;
+import com.citrus.sdk.ui.classes.CardOption;
+import com.citrus.sdk.ui.classes.CitrusCash;
+import com.citrus.sdk.ui.classes.CitrusUser;
+import com.citrus.sdk.ui.classes.NetbankingOption;
+import com.citrus.sdk.ui.classes.PaymentOption;
+import com.citrus.sdk.ui.daemons.GetBill;
+import com.citrus.sdk.ui.listeners.FragmentEventsListeners;
+import com.citrus.sdk.ui.listeners.InitListener;
+import com.citrus.sdk.ui.listeners.OnPaymentOptionSelectedListener;
+import com.citrus.sdk.ui.listeners.ProcessPaymentListener;
 import com.citruspay.citruslibrary.R;
 
 import org.json.JSONException;
@@ -43,12 +50,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.citrus.sdkui.CitrusTransactionResponse.TransactionStatus;
-import static com.citrus.sdkui.PaymentProcessingFragment.OnTransactionCompleteListener;
-import static com.citrus.sdkui.PaymentStatusFragment.OnTransactionResponseListener;
 
-
-public final class CitrusActivity extends ActionBarActivity implements FragmentEventsListeners, OnPaymentOptionSelectedListener, OnTransactionResponseListener, OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
+public final class CitrusActivity extends ActionBarActivity implements FragmentEventsListeners, OnPaymentOptionSelectedListener, PaymentStatusFragment.OnTransactionResponseListener, PaymentProcessingFragment.OnTransactionCompleteListener, ProcessPaymentListener, InitListener {
 
     private String mMerchantName = null;
     private String mMerchantBillUrl = null;
@@ -135,7 +138,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
 
                     dialog.dismiss();
 
-                    CitrusTransactionResponse transactionResponse = new CitrusTransactionResponse(TransactionStatus.FAIL, "Cancelled by the user.", "");
+                    CitrusTransactionResponse transactionResponse = new CitrusTransactionResponse(CitrusTransactionResponse.TransactionStatus.FAIL, "Cancelled by the user.", "");
                     showPaymentStatusFragment(transactionResponse, mPaymentParams);
                 }
             });

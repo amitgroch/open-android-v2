@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.citrus.sdkui.classes.CitrusCash;
-import com.citrus.sdkui.classes.NetbankingOption;
-import com.citrus.sdkui.classes.PaymentOption;
+import com.citrus.sdk.Constants;
+import com.citrus.sdk.ui.classes.CitrusCash;
+import com.citrus.sdk.ui.classes.NetbankingOption;
+import com.citrus.sdk.ui.classes.PaymentOption;
+import com.citrus.sdk.ui.listeners.OnPaymentOptionSelectedListener;
 import com.citruspay.citruslibrary.R;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.util.Locale;
  * <p/>
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnPaymentOptionSelectedListener} interface
+ * {@link com.citrus.sdk.ui.listeners.OnPaymentOptionSelectedListener} interface
  * to handle interaction events.
  * Use the {@link PaymentOptionsFragment#newInstance} factory method to
  * create an instance of this fragment.

@@ -5,14 +5,14 @@
             android:layout_height="match_parent"
             android:background="#E0E0E0"
             android:padding="8dp"
-            tools:context="com.citrus.sdkui.PaymentOptionsFragment">
+            tools:context="com.citrus.sdk.ui.PaymentOptionsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.citrus.sdkui.PaymentOptionsCardView
+        <com.citrus.sdk.ui.PaymentOptionsCardView
             android:id="@+id/cardview_citrus_cash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             card_view:cardUseCompatPadding="true"
             />
 
-        <com.citrus.sdkui.PaymentOptionsCardView
+        <com.citrus.sdk.ui.PaymentOptionsCardView
             android:id="@+id/cardview_saved_cards"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             card_view:cardUseCompatPadding="true"
             />
 
-        <com.citrus.sdkui.PaymentOptionsCardView
+        <com.citrus.sdk.ui.PaymentOptionsCardView
             android:id="@+id/cardview_debit_credit_cards"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             card_view:cardUseCompatPadding="true"
             />
 
-        <com.citrus.sdkui.PaymentOptionsCardView
+        <com.citrus.sdk.ui.PaymentOptionsCardView
             android:id="@+id/cardview_netbanking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

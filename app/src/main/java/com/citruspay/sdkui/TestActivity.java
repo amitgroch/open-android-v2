@@ -6,12 +6,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.citrus.sdkui.CitrusActivity;
-import com.citrus.sdkui.CitrusPaymentParams;
-import com.citrus.sdkui.CitrusTransactionResponse;
-import com.citrus.sdkui.CitrusUser;
-import com.citrus.sdkui.Constants;
-import com.citrus.sdkui.Utils;
+import com.citrus.sdk.Constants;
+import com.citrus.sdk.Utils;
+import com.citrus.sdk.ui.CitrusActivity;
+import com.citrus.sdk.ui.CitrusPaymentParams;
+import com.citrus.sdk.ui.CitrusTransactionResponse;
+import com.citrus.sdk.ui.classes.CitrusUser;
 
 
 public class TestActivity extends ActionBarActivity {

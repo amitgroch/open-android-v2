@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui.classes;
 
 import android.os.Parcel;
 import android.os.Parcelable;

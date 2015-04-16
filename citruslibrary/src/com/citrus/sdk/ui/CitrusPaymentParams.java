@@ -1,13 +1,14 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.citrus.mobile.Config;
-import com.citrus.sdkui.classes.CardOption;
-import com.citrus.sdkui.classes.NetbankingOption;
-import com.citrus.sdkui.classes.PaymentOption;
+import com.citrus.sdk.ui.classes.CardOption;
+import com.citrus.sdk.ui.classes.CitrusUser;
+import com.citrus.sdk.ui.classes.NetbankingOption;
+import com.citrus.sdk.ui.classes.PaymentOption;
 
 import org.json.JSONException;
 import org.json.JSONObject;

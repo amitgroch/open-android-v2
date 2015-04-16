@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui.daemons;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-class GetBill extends AsyncTask<Void, Void, String> {
+public class GetBill extends AsyncTask<Void, Void, String> {
     String billurl;
     Callback callback;
     double amount;

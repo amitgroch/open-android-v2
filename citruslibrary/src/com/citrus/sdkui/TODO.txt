@@ -1,7 +1,0 @@
-- Get assets. *
-- Get placeholder images for card and bank.
-- Get messages for every payment option if not available.
-- Need to enable back button from webview, so that user can cancel the transaction.
-- JSON keystore parsing and initialization
-- generating bill inside app itself with values from json
--

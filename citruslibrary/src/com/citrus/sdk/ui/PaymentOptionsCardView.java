@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,12 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.citrus.sdkui.classes.CardOption;
-import com.citrus.sdkui.classes.CitrusCash;
-import com.citrus.sdkui.classes.CreditCardOption;
-import com.citrus.sdkui.classes.DebitCardOption;
-import com.citrus.sdkui.classes.NetbankingOption;
-import com.citrus.sdkui.classes.PaymentOption;
+import com.citrus.sdk.ui.classes.CardOption;
+import com.citrus.sdk.ui.classes.CitrusCash;
+import com.citrus.sdk.ui.classes.CreditCardOption;
+import com.citrus.sdk.ui.classes.DebitCardOption;
+import com.citrus.sdk.ui.classes.NetbankingOption;
+import com.citrus.sdk.ui.classes.PaymentOption;
+import com.citrus.sdk.ui.listeners.OnPaymentOptionSelectedListener;
 import com.citruspay.citruslibrary.R;
 
 import java.util.List;

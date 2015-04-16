@@ -1,8 +1,10 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+
+import com.citrus.sdk.ui.classes.CitrusUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;

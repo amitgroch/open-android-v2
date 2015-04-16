@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui.listeners;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

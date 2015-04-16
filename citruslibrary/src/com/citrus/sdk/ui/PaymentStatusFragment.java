@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdk.ui;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.citrus.sdk.Constants;
+import com.citrus.sdk.ui.listeners.FragmentEventsListeners;
 import com.citruspay.citruslibrary.R;
 
 
