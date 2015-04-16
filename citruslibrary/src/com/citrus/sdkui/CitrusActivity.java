@@ -63,7 +63,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_citrus);
 
         // Restrict the activity orientation to portrait only.
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
