@@ -58,11 +58,11 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
     private double mTransactionAmount = 0.0;
     private ProgressDialog mProgressDialog = null;
     private FragmentManager mFragmentManager = null;
-    private CitrusPaymentParams mPaymentParams = null;
+    private PaymentParams mPaymentParams = null;
     private String mColorPrimary = null;
     private String mColorPrimaryDark = null;
     private ActionBar mActionBar = null;
-    private CitrusTransactionResponse mTransactionResponse;
+    private TransactionResponse mTransactionResponse;
     private boolean mShowDialog = false;
     private boolean mNewCardAdded = false;
 
@@ -138,7 +138,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
 
                     dialog.dismiss();
 
-                    CitrusTransactionResponse transactionResponse = new CitrusTransactionResponse(CitrusTransactionResponse.TransactionStatus.FAIL, "Cancelled by the user.", "");
+                    TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.FAIL, "Cancelled by the user.", "");
                     showPaymentStatusFragment(transactionResponse, mPaymentParams);
                 }
             });
@@ -302,7 +302,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
         mShowDialog = true;
     }
 
-    private void showPaymentStatusFragment(CitrusTransactionResponse transactionResponse, CitrusPaymentParams paymentParams) {
+    private void showPaymentStatusFragment(TransactionResponse transactionResponse, PaymentParams paymentParams) {
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
@@ -356,7 +356,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
         }
     }
 
-    private void sendResponse(CitrusTransactionResponse transactionResponse) {
+    private void sendResponse(TransactionResponse transactionResponse) {
         Intent intent = new Intent();
         intent.putExtra(Utils.INTENT_EXTRA_PAYMENT_RESPONSE, transactionResponse);
         setResult(Utils.REQUEST_CODE_PAYMENT_ACTIVITY, intent);
@@ -433,7 +433,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
     }
 
     @Override
-    public void onTransactionComplete(CitrusTransactionResponse transactionResponse) {
+    public void onTransactionComplete(TransactionResponse transactionResponse) {
         mTransactionResponse = transactionResponse;
         // Remove the payment processing fragment.
         mFragmentManager.popBackStack();

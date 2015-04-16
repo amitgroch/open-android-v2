@@ -50,7 +50,7 @@ public final class PaymentOptionsCardView extends CardView implements View.OnCli
         mContext = context;
     }
 
-    public void init(OnPaymentOptionSelectedListener listener, PaymentOptionsType paymentOptionsCardType, CitrusPaymentParams paymentParams) {
+    public void init(OnPaymentOptionSelectedListener listener, PaymentOptionsType paymentOptionsCardType, PaymentParams paymentParams) {
 
         mListener = listener;
 

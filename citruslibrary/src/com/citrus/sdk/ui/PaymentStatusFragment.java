@@ -28,8 +28,8 @@ import com.citruspay.citruslibrary.R;
 public class PaymentStatusFragment extends Fragment implements View.OnClickListener {
 
     private OnTransactionResponseListener mListener;
-    private CitrusTransactionResponse mTransactionResponse = null;
-    private CitrusPaymentParams mPaymentParams = null;
+    private TransactionResponse mTransactionResponse = null;
+    private PaymentParams mPaymentParams = null;
     private ImageView imgTransactionStatus = null;
 
     public PaymentStatusFragment() {
@@ -40,10 +40,10 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param transactionResponse Object of {@link CitrusTransactionResponse}
+     * @param transactionResponse Object of {@link TransactionResponse}
      * @return A new instance of fragment PaymentStatusFragment.
      */
-    public static PaymentStatusFragment newInstance(CitrusTransactionResponse transactionResponse, CitrusPaymentParams paymentParams) {
+    public static PaymentStatusFragment newInstance(TransactionResponse transactionResponse, PaymentParams paymentParams) {
         PaymentStatusFragment fragment = new PaymentStatusFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.PARAM_TRANSACTION_RESPONSE, transactionResponse);
@@ -84,7 +84,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
 
             Log.i("Citrus", "Transaction Response :: " + mTransactionResponse);
 
-            if (mTransactionResponse.getTransactionStatus() == CitrusTransactionResponse.TransactionStatus.SUCCESS) {
+            if (mTransactionResponse.getTransactionStatus() == TransactionResponse.TransactionStatus.SUCCESS) {
                 // Set the icon for transaction status.
                 imgTransactionStatus.setBackgroundResource(R.drawable.checkmark_green);
 

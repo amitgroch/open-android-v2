@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.citrus.mobile.Callback;
-import com.citrus.sdk.ui.CitrusPaymentParams;
+import com.citrus.sdk.ui.PaymentParams;
 import com.citrus.sdk.ui.classes.CardOption;
 import com.citrus.sdk.ui.classes.CitrusUser;
 import com.citrus.sdk.ui.classes.NetbankingOption;
@@ -30,7 +30,7 @@ public final class InitSDK {
     private String mMobileNo;
     private String mVanity;
 
-    public InitSDK(Context context, InitListener listener, CitrusPaymentParams paymentParams) {
+    public InitSDK(Context context, InitListener listener, PaymentParams paymentParams) {
         mContext = context;
         mListener = listener;
 

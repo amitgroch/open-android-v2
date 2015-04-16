@@ -18,15 +18,15 @@ import java.util.ArrayList;
 /**
  * Created by salil on 9/3/15.
  */
-public final class CitrusPaymentParams implements Parcelable {
+public final class PaymentParams implements Parcelable {
 
-    public static final Creator<CitrusPaymentParams> CREATOR = new Creator<CitrusPaymentParams>() {
-        public CitrusPaymentParams createFromParcel(Parcel source) {
-            return new CitrusPaymentParams(source);
+    public static final Creator<PaymentParams> CREATOR = new Creator<PaymentParams>() {
+        public PaymentParams createFromParcel(Parcel source) {
+            return new PaymentParams(source);
         }
 
-        public CitrusPaymentParams[] newArray(int size) {
-            return new CitrusPaymentParams[size];
+        public PaymentParams[] newArray(int size) {
+            return new PaymentParams[size];
         }
     };
 
@@ -99,7 +99,7 @@ public final class CitrusPaymentParams implements Parcelable {
 
     private Environment environment = Environment.SANDBOX;
 
-    private CitrusPaymentParams(double transactionAmount, String billUrl, String jsonKeyStore) {
+    private PaymentParams(double transactionAmount, String billUrl, String jsonKeyStore) {
         this.transactionAmount = transactionAmount;
         this.billUrl = billUrl;
         this.jsonKeyStore = jsonKeyStore;
@@ -132,7 +132,7 @@ public final class CitrusPaymentParams implements Parcelable {
         }
     }
 
-    private CitrusPaymentParams(Parcel in) {
+    private PaymentParams(Parcel in) {
         in.readTypedList(this.netbankingOptionList, NetbankingOption.CREATOR);
         in.readTypedList(this.topNetbankingOptions, NetbankingOption.CREATOR);
         in.readTypedList(this.userSavedOptionList, CardOption.CREATOR);
@@ -148,40 +148,40 @@ public final class CitrusPaymentParams implements Parcelable {
         this.jsonKeyStore = in.readString();
     }
 
-    public static CitrusPaymentParams builder(double transactionAmount, String billUrl, String jsonKeyStore) {
+    public static PaymentParams builder(double transactionAmount, String billUrl, String jsonKeyStore) {
         if (transactionAmount <= 0 && TextUtils.isEmpty(billUrl) && TextUtils.isEmpty(jsonKeyStore)) {
             throw new IllegalArgumentException("Mandatory parameters missing...");
         }
 
-        return new CitrusPaymentParams(transactionAmount, billUrl, jsonKeyStore);
+        return new PaymentParams(transactionAmount, billUrl, jsonKeyStore);
     }
 
-    public CitrusPaymentParams colorPrimaryDark(String colorPrimaryDark) {
+    public PaymentParams colorPrimaryDark(String colorPrimaryDark) {
         this.colorPrimaryDark = colorPrimaryDark;
         return this;
     }
 
-    public CitrusPaymentParams colorPrimary(String colorPrimary) {
+    public PaymentParams colorPrimary(String colorPrimary) {
         this.colorPrimary = colorPrimary;
         return this;
     }
 
-    public CitrusPaymentParams textColorPrimary(String textColorPrimary) {
+    public PaymentParams textColorPrimary(String textColorPrimary) {
         this.textColorPrimary = textColorPrimary;
         return this;
     }
 
-    public CitrusPaymentParams accentColor(String accentColor) {
+    public PaymentParams accentColor(String accentColor) {
         this.accentColor = accentColor;
         return this;
     }
 
-    public CitrusPaymentParams merchantName(String merchantName) {
+    public PaymentParams merchantName(String merchantName) {
         this.merchantName = merchantName;
         return this;
     }
 
-    public CitrusPaymentParams user(CitrusUser user) {
+    public PaymentParams user(CitrusUser user) {
         this.user = user;
 
         if (user != null) {
@@ -192,7 +192,7 @@ public final class CitrusPaymentParams implements Parcelable {
         return this;
     }
 
-    public CitrusPaymentParams environment(Environment environment) {
+    public PaymentParams environment(Environment environment) {
         this.environment = environment;
 
         if (environment == Environment.PRODUCTION) {
@@ -268,7 +268,7 @@ public final class CitrusPaymentParams implements Parcelable {
         return jsonKeyStore;
     }
 
-    public CitrusPaymentParams build() {
+    public PaymentParams build() {
         return this;
     }
 

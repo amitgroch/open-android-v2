@@ -35,7 +35,7 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
     private PaymentOptionsCardView mCardViewSavedCards = null;
     private PaymentOptionsCardView mCardViewDebitCreditCards = null;
     private PaymentOptionsCardView mCardViewNetbanking = null;
-    private CitrusPaymentParams mPaymentParams = null;
+    private PaymentParams mPaymentParams = null;
     private OnPaymentOptionSelectedListener mListener;
 
     public PaymentOptionsFragment() {
@@ -48,7 +48,7 @@ public class PaymentOptionsFragment extends Fragment implements OnPaymentOptionS
      *
      * @return A new instance of fragment PaymentOptionsFragment.
      */
-    public static PaymentOptionsFragment newInstance(CitrusPaymentParams paymentParams) {
+    public static PaymentOptionsFragment newInstance(PaymentParams paymentParams) {
         PaymentOptionsFragment fragment = new PaymentOptionsFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);

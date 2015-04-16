@@ -46,7 +46,7 @@ import java.util.Locale;
 public class SavedCardPaymentFragment extends Fragment {
     private ProcessPaymentListener mListener;
     private CardOption mSavedCard = null;
-    private CitrusPaymentParams mPaymentParams;
+    private PaymentParams mPaymentParams;
 
     private ProgressDialog mProgressDialog = null;
     private CheckBox mCheckCVV1 = null;
@@ -120,7 +120,7 @@ public class SavedCardPaymentFragment extends Fragment {
      *
      * @return A new instance of fragment SaveCardPaymentFragment.
      */
-    public static SavedCardPaymentFragment newInstance(CardOption cardOption, CitrusPaymentParams paymentParams) {
+    public static SavedCardPaymentFragment newInstance(CardOption cardOption, PaymentParams paymentParams) {
         SavedCardPaymentFragment fragment = new SavedCardPaymentFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.PARAM_SAVED_CARD, cardOption);

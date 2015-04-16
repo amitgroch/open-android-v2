@@ -14,15 +14,15 @@ import java.util.Map;
 /**
  * Created by salil on 16/2/15.
  */
-public final class CitrusTransactionResponse implements Parcelable {
+public final class TransactionResponse implements Parcelable {
 
-    public static final Parcelable.Creator<CitrusTransactionResponse> CREATOR = new Parcelable.Creator<CitrusTransactionResponse>() {
-        public CitrusTransactionResponse createFromParcel(Parcel source) {
-            return new CitrusTransactionResponse(source);
+    public static final Parcelable.Creator<TransactionResponse> CREATOR = new Parcelable.Creator<TransactionResponse>() {
+        public TransactionResponse createFromParcel(Parcel source) {
+            return new TransactionResponse(source);
         }
 
-        public CitrusTransactionResponse[] newArray(int size) {
-            return new CitrusTransactionResponse[size];
+        public TransactionResponse[] newArray(int size) {
+            return new TransactionResponse[size];
         }
     };
 
@@ -43,7 +43,7 @@ public final class CitrusTransactionResponse implements Parcelable {
     private Map<String, String> customParamsMap = null;
     private String jsonResponse = null;
 
-    private CitrusTransactionResponse() {
+    private TransactionResponse() {
 
     }
 
@@ -54,7 +54,7 @@ public final class CitrusTransactionResponse implements Parcelable {
      * @param message
      * @param transactionId
      */
-    CitrusTransactionResponse(TransactionStatus transactionStatus, String message, String transactionId) {
+    TransactionResponse(TransactionStatus transactionStatus, String message, String transactionId) {
         this.transactionStatus = transactionStatus;
         this.message = message;
         this.transactionDetails = new TransactionDetails(transactionId);
@@ -77,7 +77,7 @@ public final class CitrusTransactionResponse implements Parcelable {
      * @param COD                - cash on delivery.
      * @param customParamsMap    - custom parameters sent with request.
      */
-    private CitrusTransactionResponse(String amount, String currency, String message, String responseCode, TransactionStatus transactionStatus, TransactionDetails transactionDetails, CitrusUser citrusUser, PaymentMode paymentMode, String issuerCode, String impsMobileNumber, String impsMmid, String authIdCode, String signature, boolean COD, Map<String, String> customParamsMap) {
+    private TransactionResponse(String amount, String currency, String message, String responseCode, TransactionStatus transactionStatus, TransactionDetails transactionDetails, CitrusUser citrusUser, PaymentMode paymentMode, String issuerCode, String impsMobileNumber, String impsMmid, String authIdCode, String signature, boolean COD, Map<String, String> customParamsMap) {
         this.amount = amount;
         this.currency = currency;
         this.message = message;
@@ -95,7 +95,7 @@ public final class CitrusTransactionResponse implements Parcelable {
         this.customParamsMap = customParamsMap;
     }
 
-    private CitrusTransactionResponse(Parcel in) {
+    private TransactionResponse(Parcel in) {
         this.amount = in.readString();
         this.currency = in.readString();
         this.message = in.readString();
@@ -116,8 +116,8 @@ public final class CitrusTransactionResponse implements Parcelable {
         this.jsonResponse = in.readString();
     }
 
-    public static CitrusTransactionResponse fromJSON(String response) {
-        CitrusTransactionResponse transactionResponse = null;
+    public static TransactionResponse fromJSON(String response) {
+        TransactionResponse transactionResponse = null;
 
         try {
             if (response != null) {
@@ -142,13 +142,13 @@ public final class CitrusTransactionResponse implements Parcelable {
                 CitrusUser citrusUser = CitrusUser.fromJSONObject(jsonObject);
                 boolean cod = "true".equalsIgnoreCase(isCOD) ? true : false;
 
-                transactionResponse = new CitrusTransactionResponse(amount, currency, message, responseCode, transactionStatus, transactionDetails, citrusUser, paymentMode, issuerCode, impsMobileNumber, impsMmid, authIdCode, signature, cod, customParamsMap);
+                transactionResponse = new TransactionResponse(amount, currency, message, responseCode, transactionStatus, transactionDetails, citrusUser, paymentMode, issuerCode, impsMobileNumber, impsMmid, authIdCode, signature, cod, customParamsMap);
                 transactionResponse.setJsonResponse(jsonObject.toString());
 
             }
         } catch (JSONException ex) {
             ex.printStackTrace();
-            transactionResponse = new CitrusTransactionResponse();
+            transactionResponse = new TransactionResponse();
             transactionResponse.setJsonResponse(response);
         }
 

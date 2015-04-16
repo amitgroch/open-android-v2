@@ -48,7 +48,7 @@ import com.citruspay.citruslibrary.R;
 public final class NewCardPaymentFragment extends Fragment implements View.OnClickListener {
     private ProcessPaymentListener mListener = null;
     private FragmentEventsListeners mFragmentEventsListeners = null;
-    private CitrusPaymentParams mPaymentParams = null;
+    private PaymentParams mPaymentParams = null;
 
     private RadioGroup mRadioGroup = null;
     private EditText mEditNameOnCard = null;
@@ -68,7 +68,7 @@ public final class NewCardPaymentFragment extends Fragment implements View.OnCli
      *
      * @return A new instance of fragment CardPaymentFragment.
      */
-    public static NewCardPaymentFragment newInstance(CitrusPaymentParams paymentParams) {
+    public static NewCardPaymentFragment newInstance(PaymentParams paymentParams) {
 
         NewCardPaymentFragment fragment = new NewCardPaymentFragment();
         Bundle bundle = new Bundle();

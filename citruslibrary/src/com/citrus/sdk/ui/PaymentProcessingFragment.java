@@ -152,7 +152,7 @@ public final class PaymentProcessingFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnTransactionCompleteListener {
-        public void onTransactionComplete(CitrusTransactionResponse transactionResponse);
+        public void onTransactionComplete(TransactionResponse transactionResponse);
     }
 
     /**
@@ -195,7 +195,7 @@ public final class PaymentProcessingFragment extends Fragment {
 
         @JavascriptInterface
         public void pgResponse(String response) {
-            CitrusTransactionResponse transactionResponse = CitrusTransactionResponse.fromJSON(response);
+            TransactionResponse transactionResponse = TransactionResponse.fromJSON(response);
             mListener.onTransactionComplete(transactionResponse);
 
         }

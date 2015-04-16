@@ -9,8 +9,8 @@ import android.view.View;
 import com.citrus.sdk.Constants;
 import com.citrus.sdk.Utils;
 import com.citrus.sdk.ui.CitrusActivity;
-import com.citrus.sdk.ui.CitrusPaymentParams;
-import com.citrus.sdk.ui.CitrusTransactionResponse;
+import com.citrus.sdk.ui.PaymentParams;
+import com.citrus.sdk.ui.TransactionResponse;
 import com.citrus.sdk.ui.classes.CitrusUser;
 
 
@@ -32,10 +32,10 @@ public class TestActivity extends ActionBarActivity {
         Intent intent = new Intent(TestActivity.this, CitrusActivity.class);
         CitrusUser user = new CitrusUser("tester46@gmail.com", "1234567890", "Developer", "Citrus", null);
 
-        CitrusPaymentParams paymentParams = CitrusPaymentParams
+        PaymentParams paymentParams = PaymentParams
                 .builder(3.0, SANDBOX_BILL_URL, JSON_KEY_STORE_DEMO)
                 .user(user)
-                .environment(CitrusPaymentParams.Environment.SANDBOX)
+                .environment(PaymentParams.Environment.SANDBOX)
                 .merchantName("Nature First")
                 .build();
 
@@ -49,11 +49,11 @@ public class TestActivity extends ActionBarActivity {
         Intent intent = new Intent(TestActivity.this, CitrusActivity.class);
 
         CitrusUser user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Salil", "Godbole", null);
-        CitrusPaymentParams paymentParams = CitrusPaymentParams
+        PaymentParams paymentParams = PaymentParams
                 .builder(3.0, PROD_BILL_URL, JSON_KEY_STORE_DEMO)
                 .user(user)
                 .merchantName("Nature First")
-                .environment(CitrusPaymentParams.Environment.PRODUCTION)
+                .environment(PaymentParams.Environment.PRODUCTION)
                 .build();
 
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
@@ -71,7 +71,7 @@ public class TestActivity extends ActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (data != null) {
-            CitrusTransactionResponse transactionResponse = data.getParcelableExtra(Utils.INTENT_EXTRA_PAYMENT_RESPONSE);
+            TransactionResponse transactionResponse = data.getParcelableExtra(Utils.INTENT_EXTRA_PAYMENT_RESPONSE);
             if (transactionResponse != null) {
                 Log.e("Citrus", " transactionResponse : " + transactionResponse.toString());
             }
