@@ -13,7 +13,6 @@
 package com.citrus.asynch;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
@@ -23,28 +22,27 @@ import com.citrus.wallet.Wallet;
 
 public class GetWallet extends AsyncTask<Void, Void, Void> {
     String stringWallet;
-    Context context;
+    Activity activity;
     Callback callback;
 
-    public GetWallet(Context context, Callback callback) {
-        this.context = context;
+    public GetWallet(Activity activity, Callback callback) {
+        this.activity = activity;
         this.callback = callback;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         Wallet wallet = new Wallet();
-        stringWallet = wallet.getWallet(context);
+        stringWallet = wallet.getWallet(activity);
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (TextUtils.isEmpty(stringWallet)){
+        if (TextUtils.isEmpty(stringWallet)) {
             callback.onTaskexecuted("", "Could not get wallet");
-        }
-        else {
+        } else {
             callback.onTaskexecuted(stringWallet, "");
         }
     }

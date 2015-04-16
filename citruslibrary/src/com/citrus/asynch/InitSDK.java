@@ -1,7 +1,9 @@
 package com.citrus.asynch;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -97,10 +99,10 @@ public final class InitSDK {
 
         // Call only if the email id is provided.
         if (!TextUtils.isEmpty(mEmailId)) {
-            new Binduser(mContext, new Callback() {
+            new Binduser((Activity) mContext, new Callback() {
                 @Override
                 public void onTaskexecuted(String response, String error) {
-                    if (response.equalsIgnoreCase("User Bound Successfully!")) {
+                    if (response.contains("user bound")) {
                         fetchWallet();
                     } else {
                         mListener.onFailToReceiveSavedOptions(error);
@@ -117,7 +119,7 @@ public final class InitSDK {
 
     private void fetchWallet() {
 
-        new GetWallet(mContext, new Callback() {
+        new GetWallet((Activity) mContext, new Callback() {
             @Override
             public void onTaskexecuted(String response, String error) {
                 if (TextUtils.isEmpty(response)) {

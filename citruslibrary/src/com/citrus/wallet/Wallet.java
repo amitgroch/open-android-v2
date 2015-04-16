@@ -9,25 +9,24 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
- */
+*/
 package com.citrus.wallet;
 
-import android.content.Context;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
 
 import com.citrus.card.Card;
 import com.citrus.card.CardType;
 import com.citrus.mobile.Config;
 import com.citrus.mobile.OauthToken;
 import com.citrus.mobile.RESTclient;
+import com.citrus.mobile.User;
 import com.citrus.netbank.Bank;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-/**
- * Created by shardul on 19/11/14.
- */
 public class Wallet {
     private Card card;
     private Bank bank;
@@ -51,10 +50,10 @@ public class Wallet {
     /**
      * Save the netbanking option as user preffered option.
      *
-     * @param context
+     * @param activity
      * @return
      */
-    public String saveBank(Context context) {
+    public String saveBank(Activity activity) {
 
         /*
          * Following json will be required to save the bank as payment option.
@@ -62,7 +61,7 @@ public class Wallet {
           * {"paymentOptions":[{"owner":"","type":"netbanking","bank":"ICICI Bank"}],"type":"payment","defaultOption":""}
          */
 
-        OauthToken token = new OauthToken(context);
+        OauthToken token = new OauthToken(activity, User.SIGNIN_TOKEN);
         String access_token = null;
 
         try {
@@ -117,9 +116,9 @@ public class Wallet {
 
     }
 
-    public String saveCard(Context context) {
+    public String saveCard(Activity activity) {
 
-        OauthToken token = new OauthToken(context);
+        OauthToken token = new OauthToken(activity, User.SIGNIN_TOKEN);
         String access_token = null;
 
         try {
@@ -128,8 +127,10 @@ public class Wallet {
             e.printStackTrace();
         }
 
+
         JSONObject cardJson = new JSONObject();
         JSONObject cardDetails = new JSONObject();
+
 
         try {
             cardJson.put("type", "payment");
@@ -176,9 +177,9 @@ public class Wallet {
 
     }
 
-    public String getWallet(Context context) {
+    public String getWallet(Activity activity) {
 
-        OauthToken token = new OauthToken(context);
+        OauthToken token = new OauthToken(activity, User.SIGNIN_TOKEN);
         String access_token = null;
 
         try {
@@ -197,7 +198,13 @@ public class Wallet {
 
         RESTclient resTclient = new RESTclient("wallet", base_url, null, headers);
 
-        JSONObject response = resTclient.makegetRequest();
+        JSONObject response;
+        try {
+            response = resTclient.makegetRequest();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Unable to get User Wallet";
+        }
 
         return response.toString();
     }

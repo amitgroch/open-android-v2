@@ -14,9 +14,7 @@ package com.citrus.card;
 
 import java.util.Calendar;
 
-/**
- * Created by shardul on 19/11/14.
- */
+
 public class Clock {
     private static Clock instance;
     protected Calendar calendarInstance;

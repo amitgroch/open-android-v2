@@ -15,9 +15,7 @@ package com.citrus.payment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by shardul on 19/11/14.
- */
+
 public class UserDetails {
     JSONObject user;
 
@@ -25,7 +23,7 @@ public class UserDetails {
         this.user = user;
     }
 
-    public String getFirstname(){
+    public String getFirstname() {
         try {
             return user.getString("firstName");
         } catch (JSONException e) {
@@ -114,7 +112,6 @@ public class UserDetails {
             return null;
         }
     }
-
 
 
 }

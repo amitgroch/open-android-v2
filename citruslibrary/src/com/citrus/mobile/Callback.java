@@ -12,9 +12,7 @@
 */
 package com.citrus.mobile;
 
-/**
- * Created by shardul on 18/11/14.
- */
+
 public interface Callback {
     public void onTaskexecuted(String success, String error);
 }

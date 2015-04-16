@@ -13,9 +13,19 @@
 package com.citrus.mobile;
 
 public class Config {
-    private static String env, signinId, signinSecret, signupId, signupSecret;
-    private static String emailID;
-    private static String mobileNo;
+    private static String env, signinId, signinSecret, signupId, signupSecret, prepaid_cookie = "";
+
+    public static void setEnv(String sip) {
+        env = sip;
+    }
+
+    public static void setSigninId(String id) {
+        signinId = id;
+    }
+
+    public static void setSigninSecret(String secret) {
+        signinSecret = secret;
+    }
 
     public static void setupSignupId(String id) {
         signupId = id;
@@ -25,28 +35,20 @@ public class Config {
         signupSecret = secret;
     }
 
+    public static void setupPrepaidCookie(String cookie) {
+        prepaid_cookie = cookie;
+    }
+    
     public static String getEnv() {
         return env;
-    }
-
-    public static void setEnv(String sip) {
-        env = sip;
     }
 
     public static String getSigninId() {
         return signinId;
     }
 
-    public static void setSigninId(String id) {
-        signinId = id;
-    }
-
     public static String getSigninSecret() {
         return signinSecret;
-    }
-
-    public static void setSigninSecret(String secret) {
-        signinSecret = secret;
     }
 
     public static String getSignupId() {
@@ -57,19 +59,9 @@ public class Config {
         return signupSecret;
     }
 
-    public static String getEmailID() {
-        return emailID;
+    public static String getPrepaidCookie() {
+        return prepaid_cookie;
     }
 
-    public static void setEmailID(String emailID) {
-        Config.emailID = emailID;
-    }
 
-    public static String getMobileNo() {
-        return mobileNo;
-    }
-
-    public static void setMobileNo(String mobileNo) {
-        Config.mobileNo = mobileNo;
-    }
 }

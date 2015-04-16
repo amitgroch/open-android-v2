@@ -9,179 +9,181 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
- */
+*/
 package com.citrus.card;
 
-/**
- * Created by shardul on 19/11/14.
- */
+
 public class Card {
-	private String cardnumber;
-	private String cardCVV;
-	private String nameOnCard;
-	private String cardType;
-	private String expMonth;
-	private String expYear;
-	private String crdr;
-	private String token;
+    private String cardnumber;
+    private String cardCVV;
+    private String nameOnCard;
+    private String cardType;
+    private String expMonth;
+    private String expYear;
+    private String crdr;
+    private String token;
 
-	public Card(String cardNum, String month, String year, String cvv, String name, String crdr) {
-		this.cardnumber = normalizeCardNumber(cardNum);
-		this.cardCVV = cvv;
-		this.nameOnCard = name;
-		this.expMonth = month;
-		this.expYear = year;
-		this.crdr = crdr;
-	}
+    public Card(String cardNum, String month, String year, String cvv, String name, String crdr) {
+        this.cardnumber = normalizeCardNumber(cardNum);
+        this.cardCVV = cvv;
+        this.nameOnCard = name;
+        this.expMonth = month;
+        this.expYear = year;
+        this.crdr = crdr;
+    }
 
-	public Card(String token, String cvv) {
-		this.token = token;
-		this.cardCVV = cvv;
-		this.cardnumber = null;
-	}
+    public Card(String token, String cvv) {
+        this.token = token;
+        this.cardCVV = cvv;
+        this.cardnumber = null;
+    }
 
-	/***
-	 * /* The below methods are to retrieve cardDetails
-	 */
 
-	public CardType getCardType() {
-		return CardType.typeOf(cardnumber);
-	}
+    public CardType getCardType() {
+        return CardType.typeOf(cardnumber);
+    }
 
-	public String getCardNumber() {
-		return this.cardnumber;
-	}
+    public String getCardNumber() {
+        return this.cardnumber;
+    }
 
-	public String getCardHolderName() {
-		return this.nameOnCard;
-	}
+    public String getCardHolderName() {
+        return this.nameOnCard;
+    }
 
-	public String getCrdr() {
-		return this.crdr;
-	}
+    public String getCrdr() {
+        return this.crdr;
+    }
 
-	public String getExpiryYear() {
-		return ("20" + String.valueOf(expYear));
-	}
+    public String getExpiryYear() {
+        return ("20" + String.valueOf(expYear));
+    }
 
-	public String getExpiryMonth() {
+    public String getExpiryMonth() {
 
-		if (Integer.valueOf(expMonth) < 10) {
-			return "0" + String.valueOf(Integer.valueOf(expMonth));
-		}
+        if (Integer.valueOf(expMonth) < 10) {
+            return "0" + String.valueOf(Integer.valueOf(expMonth));
+        }
 
-		return String.valueOf(expMonth);
-	}
+        return String.valueOf(expMonth);
+    }
 
-	public String getCvvNumber() {
-		return this.cardCVV;
-	}
+    public String getCvvNumber() {
+        return this.cardCVV;
+    }
 
-	public String getcardToken() {
-		return this.token;
-	}
+    public String getcardToken() {
+        return this.token;
+    }
 
-	private String normalizeCardNumber(String number) {
-		if (number == null) {
-			return null;
-		}
-		return number.trim().replaceAll("\\s+|-", "");
-	}
+    private String normalizeCardNumber(String number) {
+        if (number == null) {
+            return null;
+        }
+        return number.trim().replaceAll("\\s+|-", "");
+    }
 
-	public boolean validateCard() {
-		if (cardCVV == null) {
-			return validateNumber() && validateExpiryDate();
-		} else {
-			return validateNumber() && validateExpiryDate() && validateCVC();
-		}
-	}
+    public boolean validateCard() {
+        if (cardCVV == null) {
+            return validateNumber() && validateExpiryDate();
+        } else {
+            return validateNumber() && validateExpiryDate() && validateCVC();
+        }
+    }
 
-	public boolean validateNumber() {
-		cardType = getCardType().toString();
-		if (TextUtils.isBlank(cardnumber)) {
-			return false;
-		}
+    public boolean validateNumber() {
 
-		String rawNumber = cardnumber.trim().replaceAll("\\s+|-", "");
-		if (TextUtils.isBlank(rawNumber) || !TextUtils.isWholePositiveNumber(rawNumber)
-				|| !isValidLuhnNumber(rawNumber)) {
-			return false;
-		}
+        CardType type = getCardType();
 
-		if (!"AMEX".equals(cardType) && rawNumber.length() != 16) {
-			return false;
-		}
+        if (type == null)
+            return false;
 
-		if ("AMEX".equals(cardType) && rawNumber.length() != 15) {
-			return false;
-		}
+        cardType = type.toString();
 
-		return true;
-	}
+        if (TextUtils.isBlank(cardnumber)) {
+            return false;
+        }
 
-	public boolean validateExpiryDate() {
-		if (!validateExpMonth()) {
-			return false;
-		}
-		if (!validateExpYear()) {
-			return false;
-		}
-		return !DateUtils.hasMonthPassed(Integer.valueOf(expYear), Integer.valueOf(expMonth));
-	}
+        String rawNumber = cardnumber.trim().replaceAll("\\s+|-", "");
+        if (TextUtils.isBlank(rawNumber) || !TextUtils.isWholePositiveNumber(rawNumber)
+                || !isValidLuhnNumber(rawNumber)) {
+            return false;
+        }
 
-	public boolean validateExpMonth() {
-		if (expMonth == null) {
-			return false;
-		}
-		return (Integer.valueOf(expMonth) >= 1 && Integer.valueOf(expMonth) <= 12);
-	}
+        if (!"AMEX".equals(cardType) && rawNumber.length() != 16) {
+            return false;
+        }
 
-	public boolean validateExpYear() {
-		if (expYear == null) {
-			return false;
-		}
-		return !DateUtils.hasYearPassed(Integer.valueOf(expYear));
-	}
+        if ("AMEX".equals(cardType) && rawNumber.length() != 15) {
+            return false;
+        }
 
-	public boolean validateCVC() {
-		if (TextUtils.isBlank(cardCVV)) {
-			return false;
-		}
-		String cvcValue = cardCVV.trim();
-		cardType = getCardType().toString();
-		boolean validLength = ((cardType == null && cvcValue.length() >= 3 && cvcValue.length() <= 4)
-				|| ("AMEX".equals(cardType) && cvcValue.length() == 4) || (!"AMEX".equals(cardType) && cvcValue
-				.length() == 3));
+        return true;
+    }
 
-		if (!TextUtils.isWholePositiveNumber(cvcValue) || !validLength) {
-			return false;
-		}
-		return true;
-	}
+    public boolean validateExpiryDate() {
+        if (!validateExpMonth()) {
+            return false;
+        }
+        if (!validateExpYear()) {
+            return false;
+        }
+        return !DateUtils.hasMonthPassed(Integer.valueOf(expYear), Integer.valueOf(expMonth));
+    }
 
-	private boolean isValidLuhnNumber(String number) {
-		boolean isOdd = true;
-		int sum = 0;
+    public boolean validateExpMonth() {
+        if (expMonth == null) {
+            return false;
+        }
+        return (Integer.valueOf(expMonth) >= 1 && Integer.valueOf(expMonth) <= 12);
+    }
 
-		for (int index = number.length() - 1; index >= 0; index--) {
-			char c = number.charAt(index);
-			if (!Character.isDigit(c)) {
-				return false;
-			}
-			int digitInteger = Integer.parseInt("" + c);
-			isOdd = !isOdd;
+    public boolean validateExpYear() {
+        if (expYear == null) {
+            return false;
+        }
+        return !DateUtils.hasYearPassed(Integer.valueOf(expYear));
+    }
 
-			if (isOdd) {
-				digitInteger *= 2;
-			}
+    public boolean validateCVC() {
+        if (TextUtils.isBlank(cardCVV)) {
+            return false;
+        }
+        String cvcValue = cardCVV.trim();
+        cardType = getCardType().toString();
+        boolean validLength = ((cardType == null && cvcValue.length() >= 3 && cvcValue.length() <= 4)
+                || ("AMEX".equals(cardType) && cvcValue.length() == 4) || (!"AMEX".equals(cardType) && cvcValue
+                .length() == 3));
 
-			if (digitInteger > 9) {
-				digitInteger -= 9;
-			}
+        if (!TextUtils.isWholePositiveNumber(cvcValue) || !validLength) {
+            return false;
+        }
+        return true;
+    }
 
-			sum += digitInteger;
-		}
+    private boolean isValidLuhnNumber(String number) {
+        boolean isOdd = true;
+        int sum = 0;
 
-		return sum % 10 == 0;
-	}
+        for (int index = number.length() - 1; index >= 0; index--) {
+            char c = number.charAt(index);
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+            int digitInteger = Integer.parseInt("" + c);
+            isOdd = !isOdd;
+
+            if (isOdd) {
+                digitInteger *= 2;
+            }
+
+            if (digitInteger > 9) {
+                digitInteger -= 9;
+            }
+
+            sum += digitInteger;
+        }
+
+        return sum % 10 == 0;
+    }
 }

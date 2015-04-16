@@ -12,9 +12,7 @@
 */
 package com.citrus.netbank;
 
-/**
- * Created by shardul on 21/11/14.
- */
+
 public class Bank {
 
     private String cidnumber;

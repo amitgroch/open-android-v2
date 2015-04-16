@@ -22,7 +22,6 @@ import android.widget.Spinner;
 import com.citrus.asynch.Savecard;
 import com.citrus.card.Card;
 import com.citrus.mobile.Callback;
-import com.citrus.mobile.User;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
@@ -246,19 +245,17 @@ public final class NewCardPaymentFragment extends Fragment implements View.OnCli
         }
     }
 
-    private void saveCard(Card card) {
-        if (User.isUserLoggedIn(getActivity())) {
-            new Savecard(getActivity(), new Callback() {
-                @Override
-                public void onTaskexecuted(String success, String error) {
-                    if (!TextUtils.isEmpty(success)) {
-                        Utils.showToast(getActivity(), "Card Saved Successfully.");
-                    } else {
-                        Utils.showToast(getActivity(), "Error saving the card.");
-                    }
+    private void saveCard(final Card card) {
+        new Savecard(getActivity(), new Callback() {
+            @Override
+            public void onTaskexecuted(String success, String error) {
+                if (!TextUtils.isEmpty(success)) {
+                    Utils.showToast(getActivity(), "Card Saved Successfully.");
+                } else {
+                    Utils.showToast(getActivity(), "Error saving the card.");
                 }
-            }).execute(card);
-        }
+            }
+        }).execute(card);
     }
 
     private boolean validate(String cardName, String cardNumber, String cardCVV, String cardExpiryMonth, String cardExpiryYear, int selectedCardTypeId) {

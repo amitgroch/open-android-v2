@@ -185,8 +185,8 @@ public final class PaymentParams implements Parcelable {
         this.user = user;
 
         if (user != null) {
-            Config.setEmailID(user.getEmailId());
-            Config.setMobileNo(user.getMobileNo());
+//            Config.setEmailID(user.getEmailId());
+//            Config.setMobileNo(user.getMobileNo());
         }
 
         return this;

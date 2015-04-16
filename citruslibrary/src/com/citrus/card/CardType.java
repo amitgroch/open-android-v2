@@ -12,18 +12,17 @@
 */
 package com.citrus.card;
 
-/**
- * Created by shardul on 19/11/14.
- */
 public enum CardType {
     VISA("4"),
-    MCRD("5"),
-    MAESTRO("67", "56", "502260", "504433",
+    MAESTRO("502260", "504433",
             "504434", "504435", "504437", "504645", "504681",
             "504753", "504775", "504809", "504817", "504834",
             "504848", "504884", "504973", "504993", "508125",
-            "508126", "508159", "508192", "508227", "600206",
-            "603123", "603741", "603845", "622018"),
+            "508126", "508159", "508192", "508227", "56",
+            "600206", "603123", "603741", "603845", "622018",
+            "67"),
+
+    MCRD("5"),
     DINERCLUB("30", "36", "38", "39"),
     JCB("35"),
     AMEX("34", "37"),
@@ -31,7 +30,7 @@ public enum CardType {
     UNKNOWN("0");
 
     private final String[] pattern;
-    
+
     private CardType(String... pattern) {
         this.pattern = pattern;
     }
@@ -42,27 +41,27 @@ public enum CardType {
                 return type;
             }
         }
-       return null;
+        return null;
     }
-    
+
     public static String getScheme(CardType cardType) {
-    	switch (cardType) {
-		case VISA:
-			return "VISA";
-		case MCRD:
-			return "MCRD";
-		case MAESTRO:
-			return "MAESTRO";
-		case DINERCLUB:
-			return "DINERCLUB";
-		case JCB:
-			return "JCB";
-		case AMEX:
-			return "AMEX";
-		case DISCOVER:
-			return "DISCOVER";
-		default:
-			return "UNKNOWN";
-		}
+        switch (cardType) {
+            case VISA:
+                return "VISA";
+            case MCRD:
+                return "MCRD";
+            case MAESTRO:
+                return "MAESTRO";
+            case DINERCLUB:
+                return "DINERCLUB";
+            case JCB:
+                return "JCB";
+            case AMEX:
+                return "AMEX";
+            case DISCOVER:
+                return "DISCOVER";
+            default:
+                return "UNKNOWN";
+        }
     }
 }

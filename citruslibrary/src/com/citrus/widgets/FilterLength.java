@@ -13,26 +13,25 @@
 package com.citrus.widgets;
 
 public enum FilterLength {
-	VISA("19"),
-	MCRD("19"),
-	MAESTRO("19"),
-	DINERCLUB("19"),
-	JCB("19"),
-	AMEX("18"),
-	DISCOVER("19");
-	
-	
-	private String length;
-	
-	private FilterLength(String length) {
-		this.length = length;
-	}
-	
-	public String getLength() {
-		return length;
-	}
-	
-	public static FilterLength fromString(String text) {
-		return FilterLength.valueOf(text);
-	}
+    VISA("19"),
+    MCRD("19"),
+    MAESTRO("19"),
+    DINERCLUB("19"),
+    JCB("19"),
+    AMEX("18"),
+    DISCOVER("19");
+
+    private String length;
+
+    private FilterLength(String length) {
+        this.length = length;
+    }
+
+    public String getLength() {
+        return length;
+    }
+
+    public static FilterLength fromString(String text) {
+        return FilterLength.valueOf(text);
+    }
 }

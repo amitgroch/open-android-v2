@@ -20,7 +20,7 @@ import com.citrus.mobile.Callback;
 import com.citrus.mobile.Config;
 import com.citrus.mobile.RESTclient;
 
-public class MakePayment extends AsyncTask<Void, Void, Void>{
+public class MakePayment extends AsyncTask<Void, Void, Void> {
     JSONObject payment, headers, response;
     Callback callback;
 
@@ -33,13 +33,17 @@ public class MakePayment extends AsyncTask<Void, Void, Void>{
     @Override
     protected Void doInBackground(Void... params) {
         RESTclient resTclient = new RESTclient("struct", Config.getEnv(), null, null);
-        response  = resTclient.postPayment(payment);
+        response = resTclient.postPayment(payment);
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        callback.onTaskexecuted(response.toString(), "");
+        if (response.has("error")) {
+            callback.onTaskexecuted("", response.toString());
+        } else {
+            callback.onTaskexecuted(response.toString(), "");
+        }
     }
 }

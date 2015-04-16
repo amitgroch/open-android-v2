@@ -15,9 +15,7 @@ package com.citrus.card;
 import java.util.Calendar;
 import java.util.Locale;
 
-/**
- * Created by shardul on 19/11/14.
- */
+
 public class DateUtils {
     public static boolean hasYearPassed(int year) {
         int normalized = normalizeYear(year);

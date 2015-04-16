@@ -18,7 +18,6 @@ public class TestActivity extends ActionBarActivity {
 
     private static final String SANDBOX_BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.mangesh.php";// host your bill url here
     private static final String PROD_BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.production.php";// host your bill url here
-    private static final String JSON_KEY_STORE = "{\"access_key\":\"06SLEEBYLVZELISZ5ECU\",\"signup-id\":\"kkizp9tsqg-signup\",\"signup-secret\":\"39c50a32eaabaf382223fdd05f331e1c\",\"signin-id\":\"kkizp9tsqg-signin\",\"signin-secret\":\"1fc1f57639ec87cf4d49920f6b3a2c9d\",\"vanity_Url\":\"https://www.citruspay.com/kkizp9tsqg\"}";
     private static final String JSON_KEY_STORE_DEMO = "{\"access_key\":\"06SLEEBYLVZELISZ5ECU\",\"signup-id\":\"test-signup\",\"signup-secret\":\"c78ec84e389814a05d3ae46546d16d2e\",\"signin-id\":\"test-signin\",\"signin-secret\":\"52f7e15efd4208cf5345dd554443fd99\",\"vanity_Url\":\"https://www.citruspay.com/nativeSDK\"}";
 
     @Override
