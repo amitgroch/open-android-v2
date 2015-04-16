@@ -1,7 +1,7 @@
 package com.citrus.interfaces;
 
-import com.citrus.sdkui.NetbankingOption;
-import com.citrus.sdkui.PaymentOption;
+import com.citrus.sdkui.classes.NetbankingOption;
+import com.citrus.sdkui.classes.PaymentOption;
 
 import java.util.ArrayList;
 

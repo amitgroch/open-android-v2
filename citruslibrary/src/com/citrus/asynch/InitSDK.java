@@ -7,11 +7,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.citrus.interfaces.InitListener;
 import com.citrus.mobile.Callback;
-import com.citrus.sdkui.CardOption;
 import com.citrus.sdkui.CitrusPaymentParams;
 import com.citrus.sdkui.CitrusUser;
-import com.citrus.sdkui.NetbankingOption;
-import com.citrus.sdkui.PaymentOption;
+import com.citrus.sdkui.classes.CardOption;
+import com.citrus.sdkui.classes.NetbankingOption;
+import com.citrus.sdkui.classes.PaymentOption;
 
 import org.json.JSONArray;
 import org.json.JSONException;

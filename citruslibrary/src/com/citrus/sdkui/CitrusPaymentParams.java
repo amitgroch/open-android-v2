@@ -5,6 +5,9 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.citrus.mobile.Config;
+import com.citrus.sdkui.classes.CardOption;
+import com.citrus.sdkui.classes.NetbankingOption;
+import com.citrus.sdkui.classes.PaymentOption;
 
 import org.json.JSONException;
 import org.json.JSONObject;

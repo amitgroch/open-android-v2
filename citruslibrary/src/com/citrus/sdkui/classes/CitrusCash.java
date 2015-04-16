@@ -1,4 +1,4 @@
-package com.citrus.sdkui;
+package com.citrus.sdkui.classes;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
