@@ -6,11 +6,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.citrus.sdkui.CitrusActivity;
 import com.citrus.sdkui.CitrusPaymentParams;
 import com.citrus.sdkui.CitrusTransactionResponse;
 import com.citrus.sdkui.CitrusUser;
 import com.citrus.sdkui.Constants;
-import com.citrus.sdkui.MainActivity;
 import com.citrus.sdkui.Utils;
 
 
@@ -29,7 +29,7 @@ public class TestActivity extends ActionBarActivity {
 
     public void onPaySandboxButtonClicked(View view) {
 
-        Intent intent = new Intent(TestActivity.this, MainActivity.class);
+        Intent intent = new Intent(TestActivity.this, CitrusActivity.class);
         CitrusUser user = new CitrusUser("tester46@gmail.com", "1234567890", "Developer", "Citrus", null);
 
         CitrusPaymentParams paymentParams = CitrusPaymentParams
@@ -46,7 +46,7 @@ public class TestActivity extends ActionBarActivity {
 
     public void onPayProductionButtonClicked(View view) {
 
-        Intent intent = new Intent(TestActivity.this, MainActivity.class);
+        Intent intent = new Intent(TestActivity.this, CitrusActivity.class);
 
         CitrusUser user = new CitrusUser("salilgodbole@gmail.com", "1234567890", "Salil", "Godbole", null);
         CitrusPaymentParams paymentParams = CitrusPaymentParams
