@@ -68,7 +68,7 @@ public final class PaymentParams implements Parcelable {
     /**
      * Name of the merchant. For the display purpose.
      */
-    String merchantName;
+    String merchantOrTitleName;
     /**
      * JSON Key store containing the merchant credentials. The json is in the following format.
      * <p/>
@@ -144,7 +144,7 @@ public final class PaymentParams implements Parcelable {
         this.accentColor = in.readString();
         this.transactionAmount = in.readDouble();
         this.vanity = in.readString();
-        this.merchantName = in.readString();
+        this.merchantOrTitleName = in.readString();
         this.jsonKeyStore = in.readString();
     }
 
@@ -176,8 +176,8 @@ public final class PaymentParams implements Parcelable {
         return this;
     }
 
-    public PaymentParams merchantName(String merchantName) {
-        this.merchantName = merchantName;
+    public PaymentParams merchantOrTitleName(String merchantOrTitleName) {
+        this.merchantOrTitleName = merchantOrTitleName;
         return this;
     }
 
@@ -232,8 +232,8 @@ public final class PaymentParams implements Parcelable {
         return transactionAmount;
     }
 
-    public String getMerchantName() {
-        return merchantName;
+    public String getMerchantOrTitleName() {
+        return merchantOrTitleName;
     }
 
     public Environment getEnvironment() {
@@ -290,7 +290,7 @@ public final class PaymentParams implements Parcelable {
         dest.writeString(this.accentColor);
         dest.writeDouble(this.transactionAmount);
         dest.writeString(this.vanity);
-        dest.writeString(this.merchantName);
+        dest.writeString(this.merchantOrTitleName);
         dest.writeString(this.jsonKeyStore);
     }
 

@@ -83,7 +83,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
             mTransactionAmount = mPaymentParams.transactionAmount;
 
             mMerchantBillUrl = mPaymentParams.billUrl;
-            mMerchantName = mPaymentParams.merchantName;
+            mMerchantName = mPaymentParams.merchantOrTitleName;
 
             mColorPrimary = mPaymentParams.colorPrimary;
             mColorPrimaryDark = mPaymentParams.colorPrimaryDark;

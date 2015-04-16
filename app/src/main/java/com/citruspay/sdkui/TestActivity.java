@@ -35,8 +35,8 @@ public class TestActivity extends ActionBarActivity {
         PaymentParams paymentParams = PaymentParams
                 .builder(3.0, SANDBOX_BILL_URL, JSON_KEY_STORE_DEMO)
                 .user(user)
-                .environment(PaymentParams.Environment.SANDBOX)
-                .merchantName("Nature First")
+                .environment(PaymentParams.Environment.SANDBOX) // This is optional, by default it will be used as sandbox.
+                .merchantOrTitleName("Nature First")
                 .build();
 
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS, paymentParams);
@@ -52,7 +52,7 @@ public class TestActivity extends ActionBarActivity {
         PaymentParams paymentParams = PaymentParams
                 .builder(3.0, PROD_BILL_URL, JSON_KEY_STORE_DEMO)
                 .user(user)
-                .merchantName("Nature First")
+                .merchantOrTitleName("Nature First")
                 .environment(PaymentParams.Environment.PRODUCTION)
                 .build();
 
