@@ -139,7 +139,7 @@ public abstract class CardOption extends PaymentOption {
             resourceId = context.getResources().getIdentifier("mcrd", "drawable", context.getPackageName());
         } else if ("maestro".equalsIgnoreCase(cardScheme)) {
             resourceId = context.getResources().getIdentifier("maestro", "drawable", context.getPackageName());
-        } else if ("DINERCLUB".equalsIgnoreCase(cardScheme)) {
+        } else if ("DINERS".equalsIgnoreCase(cardScheme)) {
             resourceId = context.getResources().getIdentifier("dinerclub", "drawable", context.getPackageName());
         } else if ("jcb".equalsIgnoreCase(cardScheme)) {
             resourceId = context.getResources().getIdentifier("jcb", "drawable", context.getPackageName());
