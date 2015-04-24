@@ -15,6 +15,10 @@ package com.citrus.mobile;
 public class Config {
     private static String env, signinId, signinSecret, signupId, signupSecret, prepaid_cookie = "";
 
+    private static final String GA_SANDBOX_ID = "UA-33514461-4";
+
+    private static final String GA_PRODUCTION_ID = "UA-33514461-5";
+
     public static void setEnv(String sip) {
         env = sip;
     }
@@ -61,6 +65,14 @@ public class Config {
 
     public static String getPrepaidCookie() {
         return prepaid_cookie;
+    }
+
+
+    public static String getAnalyticsID() {
+        if(env.equalsIgnoreCase("sandbox"))
+                return GA_SANDBOX_ID;
+        else
+                return GA_PRODUCTION_ID;
     }
 
 
