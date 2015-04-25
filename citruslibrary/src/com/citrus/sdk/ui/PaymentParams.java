@@ -126,6 +126,7 @@ public final class PaymentParams implements Parcelable {
             Config.setupSignupSecret(signupSecret);
             Config.setSigninId(signinId);
             Config.setSigninSecret(signinSecret);
+            Config.setVanity(this.vanity);
 
         } catch (JSONException ex) {
             throw new IllegalArgumentException("The json keystore is not a valid json.");

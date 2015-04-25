@@ -25,8 +25,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.citrus.analytics.EventsManager;
+import com.citrus.analytics.PaymentType;
+import com.citrus.analytics.WebViewEvents;
 import com.citrus.asynch.InitSDK;
 import com.citrus.mobile.Callback;
+import com.citrus.mobile.Config;
 import com.citrus.netbank.Bank;
 import com.citrus.payment.Bill;
 import com.citrus.payment.PG;
@@ -135,11 +139,19 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
             builder.setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User clicked OK button
+                    if(mFragmentManager.findFragmentByTag("PAYMENT_FRAGMENT") instanceof  PaymentProcessingFragment)
+                    {
+                        if(Config.getEnv().equalsIgnoreCase("SANDBOX"))
+                            EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.BACK_KEY, PaymentType.DEBIT_CARD);
 
+                    }
                     dialog.dismiss();
 
                     TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.FAIL, "Cancelled by the user.", "");
                     showPaymentStatusFragment(transactionResponse, mPaymentParams);
+
+
+
                 }
             });
             builder.setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
@@ -200,7 +212,6 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
 
     private void init() {
         new InitSDK(this, this, mPaymentParams);
-
         showDialog("Processing Your Payment...", true);
     }
 
@@ -295,7 +306,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
-                R.id.container, PaymentProcessingFragment.newInstance(redirectUrl));
+                R.id.container, PaymentProcessingFragment.newInstance(redirectUrl),"PAYMENT_FRAGMENT");
         ft.addToBackStack(null);
         ft.commit();
 
@@ -307,6 +318,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(
                 R.id.container, PaymentStatusFragment.newInstance(transactionResponse, paymentParams));
+        //ft.re
         // No need to add this fragment to backstack as we do not need to show the payment options and directly go back to previous activity.
 //        ft.addToBackStack(null);
         ft.commit();

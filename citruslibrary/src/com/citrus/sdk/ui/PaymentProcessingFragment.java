@@ -16,6 +16,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.citrus.analytics.EventsManager;
+import com.citrus.analytics.PaymentType;
+import com.citrus.analytics.WebViewEvents;
+import com.citrus.mobile.Config;
 import com.citrus.sdk.Utils;
 import com.citrus.sdk.ui.listeners.FragmentEventsListeners;
 import com.citruspay.citruslibrary.R;
@@ -88,6 +92,8 @@ public final class PaymentProcessingFragment extends Fragment {
         mWebviewPayment.setWebViewClient(new CitrusWebClient());
         // Load the bank's or card payment url
         mWebviewPayment.loadUrl(mUrl);
+        if(Config.getEnv().equalsIgnoreCase("SANDBOX"))
+            EventsManager.logWebViewEvents(getActivity(), WebViewEvents.OPEN, PaymentType.DEBIT_CARD);
 
         return rootView;
     }
@@ -140,6 +146,8 @@ public final class PaymentProcessingFragment extends Fragment {
         mContext = null;
         mProgressDialog = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -195,6 +203,8 @@ public final class PaymentProcessingFragment extends Fragment {
 
         @JavascriptInterface
         public void pgResponse(String response) {
+            if(Config.getEnv().equalsIgnoreCase("SANDBOX"))
+                EventsManager.logWebViewEvents(getActivity(), WebViewEvents.CLOSE, PaymentType.DEBIT_CARD);
             TransactionResponse transactionResponse = TransactionResponse.fromJSON(response);
             mListener.onTransactionComplete(transactionResponse);
 

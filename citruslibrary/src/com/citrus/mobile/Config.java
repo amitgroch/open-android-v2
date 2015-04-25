@@ -13,7 +13,22 @@
 package com.citrus.mobile;
 
 public class Config {
-    private static String env, signinId, signinSecret, signupId, signupSecret, prepaid_cookie = "";
+    private static String env;
+    private static String signinId;
+    private static String signinSecret;
+    private static String signupId;
+    private static String signupSecret;
+    private static String prepaid_cookie = "";
+
+    public static String getVanity() {
+        return vanity;
+    }
+
+    public static void setVanity(String vanity) {
+        Config.vanity = vanity;
+    }
+
+    private static String vanity;
 
     private static final String GA_SANDBOX_ID = "UA-33514461-4";
 
