@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.citrus.analytics.PaymentType;
+import com.citrus.mobile.Config;
 import com.citrus.sdk.ui.classes.CardOption;
 import com.citrus.sdk.ui.classes.CitrusCash;
 import com.citrus.sdk.ui.classes.CreditCardOption;
@@ -214,6 +216,13 @@ public final class PaymentOptionsCardView extends CardView implements View.OnCli
     public void onClick(View v) {
         if (v != null && v.getTag() != null && v.getTag() instanceof PaymentOption && mListener != null) {
             PaymentOption paymentOption = (PaymentOption) v.getTag();
+            if(paymentOption.getName()!=null) {
+                if (paymentOption.getName().contains("Debit")) {
+                    Config.setSelectedPaymentType(PaymentType.DEBIT_CARD);
+                } else if (paymentOption.getName().contains("Credit")) {
+                    Config.setSelectedPaymentType(PaymentType.CREDIT_CARD);
+                }
+            }
             mListener.onOptionSelected(paymentOption);
         }
     }

@@ -13,16 +13,11 @@
 package com.citrus.payment;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.citrus.analytics.PaymentType;
 import com.citrus.asynch.MakePayment;
 import com.citrus.card.Card;
 import com.citrus.cash.LoadMoney;
@@ -34,6 +29,12 @@ import com.citrus.mobile.OauthToken;
 import com.citrus.mobile.RESTclient;
 import com.citrus.mobile.User;
 import com.citrus.netbank.Bank;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class PG {
 
@@ -211,6 +212,11 @@ public class PG {
 
                 paymentToken.put("type", "paymentOptionToken");
                 paymentToken.put("paymentMode", paymentmode);
+
+                if(card.getCrdr().equalsIgnoreCase("debit"))
+                    Config.setSelectedPaymentType(PaymentType.DEBIT_CARD);
+                else
+                    Config.setSelectedPaymentType(PaymentType.CREDIT_CARD);
             } catch (JSONException e) {
                 e.printStackTrace();
                 callback.onTaskexecuted("", "Problem forming payment Json");
@@ -250,6 +256,7 @@ public class PG {
                 paymentmode.put("code", bank.getCidnumber());
                 paymentToken.put("type", "paymentOptionToken");
                 paymentToken.put("paymentMode", paymentmode);
+                Config.setSelectedPaymentType(PaymentType.NET_BANKING);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -320,7 +327,7 @@ public class PG {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        //Log.d("SELECTED PAYMENT OPTION", Config.getSelectedPaymentType().toString());
         new MakePayment(payment, headers, callback).execute();
 
     }

@@ -144,7 +144,7 @@ public class PaymentStatusFragment extends Fragment implements View.OnClickListe
         // Check whether the activity has implemented the OnActivityTitleChangeListener.
         // Call the onActivityTitleChanged to change the title of the activity
         if (getActivity() instanceof FragmentEventsListeners) {
-            Log.d("NewCardPaymentFragment", "onAttach (line 131): OnActivityTitleChangeListener");
+           // Log.d("NewCardPaymentFragment", "onAttach (line 131): OnActivityTitleChangeListener");
             ((FragmentEventsListeners) getActivity()).onActivityTitleChanged(title);
         }
     }

@@ -18,11 +18,15 @@ import android.webkit.WebViewClient;
 
 import com.citrus.analytics.EventsManager;
 import com.citrus.analytics.PaymentType;
+import com.citrus.analytics.TransactionType;
 import com.citrus.analytics.WebViewEvents;
 import com.citrus.mobile.Config;
 import com.citrus.sdk.Utils;
 import com.citrus.sdk.ui.listeners.FragmentEventsListeners;
 import com.citruspay.citruslibrary.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -93,7 +97,7 @@ public final class PaymentProcessingFragment extends Fragment {
         // Load the bank's or card payment url
         mWebviewPayment.loadUrl(mUrl);
         if(Config.getEnv().equalsIgnoreCase("SANDBOX"))
-            EventsManager.logWebViewEvents(getActivity(), WebViewEvents.OPEN, PaymentType.DEBIT_CARD);
+            EventsManager.logWebViewEvents(getActivity(), WebViewEvents.OPEN, Config.getSelectedPaymentType());
 
         return rootView;
     }
@@ -203,8 +207,41 @@ public final class PaymentProcessingFragment extends Fragment {
 
         @JavascriptInterface
         public void pgResponse(String response) {
-            if(Config.getEnv().equalsIgnoreCase("SANDBOX"))
-                EventsManager.logWebViewEvents(getActivity(), WebViewEvents.CLOSE, PaymentType.DEBIT_CARD);
+
+            if(Config.getEnv().equalsIgnoreCase("SANDBOX")) {
+                EventsManager.logWebViewEvents(getActivity(), WebViewEvents.CLOSE, Config.getSelectedPaymentType());
+                try {
+                    PaymentType paymentType =null;
+                    TransactionType transactionType = null;
+                    JSONObject paymentResponse = new JSONObject(response);
+                    String paymentMode = paymentResponse.getString("paymentMode");
+                    if(paymentMode.equalsIgnoreCase("CREDIT_CARD"))
+                    {
+                        paymentType = PaymentType.CREDIT_CARD;
+                    }
+                    else if(paymentMode.equalsIgnoreCase("DEBIT_CARD")) {
+                        paymentType = PaymentType.DEBIT_CARD;
+                    }
+                    else if(paymentMode.equalsIgnoreCase("NET_BANKING")) {
+                        paymentType = PaymentType.NET_BANKING;
+                    }
+
+                    String transactionStatus = paymentResponse.getString("TxStatus");
+                    if(transactionStatus.equalsIgnoreCase("FAIL")) {
+                        transactionType =TransactionType.FAIL;
+                    }
+                    else if(transactionStatus.equalsIgnoreCase("SUCCESS")) {
+                        transactionType =TransactionType.SUCCESS;
+                    }
+
+                    if(transactionType!=null & paymentType!=null) {
+                        EventsManager.logPaymentEvents(getActivity(),paymentType,transactionType);//log transaction events
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            Config.setSelectedPaymentType(null);
             TransactionResponse transactionResponse = TransactionResponse.fromJSON(response);
             mListener.onTransactionComplete(transactionResponse);
 

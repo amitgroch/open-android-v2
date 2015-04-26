@@ -12,6 +12,8 @@
 */
 package com.citrus.mobile;
 
+import com.citrus.analytics.PaymentType;
+
 public class Config {
     private static String env;
     private static String signinId;
@@ -19,6 +21,16 @@ public class Config {
     private static String signupId;
     private static String signupSecret;
     private static String prepaid_cookie = "";
+
+    public static PaymentType getSelectedPaymentType() {
+        return selectedPaymentType;
+    }
+
+    public static void setSelectedPaymentType(PaymentType selectedPaymentType) {
+        Config.selectedPaymentType = selectedPaymentType;//this will be used for logging events
+    }
+
+    private static PaymentType selectedPaymentType;
 
     public static String getVanity() {
         return vanity;

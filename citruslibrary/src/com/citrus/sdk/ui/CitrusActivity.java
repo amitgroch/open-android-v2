@@ -26,7 +26,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.citrus.analytics.EventsManager;
-import com.citrus.analytics.PaymentType;
 import com.citrus.analytics.WebViewEvents;
 import com.citrus.asynch.InitSDK;
 import com.citrus.mobile.Callback;
@@ -101,6 +100,9 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
         mFragmentManager = getSupportFragmentManager();
 
         init();
+        /*DebugLogConfig.enable();
+        GoogleAnalytics.getInstance(this).getLogger()
+                .setLogLevel(Logger.LogLevel.VERBOSE);*/
     }
 
     @Override
@@ -142,7 +144,7 @@ public final class CitrusActivity extends ActionBarActivity implements FragmentE
                     if(mFragmentManager.findFragmentByTag("PAYMENT_FRAGMENT") instanceof  PaymentProcessingFragment)
                     {
                         if(Config.getEnv().equalsIgnoreCase("SANDBOX"))
-                            EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.BACK_KEY, PaymentType.DEBIT_CARD);
+                            EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.BACK_KEY, Config.getSelectedPaymentType());
 
                     }
                     dialog.dismiss();
