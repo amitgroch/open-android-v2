@@ -59,8 +59,19 @@ public class EventsManager {
      * @return WebViewEvent*ConnectionType*PaymentType*BuildVersion
      */
     private static long getWebViewEventValue(WebViewEvents webViewEvents, ConnectionType connectionType, PaymentType paymentType) {
-        long value = webViewEvents.getValue()*connectionType.getValue()*paymentType.getValue()*APILevel.getValue(Build.VERSION.SDK_INT);
-        return value;
+        //long value = webViewEvents.getValue()*connectionType.getValue()*paymentType.getValue()*APILevel.getValue(Build.VERSION.SDK_INT);
+      //  return 5L;
+        switch(webViewEvents) {
+            case OPEN:
+                return 1L;
+            case BACK_KEY:
+                return 2L;
+            case CLOSE:
+                return 3L;
+            default:
+                return 0L;
+        }
+
     }
 
     /**
@@ -71,8 +82,15 @@ public class EventsManager {
      * @return ConnectionType*PaymentType*BuildVersion*TransactionType
      */
     private static long getPaymentEventValue(ConnectionType connectionType, PaymentType paymentType, TransactionType transactionType) {
-        long value = connectionType.getValue()*paymentType.getValue()*APILevel.getValue(Build.VERSION.SDK_INT)*transactionType.getValue();
-        return value;
+        //long value = connectionType.getValue()*paymentType.getValue()*APILevel.getValue(Build.VERSION.SDK_INT)*transactionType.getValue();
+        switch(transactionType) {
+            case SUCCESS:
+                return 4L;
+            case FAIL:
+                return 5L;
+            default:
+                return 0L;
+        }
     }
 
     /**
