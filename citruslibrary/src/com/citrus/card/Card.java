@@ -108,7 +108,16 @@ public class Card {
     }
 
     public boolean validateCard() {
-        if (cardCVV == null) {
+        CardType type = getCardType();
+        String cardType = null;
+
+        if (type != null) {
+            cardType = type.toString();
+        }
+
+        if ("MTRO".equalsIgnoreCase(cardType)) {
+            return validateNumber();
+        } else if (cardCVV == null) {
             return validateNumber() && validateExpiryDate();
         } else {
             return validateNumber() && validateExpiryDate() && validateCVC();
