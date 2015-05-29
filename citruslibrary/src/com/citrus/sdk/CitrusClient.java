@@ -474,7 +474,7 @@ public class CitrusClient {
                 @Override
                 public void success(AccessToken accessToken) {
 
-                    retrofitClient.getBalance(accessToken.getAccessToken(), new retrofit.Callback<Amount>() {
+                    retrofitClient.getBalance(accessToken.getHeaderAccessToken(), new retrofit.Callback<Amount>() {
                         @Override
                         public void success(Amount amount, Response response) {
                             sendResponse(callback, amount);
