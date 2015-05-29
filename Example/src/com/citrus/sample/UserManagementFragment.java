@@ -44,10 +44,12 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
 
     private UserManagementInteractionListener mListener = null;
-    private Button btnSignIn = null;
-    private Button btnSignUp = null;
-    private Button btnResetPassword = null;
+    private Button btnIsUserSignedIn = null;
     private Button btnLinkUser = null;
+    private Button btnSignUp = null;
+    private Button btnSignIn = null;
+    private Button btnSignout = null;
+    private Button btnResetPassword = null;
 
     private EditText editEmailId = null;
     private EditText editMobileNo = null;
@@ -90,15 +92,19 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         editPassword = (EditText) rootView.findViewById(R.id.edit_password);
         textMessage = (TextView) rootView.findViewById(R.id.txt_user_mgmt_message);
 
+        btnIsUserSignedIn = (Button) rootView.findViewById(R.id.btn_is_user_signed_in);
+        btnLinkUser = (Button) rootView.findViewById(R.id.btn_link_user);
         btnSignIn = (Button) rootView.findViewById(R.id.btn_signin);
         btnSignUp = (Button) rootView.findViewById(R.id.btn_signup);
-        btnLinkUser = (Button) rootView.findViewById(R.id.btn_link_user);
+        btnSignout = (Button) rootView.findViewById(R.id.btn_logout);
         btnResetPassword = (Button) rootView.findViewById(R.id.btn_reset_password);
 
+        btnIsUserSignedIn.setOnClickListener(this);
         btnLinkUser.setOnClickListener(this);
         btnSignUp.setOnClickListener(this);
         btnSignIn.setOnClickListener(this);
         btnResetPassword.setOnClickListener(this);
+        btnSignout.setOnClickListener(this);
 
         citrusClient = CitrusClient.getInstance(context.getApplicationContext());
 
