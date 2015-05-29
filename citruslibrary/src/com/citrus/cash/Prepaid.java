@@ -1,8 +1,5 @@
 package com.citrus.cash;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 
@@ -11,6 +8,11 @@ import com.citrus.mobile.Config;
 import com.citrus.mobile.OauthToken;
 import com.citrus.mobile.RESTclient;
 import com.citrus.mobile.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class Prepaid {
 	
@@ -69,12 +71,12 @@ public class Prepaid {
 	            return "Bind Token not found - Bind user first";
 	        }
 	        
-	        RESTclient resTclient = new RESTclient("balance",base_url, null, headers);
+	        RESTclient resTclient = new RESTclient("newbalance",base_url, null, headers);
 	        
 	        
 			try {
-				response = resTclient.makegetRequest();
-			} catch (JSONException e) {
+				response = resTclient.makePostrequest();
+			}  catch (IOException e) {
 				e.printStackTrace();
 				return "Could not get user balance";
 			}
