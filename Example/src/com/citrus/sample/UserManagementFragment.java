@@ -16,9 +16,12 @@
 package com.citrus.sample;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +42,14 @@ import com.citrus.sdk.response.CitrusResponse;
  */
 public class UserManagementFragment extends Fragment implements View.OnClickListener {
 
-    private Button btnSignIn = null;
-    private Button btnSignUp = null;
-    private Button btnResetPassword = null;
+
+    private UserManagementInteractionListener mListener = null;
+    private Button btnIsUserSignedIn = null;
     private Button btnLinkUser = null;
+    private Button btnSignUp = null;
+    private Button btnSignIn = null;
+    private Button btnSignout = null;
+    private Button btnResetPassword = null;
 
     private EditText editEmailId = null;
     private EditText editMobileNo = null;
@@ -85,19 +92,27 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         editPassword = (EditText) rootView.findViewById(R.id.edit_password);
         textMessage = (TextView) rootView.findViewById(R.id.txt_user_mgmt_message);
 
+        btnIsUserSignedIn = (Button) rootView.findViewById(R.id.btn_is_user_signed_in);
+        btnLinkUser = (Button) rootView.findViewById(R.id.btn_link_user);
         btnSignIn = (Button) rootView.findViewById(R.id.btn_signin);
         btnSignUp = (Button) rootView.findViewById(R.id.btn_signup);
-        btnLinkUser = (Button) rootView.findViewById(R.id.btn_link_user);
+        btnSignout = (Button) rootView.findViewById(R.id.btn_logout);
         btnResetPassword = (Button) rootView.findViewById(R.id.btn_reset_password);
 
+        btnIsUserSignedIn.setOnClickListener(this);
         btnLinkUser.setOnClickListener(this);
         btnSignUp.setOnClickListener(this);
         btnSignIn.setOnClickListener(this);
         btnResetPassword.setOnClickListener(this);
+        btnSignout.setOnClickListener(this);
 
         citrusClient = CitrusClient.getInstance(context.getApplicationContext());
 
         return rootView;
+    }
+
+    private void isUserSignedIn() {
+
     }
 
     private void linkUser() {
@@ -117,6 +132,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                     textMessage.setText("User is not a Citrus Member. Please Sign Up the user.");
                 }
 
+                btnLinkUser.setVisibility(View.GONE);
                 editPassword.setVisibility(View.VISIBLE);
             }
 
@@ -136,6 +152,8 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
             public void success(CitrusResponse citrusResponse) {
                 Utils.showToast(context, citrusResponse.getMessage());
                 textMessage.setText(citrusResponse.getMessage());
+
+                mListener.onShowWalletScreen();
             }
 
             @Override
@@ -156,6 +174,9 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
             public void success(CitrusResponse citrusResponse) {
                 Utils.showToast(context, citrusResponse.getMessage());
                 textMessage.setText(citrusResponse.getMessage());
+
+                btnSignUp.setVisibility(View.GONE);
+                btnSignIn.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -164,7 +185,6 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                 textMessage.setText(error.getMessage());
             }
         });
-
     }
 
     private void resetPassword() {
@@ -183,8 +203,45 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                 textMessage.setText(error.getMessage());
             }
         });
-
     }
+
+
+    private void logout() {
+        citrusClient.signOut(new Callback<CitrusResponse>() {
+            @Override
+            public void success(CitrusResponse citrusResponse) {
+                Utils.showToast(context, citrusResponse.getMessage());
+                textMessage.setText(citrusResponse.getMessage());
+
+                btnLinkUser.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Utils.showToast(context, error.getMessage());
+                textMessage.setText(error.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (UserManagementInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement UserManagementInteractionListener");
+        }
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -192,6 +249,9 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         textMessage.setText("");
 
         switch (v.getId()) {
+            case R.id.btn_is_user_signed_in:
+                isUserSignedIn();
+                break;
             case R.id.btn_link_user:
                 linkUser();
                 break;
@@ -204,6 +264,13 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
             case R.id.btn_reset_password:
                 resetPassword();
                 break;
+            case R.id.btn_logout:
+                logout();
+                break;
         }
+    }
+
+    public static interface UserManagementInteractionListener {
+        void onShowWalletScreen();
     }
 }
