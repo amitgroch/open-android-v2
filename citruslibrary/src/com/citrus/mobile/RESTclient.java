@@ -12,16 +12,11 @@
 */
 package com.citrus.mobile;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.citrus.sdk.CitrusUser;
+import com.citrus.sdk.classes.Amount;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -41,11 +36,16 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.citrus.sdk.CitrusUser;
-import com.citrus.sdk.classes.Amount;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -80,6 +80,8 @@ public class RESTclient {
             urls.put("struct", "service/moto/authorize/struct/payment");
             urls.put("prepaid", "prepaid/pg/_verify");
             urls.put("balance", "service/v2/mycard");
+            urls.put("newbalance", "service/v2/mycard/balance");
+
             urls.put("password", "service/v2/identity/me/password");
             urls.put("specialbalance", "service/v2/prepayment/balance");
             urls.put("resetpassword", "service/v2/identity/passwords/reset");
@@ -274,20 +276,21 @@ public class RESTclient {
              e.printStackTrace();
          }
 
-         List<NameValuePair> postData = new ArrayList<NameValuePair>(2);
-         Iterator<String> iter = params.keys();
-         while (iter.hasNext()) {
-             String key = iter.next();
-             try {
-                 String value = params.getString(key);
-                 postData.add(new BasicNameValuePair(key, value));
-             } catch (JSONException e) {
-                 Log.d("exception", e.toString());
+         if(params!=null) {
+             List<NameValuePair> postData = new ArrayList<NameValuePair>(2);
+             Iterator<String> iter = params.keys();
+             while (iter.hasNext()) {
+                 String key = iter.next();
+                 try {
+                     String value = params.getString(key);
+                     postData.add(new BasicNameValuePair(key, value));
+                 } catch (JSONException e) {
+                     Log.d("exception", e.toString());
+                 }
              }
+
+             httpPost.setEntity(new UrlEncodedFormEntity(postData));
          }
-
-         httpPost.setEntity(new UrlEncodedFormEntity(postData));
-
          Iterator<String> iterhead = headers.keys();
          while (iterhead.hasNext()) {
              String key = iterhead.next();
