@@ -30,6 +30,10 @@ public class UIActivityFragment extends Fragment {
     public UIActivityFragment() {
     }
 
+    public static UIActivityFragment getInstance() {
+        return new UIActivityFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

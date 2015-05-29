@@ -17,6 +17,7 @@ package com.citrus.sample;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,7 +27,7 @@ import android.view.View;
 import com.citrus.sdk.CitrusClient;
 
 
-public class UIActivity extends ActionBarActivity {
+public class UIActivity extends ActionBarActivity implements UserManagementFragment.UserManagementInteractionListener {
 
     private FragmentManager fragmentManager = null;
     private Context mContext = this;
@@ -41,14 +42,42 @@ public class UIActivity extends ActionBarActivity {
 
         citrusClient = CitrusClient.getInstance(mContext);
         citrusClient.init("test-signup", "c78ec84e389814a05d3ae46546d16d2e", "test-signin", "52f7e15efd4208cf5345dd554443fd99", "prepaid", CitrusClient.Environment.SANDBOX);
+
+        showUI();
+    }
+
+    private void showUI() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.container, UIActivityFragment.getInstance());
+
+//        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     public void onUserManagementClicked(View view) {
         UserManagementFragment fragment = UserManagementFragment.newInstance(this);
 
-        fragmentManager.beginTransaction().add(R.id.fragment, fragment).commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .replace(R.id.container, fragment);
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     public void onPaymentClicked(View view) {
+    }
+
+    @Override
+    public void onShowWalletScreen() {
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .replace(R.id.container, WalletPaymentFragment.newInstance());
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 }
