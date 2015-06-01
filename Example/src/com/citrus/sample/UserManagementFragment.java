@@ -272,7 +272,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         }
     }
 
-    public static interface UserManagementInteractionListener {
+    public interface UserManagementInteractionListener {
         void onShowWalletScreen();
     }
 }

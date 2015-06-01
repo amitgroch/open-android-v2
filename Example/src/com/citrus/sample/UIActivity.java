@@ -20,8 +20,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.citrus.sdk.CitrusClient;
@@ -49,7 +47,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
     private void showUI() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.container, UIActivityFragment.getInstance());
+                .replace(R.id.container, UIActivityFragment.newInstance());
 
 //        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -66,7 +64,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
         fragmentTransaction.commit();
     }
 
-    public void onPaymentClicked(View view) {
+    public void onGuestPaymentClicked(View view) {
     }
 
     @Override
@@ -76,7 +74,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .replace(R.id.container, WalletPaymentFragment.newInstance());
 
-        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }

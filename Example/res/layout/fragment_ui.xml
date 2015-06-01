@@ -24,6 +24,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.citrus.sample.UIActivityFragment">
 
+    <TextView
+        android:id="@+id/txt_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:text="Please Sign In or Sign Up the user." />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,9 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/button_margin"
-        android:onClick="onPaymentClicked"
-        android:text="Payment" />
-
-
+        android:onClick="onGuestPaymentClicked"
+        android:text="Guest Payment" />
 
 </LinearLayout>

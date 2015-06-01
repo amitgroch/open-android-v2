@@ -353,7 +353,6 @@ public class CitrusClient {
      */
     public synchronized void resetPassword(final String emailId, @NonNull final Callback<CitrusResponse> callback) {
 
-        OauthToken oauthToken = new OauthToken(mContext);
         oauthToken.getSignUpToken(new Callback<AccessToken>() {
             @Override
             public void success(AccessToken accessToken) {
@@ -393,11 +392,11 @@ public class CitrusClient {
          */
         if (validate()) {
 
-            oauthToken.getPrepaidToken(new Callback<AccessToken>() {
+            oauthToken.getSignInToken(new Callback<AccessToken>() {
                 @Override
                 public void success(AccessToken accessToken) {
 
-                    retrofitClient.getWallet(accessToken.getAccessToken(), new retrofit.Callback<JsonElement>() {
+                    retrofitClient.getWallet(accessToken.getHeaderAccessToken(), new retrofit.Callback<JsonElement>() {
                         @Override
                         public void success(JsonElement element, Response response) {
                             if (element != null) {
@@ -468,7 +467,7 @@ public class CitrusClient {
      */
     public synchronized void getBalance(final Callback<Amount> callback) {
         if (validate()) {
-            getPrepaidToken(new Callback<AccessToken>() {
+            oauthToken.getSignInToken(new Callback<AccessToken>() {
                 @Override
                 public void success(AccessToken accessToken) {
 
@@ -504,7 +503,7 @@ public class CitrusClient {
         if (validate()) {
 
             if (paymentOption != null) {
-                getPrepaidToken(new Callback<AccessToken>() {
+                oauthToken.getSignInToken(new Callback<AccessToken>() {
                     @Override
                     public void success(AccessToken accessToken) {
                         retrofitClient.savePaymentOption(accessToken.getAccessToken(), new TypedString(paymentOption.getSavePaymentOptionObject()), new retrofit.Callback<CitrusResponse>() {
@@ -589,7 +588,7 @@ public class CitrusClient {
                 }
             };
 
-            getPrepaidToken(new Callback<AccessToken>() {
+            oauthToken.getSignInToken(new Callback<AccessToken>() {
                 @Override
                 public void success(AccessToken accessToken) {
                     if (!TextUtils.isEmpty(toUser.getEmailId())) {
