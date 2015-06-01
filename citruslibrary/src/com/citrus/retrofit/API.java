@@ -100,8 +100,13 @@ public interface API {
     @GET("/service/v2/profile/me/payment")
     void getWallet(@Header("Authorization") String header, Callback<JsonElement> callback);
 
-    // Get the prepaid balance of the user.
+  /*  // Get the prepaid balance of the user. -this is old method to get Balance
     @GET("/service/v2/mycard")
+    void getBalance(@Header("Authorization") String header, Callback<Amount> callback);
+*/
+
+    // Get the prepaid balance of the user. this is new method to get Balance
+    @POST("/service/v2/mycard/balance")
     void getBalance(@Header("Authorization") String header, Callback<Amount> callback);
 
     //bill generator response

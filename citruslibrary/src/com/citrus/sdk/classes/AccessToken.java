@@ -59,6 +59,10 @@ public class AccessToken {
         return accessToken;
     }
 
+    public String getHeaderAccessToken() {
+        return "Bearer " + accessToken;
+    }
+
     /**
      *
      * @param accessToken

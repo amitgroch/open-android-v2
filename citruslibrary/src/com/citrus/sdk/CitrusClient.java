@@ -166,9 +166,8 @@ public class CitrusClient {
                     if (accessToken.getAccessToken() != null) {
                         OauthToken signuptoken = new OauthToken(mContext, SIGNUP_TOKEN);
                         signuptoken.createToken(accessToken.getJSON()); //Oauth Token received
-                        String header = "Bearer " + accessToken.getAccessToken();
 
-                        retrofitClient.getBindResponse(header, emailId, mobileNo, new retrofit.Callback<BindPOJO>() {
+                        retrofitClient.getBindResponse(accessToken.getHeaderAccessToken(), emailId, mobileNo, new retrofit.Callback<BindPOJO>() {
                             @Override
                             public void success(BindPOJO bindPOJO, Response response) {
                                 Logger.d("BIND RESPONSE " + bindPOJO.getUsername());
@@ -359,9 +358,8 @@ public class CitrusClient {
             @Override
             public void success(AccessToken accessToken) {
                 if (accessToken != null) {
-                    String signupToken = accessToken.getAccessToken();
 
-                    retrofitClient.resetPassword("Bearer " + signupToken, emailId, new retrofit.Callback<JsonElement>() {
+                    retrofitClient.resetPassword(accessToken.getHeaderAccessToken(), emailId, new retrofit.Callback<JsonElement>() {
                         @Override
                         public void success(JsonElement element, Response response) {
                             sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_MESSAGE_RESET_PASSWORD, Status.SUCCESSFUL));
@@ -474,7 +472,7 @@ public class CitrusClient {
                 @Override
                 public void success(AccessToken accessToken) {
 
-                    retrofitClient.getBalance(accessToken.getAccessToken(), new retrofit.Callback<Amount>() {
+                    retrofitClient.getBalance(accessToken.getHeaderAccessToken(), new retrofit.Callback<Amount>() {
                         @Override
                         public void success(Amount amount, Response response) {
                             sendResponse(callback, amount);
