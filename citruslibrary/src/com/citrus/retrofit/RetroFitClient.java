@@ -10,11 +10,12 @@ import retrofit.client.OkClient;
 /**
  * Created by MANGESH KADAM on 5/7/2015.
  */
-public class RetroFitClient {
+public class
+        RetroFitClient {
     private static API RETROFIT_CLIENT;
     private static String CITRUS_ROOT = null;
     private static OkHttpClient okHttpClient = null;
-    static CitrusEndPoint citrusEndPoint;
+    private static CitrusEndPoint citrusEndPoint;
 
 
     private RetroFitClient() {}
@@ -61,7 +62,15 @@ public class RetroFitClient {
         okHttpClient.interceptors().clear();
     }
 
-    public static CitrusEndPoint getCitrusEndPoint() {
+   /* public static CitrusEndPoint getCitrusEndPoint() {
         return citrusEndPoint;
+    }*/
+
+    public static void resetEndPoint() {
+        citrusEndPoint.setUrl(CITRUS_ROOT);
+    }
+
+     public static void setEndPoint(String url) {
+        citrusEndPoint.setUrl(url);
     }
 }
