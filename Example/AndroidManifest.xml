@@ -23,11 +23,11 @@
         <activity
             android:name="com.citrus.prepaid.PrepaidWallet"
             android:label="@string/title_activity_prepaid" >
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!-- <activity -->
         <!-- android:name="com.citrus.sample.MainActivity" -->
@@ -57,7 +57,7 @@
         </activity>
         <activity
             android:name=".UIActivity"
-            android:label="@string/title_activity_ui" android:theme="@style/AppTheme">
+            android:label="@string/title_activity_ui" android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

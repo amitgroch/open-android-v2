@@ -21,11 +21,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.citrus.sdk.CitrusClient;
+import com.citrus.sdk.TransactionResponse;
 
 
-public class UIActivity extends ActionBarActivity implements UserManagementFragment.UserManagementInteractionListener {
+public class UIActivity extends ActionBarActivity implements UserManagementFragment.UserManagementInteractionListener, WalletPaymentFragment.WalletFragmentListener {
 
     private FragmentManager fragmentManager = null;
     private Context mContext = this;
@@ -47,9 +49,8 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
     private void showUI() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.container, UIActivityFragment.newInstance());
+                .add(R.id.container, UIActivityFragment.newInstance());
 
-//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -74,8 +75,14 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .replace(R.id.container, WalletPaymentFragment.newInstance());
 
-//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
+    }
+
+    @Override
+    public void onPaymentComplete(TransactionResponse transactionResponse) {
+        if (transactionResponse != null) {
+            Utils.showToast(mContext, transactionResponse.getMessage());
+        }
     }
 }
