@@ -214,6 +214,8 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                 textMessage.setText(citrusResponse.getMessage());
 
                 btnLinkUser.setVisibility(View.VISIBLE);
+                btnSignIn.setVisibility(View.GONE);
+                btnSignUp.setVisibility(View.GONE);
             }
 
             @Override

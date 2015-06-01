@@ -23,25 +23,26 @@
         <activity
             android:name="com.citrus.prepaid.PrepaidWallet"
             android:label="@string/title_activity_prepaid" >
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
-        <!--<activity-->
-            <!--android:name="com.citrus.sample.MainActivity"-->
-            <!--android:label="@string/title_activity_main" >-->
-
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
 
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
+        </activity>
+        <!-- <activity -->
+        <!-- android:name="com.citrus.sample.MainActivity" -->
+        <!-- android:label="@string/title_activity_main" > -->
 
-        <!--</activity>-->
+
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+
+
+        <!-- </activity> -->
         <activity
             android:name=".Widgets"
             android:label="@string/title_activity_widgets" >
@@ -53,6 +54,15 @@
         <activity
             android:name=".PrepaidFunctions"
             android:label="@string/title_activity_prepaid_functions" >
+        </activity>
+        <activity
+            android:name=".UIActivity"
+            android:label="@string/title_activity_ui" android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
