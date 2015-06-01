@@ -535,6 +535,7 @@ public class PG {
                     @Override
                     public void failure(RetrofitError error) {
                         Logger.d("Failed to get Prepaid Bill" + error.getMessage());
+                        internal.onTaskexecuted("",error.getMessage());
                     }
                 });
             }
@@ -542,6 +543,7 @@ public class PG {
             @Override
             public void error(CitrusError error) {
                 Logger.d("Failed to get Prepaid Token***");
+                internal.onTaskexecuted("", "{\"message\":\"Prepaid Oauth Token is missing - did you sign in the user?\",\"error\":\"600\"}");
             }
         });
 

@@ -12,8 +12,9 @@
 */
 package com.citrus.payment;
 
-import com.citrus.sdk.classes.BillGeneratorPOJO;
 import com.citrus.sdk.classes.Amount;
+import com.citrus.sdk.classes.BillGeneratorPOJO;
+import com.citrus.sdk.payment.PaymentBill;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +88,17 @@ public class Bill {
         this.returnurl = billGeneratorPOJO.getReturnUrl();
         if(billGeneratorPOJO.getNotifyUrl()!=null)
             this.notifyurl = billGeneratorPOJO.getNotifyUrl();
+    }
+
+
+    public Bill(PaymentBill paymentBill) {
+        this.txnId = paymentBill.getMerchantTransactionId();
+        this.amount = Amount.toJSONObject(paymentBill.getAmount());
+        this.signature = paymentBill.getRequestSignature();
+        this.access_key = paymentBill.getMerchantAccessKey();
+        this.returnurl = paymentBill.getReturnUrl();
+        if(paymentBill.getNotifyUrl()!=null)
+            this.notifyurl = paymentBill.getNotifyUrl();
     }
 
     public String getTxnId() {
