@@ -53,7 +53,7 @@ public interface Constants {
     String textColor = "#ffffff";
     String accentColor = "";
 
-    boolean ENABLE_LOGS = true;
+    boolean ENABLE_LOGS = false;
 }
 
 
