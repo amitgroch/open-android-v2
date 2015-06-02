@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.widget.Toast;
 
@@ -694,6 +693,26 @@ public class CitrusClient {
         }
     }
 
+    public synchronized  boolean isUserSignedIn() {
+        if(validate()) {
+            final boolean[] isSignedIn = new boolean[1];//= false;
+            oauthToken.getPrepaidToken(new Callback<AccessToken>() {
+                @Override
+                public void success(AccessToken accessToken) {
+                    isSignedIn[0] = true;
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    isSignedIn[0] = false;
+                }
+            });
+            return isSignedIn[0];
+        }
+        else {
+            return false;
+        }
+    }
 
     // Public APIS end
 
