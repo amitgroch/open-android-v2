@@ -558,24 +558,25 @@ public class CitrusClient {
      * @param amount   - Transaction amount
      * @param callback
      */
-    public synchronized void getBill(String billUrl, Amount amount, Callback<PaymentBill> callback) {
+    public synchronized void getBill(String billUrl, Amount amount, final Callback<PaymentBill> callback) {
         // Get the bill from the merchant server.
 
         new GetJSONBill(billUrl, amount, new retrofit.Callback<PaymentBill>() {
             @Override
             public void success(PaymentBill paymentBill, Response response) {
-                Log.d("BILLPOJO**", paymentBill.getAmount().getValue());
-
-//                walletpay(billGeneratorPOJO);
+                Logger.d("GETBILL RESPONSE **" + paymentBill.toString());
+                callback.success(paymentBill);
             }
 
             @Override
             public void failure(RetrofitError error) {
+                sendError(callback, error);
 
             }
         }).getJSONBill();
 
     }
+
 
     /**
      * Send money to your friend.
