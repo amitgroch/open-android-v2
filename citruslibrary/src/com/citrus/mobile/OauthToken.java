@@ -41,6 +41,12 @@ import retrofit.client.Response;
 
 public class OauthToken {
     private static final String STORED_VALUES = "UserStorage";
+
+    //emailID and MobileNo is saved after SignIn token is received
+    public static final String EMAIL_ID = "email_id";
+
+    public static final String MOBILE_NO = "mobile_no";
+
     private Context context;
 
     private Activity activity;
@@ -292,4 +298,20 @@ public class OauthToken {
     }
 
 
+    public boolean saveUserDetails(String emailId, String mobileNo) {
+
+        SharedPreferences.Editor editor = tokenPrefs.edit();
+        editor.putString(EMAIL_ID, emailId);
+        editor.putString(MOBILE_NO, mobileNo);
+        return editor.commit();
+    }
+
+
+    public String getEmailId() {
+        return tokenPrefs.getString(EMAIL_ID, null);
+    }
+
+    public String getMobileNumber() {
+        return tokenPrefs.getString(MOBILE_NO, null);
+    }
 }

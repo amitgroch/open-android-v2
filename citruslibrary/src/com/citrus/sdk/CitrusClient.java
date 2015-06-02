@@ -88,6 +88,8 @@ public class CitrusClient {
     public static final String SIGNUP_TOKEN = "signup_token";
     public static final String PREPAID_TOKEN = "prepaid_token";
 
+
+
     private String signinId;
     private String signinSecret;
     private String signupId;
@@ -200,7 +202,7 @@ public class CitrusClient {
                                         if (accessToken.getAccessToken() != null) {
                                             OauthToken token = new OauthToken(mContext, SIGNIN_TOKEN);
                                             token.createToken(accessToken.getJSON());
-
+                                            token.saveUserDetails(emailId, mobileNo);//save email and mobile No of the user
                                             RandomPassword pwd = new RandomPassword();
 
                                             String random_pass = pwd.generate(emailId, mobileNo);
@@ -268,6 +270,7 @@ public class CitrusClient {
                             if (accessToken.getAccessToken() != null) {
                                 OauthToken token = new OauthToken(mContext, PREPAID_TOKEN);
                                 token.createToken(accessToken.getJSON());///grant Type password token saved
+                                token.saveUserDetails(emailId, null);//save email ID of the signed in user
                                 RetroFitClient.setInterCeptor();
                                 EventBus.getDefault().register(CitrusClient.this);
                                 retrofitClient.getCookie(emailId, password, "true", new retrofit.Callback<String>() {
@@ -712,6 +715,16 @@ public class CitrusClient {
         else {
             return false;
         }
+    }
+
+
+    public synchronized String getUserEmailID() {
+            return oauthToken.getEmailId();
+    }
+
+
+    public synchronized String getUserMobileNumber() {
+            return oauthToken.getMobileNumber();
     }
 
     // Public APIS end
