@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.citrus.asynch.GetJSONBill;
 import com.citrus.cash.PersistentConfig;
 import com.citrus.citrususer.RandomPassword;
+import com.citrus.mobile.Config;
 import com.citrus.mobile.OAuth2GrantType;
 import com.citrus.mobile.OauthToken;
 import com.citrus.mobile.User;
@@ -114,16 +115,37 @@ public class CitrusClient {
         oauthToken = new OauthToken(context);
     }
 
-    public void init(String signupId, String signupSecret, String signinId, String signinSecret, String vanity, Environment environment) {
+    public void init(@NonNull String signupId, @NonNull String signupSecret, @NonNull String signinId, @NonNull String signinSecret, @NonNull String vanity, @NonNull Environment environment) {
         this.signupId = signupId;
         this.signupSecret = signupSecret;
         this.signinId = signinId;
         this.signinSecret = signinSecret;
         this.vanity = vanity;
+
+
+        if (environment == null) {
+            this.environment = Environment.SANDBOX;
+        }
         this.environment = environment;
 
         if (validate()) {
             initRetrofitClient();
+        }
+
+        // TODO: Remove full dependency on this class.
+        Config.setupSignupId(signupId);
+        Config.setupSignupSecret(signupSecret);
+
+        Config.setSigninId(signinId);
+        Config.setSigninSecret(signinSecret);
+
+        switch (environment) {
+            case SANDBOX:
+                Config.setEnv("sandbox");
+                break;
+            case PRODUCTION:
+                Config.setEnv("production");
+                break;
         }
     }
 

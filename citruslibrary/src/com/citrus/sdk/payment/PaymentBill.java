@@ -233,7 +233,7 @@ public class PaymentBill implements Parcelable {
         return "PaymentBill{" +
                 "amount=" + amount +
                 ", requestSignature='" + requestSignature + '\'' +
-                ", merchantTransactionId='" + merchantTransactionId + '\'' +
+                ", merchantTxnId='" + merchantTransactionId + '\'' +
                 ", merchantAccessKey='" + merchantAccessKey + '\'' +
                 ", returnUrl='" + returnUrl + '\'' +
                 ", notifyUrl='" + notifyUrl + '\'' +
