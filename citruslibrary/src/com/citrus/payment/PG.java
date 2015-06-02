@@ -213,10 +213,10 @@ public class PG {
             }
         };
 
-        new GetPrepaidbill()
-                .execute(new String[]{loadmoney.getAmount(), loadmoney.getReturl()});
+       /* new GetPrepaidbill()
+                .execute(new String[]{loadmoney.getAmount(), loadmoney.getReturl()});*/
 
-      //  getPrepaidBill(loadmoney.getAmount(), loadmoney.getReturl());
+        getPrepaidBill(loadmoney.getAmount(), loadmoney.getReturl());
     }
 
     private void formprepaidBill(String prepaid_bill) {
