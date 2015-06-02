@@ -20,6 +20,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.citrus.sdk.classes.Amount;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
@@ -238,5 +239,15 @@ public class PaymentBill implements Parcelable {
                 ", notifyUrl='" + notifyUrl + '\'' +
                 ", customParametersMap=" + customParametersMap +
                 '}';
+    }
+
+    public JSONObject getBillJSON() {
+        final Gson gson = new Gson();
+        String json = gson.toJson(this);
+        try {
+            return new JSONObject(json);
+        } catch (JSONException e) {
+            return null;
+        }
     }
 }

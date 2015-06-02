@@ -32,6 +32,8 @@ public class GetJSONBill {
         String baseURL = url.getProtocol() + "://" + url.getAuthority();
         String path = url.getPath();
         path = path.substring(1);
+        RetroFitClient.setEndPoint(baseURL);
         RetroFitClient.getBillGeneratorClient(baseURL).getBill(path, amount.getValue(), callback);
+        RetroFitClient.resetEndPoint();
     }
 }

@@ -29,7 +29,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
@@ -41,7 +40,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.citrus.asynch.GetBill;
 import com.citrus.cash.LoadMoney;
 import com.citrus.cash.PersistentConfig;
 import com.citrus.cash.Prepaid;
@@ -56,6 +54,7 @@ import com.citrus.sdk.classes.CitrusConfig;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.payment.PaymentOption;
 import com.citrus.sdk.payment.PaymentType;
+import com.citrus.sdk.response.CitrusError;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
@@ -172,7 +171,7 @@ public class CitrusActivity extends ActionBarActivity {
             billUrl = billUrl + "?amount=" + mPaymentType.getAmount().getValue();
         }
 
-        new GetBill(billUrl, new Callback() {
+      /*  new GetBill(billUrl, new Callback() {
             @Override
             public void onTaskexecuted(String bill, String error) {
                 dismissDialog();
@@ -186,7 +185,20 @@ public class CitrusActivity extends ActionBarActivity {
                     proceedToPayment(bill);
                 }
             }
-        }).execute();
+        }).execute();*/
+
+        CitrusClient.getInstance(CitrusActivity.this).getBill(mPaymentType.getUrl(), mPaymentType.getAmount(), new com.citrus.sdk.Callback<PaymentBill>() {
+            @Override
+            public void success(PaymentBill paymentBill) {
+                proceedToPayment(paymentBill.getBillJSON().toString());
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.FAILED, error.getMessage(), mTransactionId);
+                sendResult(transactionResponse);
+            }
+        });
     }
 
     private void proceedToPayment(String billJSON) {
