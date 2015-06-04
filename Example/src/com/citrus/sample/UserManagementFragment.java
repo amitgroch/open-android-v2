@@ -96,7 +96,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         btnLinkUser = (Button) rootView.findViewById(R.id.btn_link_user);
         btnSignIn = (Button) rootView.findViewById(R.id.btn_signin);
         btnSignUp = (Button) rootView.findViewById(R.id.btn_signup);
-        btnSignout = (Button) rootView.findViewById(R.id.btn_logout);
+
         btnResetPassword = (Button) rootView.findViewById(R.id.btn_reset_password);
 
         btnIsUserSignedIn.setOnClickListener(this);
@@ -104,7 +104,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         btnSignUp.setOnClickListener(this);
         btnSignIn.setOnClickListener(this);
         btnResetPassword.setOnClickListener(this);
-        btnSignout.setOnClickListener(this);
+
 
         citrusClient = CitrusClient.getInstance(context.getApplicationContext());
 

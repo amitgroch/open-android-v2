@@ -18,7 +18,6 @@ package com.citrus.sample;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,25 +26,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.citrus.mobile.Month;
-import com.citrus.mobile.Year;
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusActivity;
 import com.citrus.sdk.CitrusClient;
-import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.Constants;
-import com.citrus.sdk.PaymentParams;
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
-import com.citrus.sdk.payment.DebitCardOption;
 import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
+
+import static com.citrus.sample.Utils.PaymentType.*;
+import static com.citrus.sample.Utils.PaymentType.CITRUS_CASH;
+import static com.citrus.sample.Utils.PaymentType.PG_PAYMENT;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.citrus.sample.WalletPaymentFragment.WalletFragmentListener} interface
+ * {@link WalletFragmentListener} interface
  * to handle interaction events.
  * Use the {@link WalletPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -61,8 +59,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnPayUsingCash = null;
     private Button btnPGPayment = null;
 
-    private final String BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.php";
-    private final String RETURN_URL_LOAD_MONEY = "https://salty-plateau-1529.herokuapp.com/redirectUrlLoadCash.php";
 
     /**
      * Use this factory method to create a new instance of
@@ -179,32 +175,15 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     }
 
     private void loadMoney() {
-        Amount amount = new Amount("5");
-        DebitCardOption debitCardOption = new DebitCardOption("Salil Godbole", "4900150424000061", "012", Month.getMonth("12"), Year.getYear("2017"));
-        PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, RETURN_URL_LOAD_MONEY, debitCardOption);
-
-        startCitrusActivity(loadMoney);
+        mListener.onPaymentTypeSelected(LOAD_MONEY);
     }
 
     private void payUsingCash() {
-
-        Amount amount = new Amount("5");
-        PaymentType.CitrusCash payUsingCash = new PaymentType.CitrusCash(amount, BILL_URL);
-
-        startCitrusActivity(payUsingCash);
+        mListener.onPaymentTypeSelected(CITRUS_CASH);
     }
 
     private void pgPayment() {
-        CitrusUser citrusUser = new CitrusUser("salilgodbole@gmail.com", "9970950374");
-        Amount amount = new Amount("5");
-        DebitCardOption debitCardOption = new DebitCardOption("Salil Godbole", "4900150424000061", "012", Month.getMonth("12"), Year.getYear("2017"));
-        PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, citrusUser);
-
-        startCitrusActivity(pgPayment);
-    }
-
-    public interface WalletFragmentListener {
-        void onPaymentComplete(TransactionResponse transactionResponse);
+        mListener.onPaymentTypeSelected(PG_PAYMENT);
     }
 
 }

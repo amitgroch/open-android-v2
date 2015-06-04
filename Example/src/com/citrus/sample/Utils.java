@@ -26,4 +26,8 @@ public class Utils {
     public static void showToast(Context context, String message) {
         Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
+
+    public static enum PaymentType {
+        LOAD_MONEY, CITRUS_CASH, PG_PAYMENT;
+    }
 }

@@ -1,49 +1,73 @@
 package com.citrus.sample;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import com.citrus.mobile.CType;
+import com.citrus.mobile.Month;
+import com.citrus.mobile.Year;
+import com.citrus.sdk.CitrusActivity;
+import com.citrus.sdk.CitrusClient;
+import com.citrus.sdk.CitrusUser;
+import com.citrus.sdk.Constants;
+import com.citrus.sdk.TransactionResponse;
+import com.citrus.sdk.classes.Amount;
+import com.citrus.sdk.payment.CardOption;
+import com.citrus.sdk.payment.CreditCardOption;
+import com.citrus.sdk.payment.DebitCardOption;
+import com.citrus.sdk.payment.PaymentType;
+import com.citrus.widgets.CardNumberEditText;
+import com.citrus.widgets.ExpiryDate;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CardPaymentFragment.OnFragmentInteractionListener} interface
+ * {@link WalletPaymentFragment} interface
  * to handle interaction events.
  * Use the {@link CardPaymentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CardPaymentFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class CardPaymentFragment extends Fragment implements View.OnClickListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private final String BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.php";
+    private final String RETURN_URL_LOAD_MONEY = "https://salty-plateau-1529.herokuapp.com/redirectUrlLoadCash.php";
 
-    private OnFragmentInteractionListener mListener;
+    private EditText editCardName = null;
+    private EditText editCVV = null;
+    private EditText editAmount = null;
+    private CardNumberEditText editCardNumber = null;
+    private ExpiryDate editCardExpiry = null;
+    private RadioGroup radioGroup = null;
+    private CType cType = CType.DEBIT;
+    private Button btnPay = null;
+    private Utils.PaymentType paymentType = null;
+
+
+    private WalletFragmentListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment CardPaymentFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CardPaymentFragment newInstance(String param1, String param2) {
+    public static CardPaymentFragment newInstance(Utils.PaymentType paymentType) {
         CardPaymentFragment fragment = new CardPaymentFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("paymentType", paymentType);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -54,9 +78,10 @@ public class CardPaymentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            Bundle bundle = getArguments();
+            paymentType = (Utils.PaymentType) bundle.getSerializable("paymentType");
         }
     }
 
@@ -64,24 +89,39 @@ public class CardPaymentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card_payment, container, false);
-    }
+        View rootView = inflater.inflate(R.layout.fragment_card_payment, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        editCardName = (EditText) rootView.findViewById(R.id.txt_card_name);
+        editCVV = (EditText) rootView.findViewById(R.id.txt_cvv);
+        editAmount = (EditText) rootView.findViewById(R.id.txt_amount);
+        editCardNumber = (CardNumberEditText) rootView.findViewById(R.id.cardnumber);
+        editCardExpiry = (ExpiryDate) rootView.findViewById(R.id.expdate);
+        btnPay = (Button) rootView.findViewById(R.id.btn_pay);
+        btnPay.setOnClickListener(this);
+        radioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radioCredit) {
+                    cType = CType.CREDIT;
+                } else if (checkedId == R.id.radioDebit) {
+                    cType = CType.DEBIT;
+                }
+            }
+        });
+
+        return rootView;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (WalletFragmentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement WalletFragmentListener");
         }
     }
 
@@ -91,19 +131,51 @@ public class CardPaymentFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    private void startCitrusActivity(PaymentType paymentType) {
+        Intent intent = new Intent(getActivity(), CitrusActivity.class);
+        intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_TYPE, paymentType);
+        startActivityForResult(intent, Constants.REQUEST_CODE_PAYMENT);
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        TransactionResponse transactionResponse = data.getParcelableExtra(Constants.INTENT_EXTRA_TRANSACTION_RESPONSE);
+        if (transactionResponse != null) {
+            Utils.showToast(getActivity(), transactionResponse.getMessage());
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        String cardHolderName = editCardName.getText().toString();
+        String cardNumber = editCardNumber.getText().toString();
+        String cardCVV = editCVV.getText().toString();
+        Month month = editCardExpiry.getMonth();
+        Year year = editCardExpiry.getYear();
+        String amountStr = editAmount.getText().toString();
+
+        Amount amount = new Amount(amountStr);
+        CardOption cardOption = null;
+        if (cType == CType.DEBIT) {
+            cardOption = new DebitCardOption(cardHolderName, cardNumber, cardCVV, month, year);
+        } else {
+            cardOption = new CreditCardOption(cardHolderName, cardNumber, cardCVV, month, year);
+        }
+        PaymentType paymentType = null;
+        CitrusClient client = CitrusClient.getInstance(getActivity());
+
+        if (this.paymentType == Utils.PaymentType.LOAD_MONEY) {
+            paymentType = new PaymentType.LoadMoney(amount, RETURN_URL_LOAD_MONEY, cardOption);
+        } else if (this.paymentType == Utils.PaymentType.CITRUS_CASH) {
+            paymentType = new PaymentType.CitrusCash(amount, BILL_URL);
+        } else if (this.paymentType == Utils.PaymentType.PG_PAYMENT) {
+            paymentType = new PaymentType.PGPayment(amount, BILL_URL, cardOption, new CitrusUser(client.getUserEmailID(), client.getUserMobileNumber()));
+        }
+
+        startCitrusActivity(paymentType);
+
+    }
 }

@@ -20,12 +20,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.citrus.sdk.Callback;
+import com.citrus.sdk.CitrusClient;
+import com.citrus.sdk.response.CitrusError;
+import com.citrus.sdk.response.CitrusResponse;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class UIActivityFragment extends Fragment {
+public class UIActivityFragment extends Fragment implements View.OnClickListener {
+
+    private TextView textMessage = null;
+    private CitrusClient citrusClient = null;
+    private Button btnSignout = null;
+    private Button btnUserManagement = null;
+    private Button btnWalletPayment = null;
 
     public UIActivityFragment() {
     }
@@ -37,10 +50,50 @@ public class UIActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_ui, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_ui, container, false);
+        textMessage = (TextView) rootView.findViewById(R.id.txt_message);
+
+        btnUserManagement = (Button) rootView.findViewById(R.id.btn_user_management);
+        btnWalletPayment = (Button) rootView.findViewById(R.id.btn_user_wallet);
+        btnSignout = (Button) rootView.findViewById(R.id.btn_logout);
+        btnSignout.setOnClickListener(this);
+
+        if (isUserLoggedIn()) {
+            textMessage.setText("Welcome " + citrusClient.getUserEmailID());
+            btnWalletPayment.setVisibility(View.VISIBLE);
+            btnUserManagement.setVisibility(View.GONE);
+        } else {
+            textMessage.setText("Please Sign In or Sign Up the user.");
+            btnWalletPayment.setVisibility(View.GONE);
+            btnUserManagement.setVisibility(View.VISIBLE);
+        }
+
+        return rootView;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        citrusClient = CitrusClient.getInstance(getActivity().getApplicationContext());
     }
 
     private boolean isUserLoggedIn() {
-        return true;
+        return citrusClient.isUserSignedIn();
+    }
+
+    @Override
+    public void onClick(View v) {
+        citrusClient.signOut(new Callback<CitrusResponse>() {
+            @Override
+            public void success(CitrusResponse citrusResponse) {
+                Utils.showToast(getActivity(), citrusResponse.getMessage());
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Utils.showToast(getActivity(), error.getMessage());
+            }
+        });
     }
 }
