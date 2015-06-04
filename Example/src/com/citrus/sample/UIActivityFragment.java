@@ -62,10 +62,12 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
             textMessage.setText("Welcome " + citrusClient.getUserEmailID());
             btnWalletPayment.setVisibility(View.VISIBLE);
             btnUserManagement.setVisibility(View.GONE);
+            btnSignout.setVisibility(View.VISIBLE);
         } else {
             textMessage.setText("Please Sign In or Sign Up the user.");
             btnWalletPayment.setVisibility(View.GONE);
             btnUserManagement.setVisibility(View.VISIBLE);
+            btnSignout.setVisibility(View.GONE);
         }
 
         return rootView;
@@ -88,6 +90,11 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
             @Override
             public void success(CitrusResponse citrusResponse) {
                 Utils.showToast(getActivity(), citrusResponse.getMessage());
+
+                textMessage.setText("Please Sign In or Sign Up the user.");
+                btnSignout.setVisibility(View.GONE);
+                btnUserManagement.setVisibility(View.VISIBLE);
+                btnWalletPayment.setVisibility(View.GONE);
             }
 
             @Override

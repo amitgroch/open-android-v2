@@ -19,7 +19,7 @@ package com.citrus.sdk;
  * Created by salil on 24/4/15.
  */
 public interface Constants {
-    String SDK_VERSION = "3.0.1";
+    int SDK_VERSION = 3;
 
     String INTENT_EXTRA_TRANSACTION_RESPONSE = "INTENT_EXTRA_TRANSACTION_RESPONSE";
 

@@ -57,7 +57,7 @@
         </activity>
         <activity
             android:name=".UIActivity"
-            android:label="@string/title_activity_ui" android:theme="@style/Theme.AppCompat">
+            android:label="@string/title_activity_ui" android:theme="@style/Theme.AppCompat" android:configChanges="orientation|keyboard|screenSize" android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

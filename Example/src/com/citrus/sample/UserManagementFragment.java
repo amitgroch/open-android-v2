@@ -44,11 +44,9 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
 
     private UserManagementInteractionListener mListener = null;
-    private Button btnIsUserSignedIn = null;
     private Button btnLinkUser = null;
     private Button btnSignUp = null;
     private Button btnSignIn = null;
-    private Button btnSignout = null;
     private Button btnResetPassword = null;
 
     private EditText editEmailId = null;
@@ -92,14 +90,12 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         editPassword = (EditText) rootView.findViewById(R.id.edit_password);
         textMessage = (TextView) rootView.findViewById(R.id.txt_user_mgmt_message);
 
-        btnIsUserSignedIn = (Button) rootView.findViewById(R.id.btn_is_user_signed_in);
         btnLinkUser = (Button) rootView.findViewById(R.id.btn_link_user);
         btnSignIn = (Button) rootView.findViewById(R.id.btn_signin);
         btnSignUp = (Button) rootView.findViewById(R.id.btn_signup);
 
         btnResetPassword = (Button) rootView.findViewById(R.id.btn_reset_password);
 
-        btnIsUserSignedIn.setOnClickListener(this);
         btnLinkUser.setOnClickListener(this);
         btnSignUp.setOnClickListener(this);
         btnSignIn.setOnClickListener(this);
@@ -109,10 +105,6 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         citrusClient = CitrusClient.getInstance(context.getApplicationContext());
 
         return rootView;
-    }
-
-    private void isUserSignedIn() {
-
     }
 
     private void linkUser() {
@@ -206,26 +198,6 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
     }
 
 
-    private void logout() {
-        citrusClient.signOut(new Callback<CitrusResponse>() {
-            @Override
-            public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(context, citrusResponse.getMessage());
-                textMessage.setText(citrusResponse.getMessage());
-
-                btnLinkUser.setVisibility(View.VISIBLE);
-                btnSignIn.setVisibility(View.GONE);
-                btnSignUp.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
-                textMessage.setText(error.getMessage());
-            }
-        });
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -251,9 +223,6 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         textMessage.setText("");
 
         switch (v.getId()) {
-            case R.id.btn_is_user_signed_in:
-                isUserSignedIn();
-                break;
             case R.id.btn_link_user:
                 linkUser();
                 break;
@@ -265,9 +234,6 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                 break;
             case R.id.btn_reset_password:
                 resetPassword();
-                break;
-            case R.id.btn_logout:
-                logout();
                 break;
         }
     }

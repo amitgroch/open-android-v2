@@ -8,19 +8,10 @@
         android:layout_height="match_parent"
         tools:context="com.citrus.sample.UserManagementFragment">
 
-        <Button
-            android:id="@+id/btn_is_user_signed_in"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/button_margin"
-            android:text="Is User Logged In?" />
-
         <EditText
             android:id="@+id/edit_email_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btn_is_user_signed_in"
             android:layout_margin="@dimen/button_margin"
             android:hint="Enter Email Id"
             android:inputType="textEmailAddress"

@@ -37,6 +37,7 @@ import com.citrus.sdk.CitrusActivity;
 import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.Constants;
+import com.citrus.sdk.Environment;
 import com.citrus.sdk.PaymentParams;
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
@@ -47,7 +48,6 @@ import com.citrus.sdk.payment.PaymentType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.citrus.sdk.CitrusClient.Environment;
 import static com.citrus.sdk.CitrusClient.getInstance;
 
 public class PrepaidWallet extends Activity {

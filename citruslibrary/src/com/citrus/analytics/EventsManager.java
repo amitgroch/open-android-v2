@@ -58,7 +58,7 @@ public class EventsManager {
         Tracker t = ((CitrusLibraryApp) context.getApplicationContext()).getTracker(
                 CitrusLibraryApp.TrackerName.APP_TRACKER);
         t.send(new HitBuilders.EventBuilder().setCategory(Config.getVanity())
-                .setAction(INIT_EVENTS).setLabel(Constants.SDK_VERSION)
+                .setAction(INIT_EVENTS).setLabel(String.valueOf(Constants.SDK_VERSION))
                 .setValue(Long.valueOf(Constants.SDK_VERSION)).build());
     }
 

@@ -49,7 +49,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
     private void showUI() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .add(R.id.container, UIActivityFragment.newInstance());
+                .replace(R.id.container, UIActivityFragment.newInstance());
 
         fragmentTransaction.commit();
     }
@@ -75,6 +75,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .replace(R.id.container, WalletPaymentFragment.newInstance());
 
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }
