@@ -205,6 +205,13 @@ public class CitrusActivity extends ActionBarActivity {
 
 
         if (mPaymentType instanceof PaymentType.CitrusCash) { //pay using citrus cash
+            CitrusClient citrusClient = CitrusClient.getInstance(CitrusActivity.this);
+            String emailId = citrusClient.getUserEmailId();
+            String mobileNo = citrusClient.getUserMobileNumber();
+
+            if (mCitrusUser == null) {
+                mCitrusUser = new CitrusUser(emailId, mobileNo);
+            }
 
             UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mCitrusUser));
             Prepaid prepaid = new Prepaid(userDetails.getEmail());

@@ -71,7 +71,7 @@ public interface API {
     //set Password
     @FormUrlEncoded
     @PUT("/service/v2/identity/me/password")
-    void setPasswordResponse(@Header("Authorization") String header,@Field("old") String oldPassword, @Field("new") String newPassword, Callback<ResponseCallback> callback);
+    void setPasswordResponse(@Header("Authorization") String header, @Field("old") String oldPassword, @Field("new") String newPassword, Callback<ResponseCallback> callback);
 
     @FormUrlEncoded
     @POST("/oauth/token")
@@ -100,10 +100,13 @@ public interface API {
     @GET("/service/v2/profile/me/payment")
     void getWallet(@Header("Authorization") String header, Callback<JsonElement> callback);
 
-  /*  // Get the prepaid balance of the user. -this is old method to get Balance
-    @GET("/service/v2/mycard")
-    void getBalance(@Header("Authorization") String header, Callback<Amount> callback);
-*/
+    // Get the prepaid balance of the user. -this is old method to get Balance
+//    @GET("/service/v2/mycard")
+//    void getBalance(@Header("Authorization") String header, Callback<Amount> callback);
+
+    // Activate the prepaid user.
+    @GET("/service/v2/prepayment/balance")
+    void activatePrepaidUser(@Header("Authorization") String header, Callback<Amount> callback);
 
     // Get the prepaid balance of the user. this is new method to get Balance
     @POST("/service/v2/mycard/balance")

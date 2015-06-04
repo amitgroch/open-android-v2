@@ -20,8 +20,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,7 +159,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         String mobileNo = editMobileNo.getText().toString();
         String password = editPassword.getText().toString();
 
-        citrusClient.setPassword(emailId, mobileNo, password, new Callback<CitrusResponse>() {
+        citrusClient.signUp(emailId, mobileNo, password, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
                 Utils.showToast(context, citrusResponse.getMessage());
@@ -169,6 +167,8 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
                 btnSignUp.setVisibility(View.GONE);
                 btnSignIn.setVisibility(View.VISIBLE);
+
+                mListener.onShowWalletScreen();
             }
 
             @Override

@@ -2,7 +2,6 @@ package com.citrus.sample;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.citrus.mobile.CType;
 import com.citrus.mobile.Month;
@@ -172,7 +170,7 @@ public class CardPaymentFragment extends Fragment implements View.OnClickListene
         } else if (this.paymentType == Utils.PaymentType.CITRUS_CASH) {
             paymentType = new PaymentType.CitrusCash(amount, BILL_URL);
         } else if (this.paymentType == Utils.PaymentType.PG_PAYMENT) {
-            paymentType = new PaymentType.PGPayment(amount, BILL_URL, cardOption, new CitrusUser(client.getUserEmailID(), client.getUserMobileNumber()));
+            paymentType = new PaymentType.PGPayment(amount, BILL_URL, cardOption, new CitrusUser(client.getUserEmailId(), client.getUserMobileNumber()));
         }
 
         startCitrusActivity(paymentType);

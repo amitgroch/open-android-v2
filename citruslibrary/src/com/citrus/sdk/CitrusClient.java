@@ -71,13 +71,9 @@ import static com.citrus.sdk.response.CitrusResponse.Status;
  */
 public class CitrusClient {
 
-
-
     public static final String SIGNIN_TOKEN = "signin_token";
     public static final String SIGNUP_TOKEN = "signup_token";
     public static final String PREPAID_TOKEN = "prepaid_token";
-
-
 
     private String signinId;
     private String signinSecret;
@@ -144,15 +140,13 @@ public class CitrusClient {
     }
 
     private void saveSDKEnvironment() {
-        if(oauthToken.getCurrentEnvironment()==Environment.NONE) { //no environment saved till now
+        if (oauthToken.getCurrentEnvironment() == Environment.NONE) { //no environment saved till now
             oauthToken.saveEnvironment(environment);
             Logger.d("NO ENVIRONMENT EXISTS earlier");
-        }
-        else if(oauthToken.getCurrentEnvironment()==environment) {
+        } else if (oauthToken.getCurrentEnvironment() == environment) {
             //dont save new enviroment
             Logger.d("PREVIOUS AND CURRENT ENVIRONMENT IS SAME");
-        }
-        else { //environment changed-  logout user, save new environment
+        } else { //environment changed-  logout user, save new environment
             signOut(new Callback<CitrusResponse>() {
                 @Override
                 public void success(CitrusResponse citrusResponse) {
@@ -190,7 +184,7 @@ public class CitrusClient {
     /**
      * This api will check whether the user is existing user or not. If the user is existing user,
      * then it will return the existing details, else it will create an account internally and
-     * then call setPassword to set the password and activate the account.
+     * then call signUp to set the password and activate the account.
      *
      * @param emailId  - emailId of the user
      * @param mobileNo - mobileNo of the user
@@ -359,7 +353,7 @@ public class CitrusClient {
      * @param password
      * @param callback
      */
-    public synchronized void setPassword(String emailId, String mobileNo, String password, final Callback<CitrusResponse> callback) {
+    public synchronized void signUp(final String emailId, String mobileNo, final String password, final Callback<CitrusResponse> callback) {
 
         if (validate()) {
             OauthToken token = new OauthToken(mContext, SIGNIN_TOKEN);
@@ -371,13 +365,33 @@ public class CitrusClient {
                 retrofitClient.setPasswordResponse(header, random_pass, password, new retrofit.Callback<ResponseCallback>() {
                     @Override
                     public void success(ResponseCallback responseCallback, Response response) {
-                        Logger.d("SET PASSWORD RESPONSE **" + String.valueOf(response.getStatus()));
-                        sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_MESSAGE_SET_PASSWORD, Status.SUCCESSFUL));
+                        Logger.d("SIGNUP PASSWORD RESPONSE **" + String.valueOf(response.getStatus()));
+                        signIn(emailId, password, new Callback<CitrusResponse>() {
+                            @Override
+                            public void success(CitrusResponse citrusResponse) {
+                                activatePrepaidUser(new Callback<Amount>() {
+                                    @Override
+                                    public void success(Amount amount) {
+                                        sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_MESSAGE_SET_PASSWORD, Status.SUCCESSFUL));
+                                    }
+
+                                    @Override
+                                    public void error(CitrusError error) {
+                                        sendError(callback, error);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void error(CitrusError error) {
+                                sendError(callback, error);
+                            }
+                        });
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Logger.d("SET PASSWORD ERROR **" + error.getMessage());
+                        Logger.d("SIGNUP PASSWORD ERROR **" + error.getMessage());
                         sendError(callback, error);
                     }
                 });
@@ -490,6 +504,38 @@ public class CitrusClient {
                         @Override
                         public void failure(RetrofitError error) {
                             sendError(callback, new CitrusError(error.getMessage(), Status.FAILED));
+                        }
+                    });
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    sendError(callback, error);
+                }
+            });
+        }
+    }
+
+    /**
+     * Activate the prepaid user.
+     *
+     * @param callback
+     */
+    private synchronized void activatePrepaidUser(final Callback<Amount> callback) {
+        if (validate()) {
+            oauthToken.getPrepaidToken(new Callback<AccessToken>() {
+                @Override
+                public void success(AccessToken accessToken) {
+
+                    retrofitClient.activatePrepaidUser(accessToken.getHeaderAccessToken(), new retrofit.Callback<Amount>() {
+                        @Override
+                        public void success(Amount amount, Response response) {
+                            sendResponse(callback, amount);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            sendError(callback, error);
                         }
                     });
                 }
@@ -714,8 +760,8 @@ public class CitrusClient {
         }
     }
 
-    public synchronized  boolean isUserSignedIn() {
-        if(validate()) {
+    public synchronized boolean isUserSignedIn() {
+        if (validate()) {
             final boolean[] isSignedIn = new boolean[1];//= false;
             oauthToken.getPrepaidToken(new Callback<AccessToken>() {
                 @Override
@@ -729,20 +775,19 @@ public class CitrusClient {
                 }
             });
             return isSignedIn[0];
-        }
-        else {
+        } else {
             return false;
         }
     }
 
 
-    public synchronized String getUserEmailID() {
-            return oauthToken.getEmailId();
+    public synchronized String getUserEmailId() {
+        return oauthToken.getEmailId();
     }
 
 
     public synchronized String getUserMobileNumber() {
-            return oauthToken.getMobileNumber();
+        return oauthToken.getMobileNumber();
     }
 
     // Public APIS end
