@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.widget.Toast;
 
+import com.citrus.analytics.EventsManager;
 import com.citrus.asynch.GetJSONBill;
 import com.citrus.cash.PersistentConfig;
 import com.citrus.citrususer.RandomPassword;
@@ -70,19 +71,7 @@ import static com.citrus.sdk.response.CitrusResponse.Status;
  */
 public class CitrusClient {
 
-    public enum Environment {
-        SANDBOX {
-            public String getBaseUrl() {
-                return "https://sandboxadmin.citruspay.com";
-            }
-        }, PRODUCTION {
-            public String getBaseUrl() {
-                return "https://admin.citruspay.com";
-            }
-        };
 
-        public abstract String getBaseUrl();
-    }
 
     public static final String SIGNIN_TOKEN = "signin_token";
     public static final String SIGNUP_TOKEN = "signup_token";
@@ -128,6 +117,7 @@ public class CitrusClient {
             this.environment = Environment.SANDBOX;
         }
         this.environment = environment;
+        saveSDKEnvironment();
 
         if (validate()) {
             initRetrofitClient();
@@ -147,6 +137,34 @@ public class CitrusClient {
             case PRODUCTION:
                 Config.setEnv("production");
                 break;
+        }
+
+        Logger.d("VANITY*** " + vanity);
+        EventsManager.logInitSDKEvents(mContext);
+    }
+
+    private void saveSDKEnvironment() {
+        if(oauthToken.getCurrentEnvironment()==Environment.NONE) { //no environment saved till now
+            oauthToken.saveEnvironment(environment);
+            Logger.d("NO ENVIRONMENT EXISTS earlier");
+        }
+        else if(oauthToken.getCurrentEnvironment()==environment) {
+            //dont save new enviroment
+            Logger.d("PREVIOUS AND CURRENT ENVIRONMENT IS SAME");
+        }
+        else { //environment changed-  logout user, save new environment
+            signOut(new Callback<CitrusResponse>() {
+                @Override
+                public void success(CitrusResponse citrusResponse) {
+                    oauthToken.saveEnvironment(environment);
+                    Logger.d("ENVIRONMMENT MISMATCH ***" + "user Logging out");
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    oauthToken.saveEnvironment(environment);
+                }
+            });
         }
     }
 

@@ -1,6 +1,7 @@
 package com.citrus.analytics;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 
 import com.citrus.mobile.Config;
@@ -19,6 +20,7 @@ public class EventsManager {
     private final static String PAYMENT_EVENTS = "PAYMENT_EVENTS";
 
 
+    private final static String INIT_EVENTS = "SDK_INIT_EVENTS";
     /**
      * This function will be called to log WebView related events
      * @param activity
@@ -47,10 +49,18 @@ public class EventsManager {
                 CitrusLibraryApp.TrackerName.APP_TRACKER);
         t.send(new HitBuilders.EventBuilder().setCategory(Config.getVanity())
                 .setAction(PAYMENT_EVENTS).setLabel(getPaymentEventLabel(connectionType, paymentType, transactionType))
-                .setValue(getPaymentEventValue(connectionType, paymentType,transactionType)).build());
+                .setValue(getPaymentEventValue(connectionType, paymentType, transactionType)).build());
         //ConnectionType*PaymentType*BuildVersion*TransactionType
     }
 
+
+    public static void logInitSDKEvents(Context context){
+        Tracker t = ((CitrusLibraryApp) context.getApplicationContext()).getTracker(
+                CitrusLibraryApp.TrackerName.APP_TRACKER);
+        t.send(new HitBuilders.EventBuilder().setCategory(Config.getVanity())
+                .setAction(INIT_EVENTS).setLabel(Constants.SDK_VERSION)
+                .setValue(Long.valueOf(Constants.SDK_VERSION)).build());
+    }
 
     /**
      * This function will return value for webview events

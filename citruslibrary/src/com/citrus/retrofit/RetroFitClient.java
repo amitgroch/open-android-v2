@@ -1,7 +1,7 @@
 package com.citrus.retrofit;
 
-import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.Constants;
+import com.citrus.sdk.Environment;
 import com.squareup.okhttp.OkHttpClient;
 
 import retrofit.RestAdapter;
@@ -24,7 +24,7 @@ public class
         return RETROFIT_CLIENT;
     }
 
-    public static void initRetroFitClient(CitrusClient.Environment environment) {
+    public static void initRetroFitClient(Environment environment) {
         if (environment != null) {
             CITRUS_ROOT = environment.getBaseUrl();
         }
