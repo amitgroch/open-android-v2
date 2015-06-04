@@ -18,10 +18,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.citrus.sdk.classes.AccessToken;
 import com.citrus.retrofit.RetroFitClient;
 import com.citrus.sdk.Constants;
+import com.citrus.sdk.Environment;
 import com.citrus.sdk.ResponseMessages;
+import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
 import com.google.gson.Gson;
@@ -38,7 +39,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
 public class OauthToken {
     private static final String STORED_VALUES = "UserStorage";
 
@@ -46,6 +46,8 @@ public class OauthToken {
     public static final String EMAIL_ID = "email_id";
 
     public static final String MOBILE_NO = "mobile_no";
+
+    private static final String ENVIRONMENT = "environment";
 
     private Context context;
 
@@ -313,5 +315,16 @@ public class OauthToken {
 
     public String getMobileNumber() {
         return tokenPrefs.getString(MOBILE_NO, null);
+    }
+
+    public boolean saveEnvironment(Environment environment) {
+        SharedPreferences.Editor editor = tokenPrefs.edit();
+        editor.putString(ENVIRONMENT, environment.toString());
+        return editor.commit();
+    }
+
+    public Environment getCurrentEnvironment() {
+        String environment = tokenPrefs.getString(ENVIRONMENT, null);
+        return (environment==null)?Environment.NONE:Environment.valueOf(environment);
     }
 }

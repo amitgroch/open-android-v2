@@ -16,14 +16,14 @@
 package com.citrus.sample;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.citrus.sdk.CitrusClient;
+import com.citrus.sdk.Environment;
 import com.citrus.sdk.TransactionResponse;
 
 
@@ -41,7 +41,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
         fragmentManager = getSupportFragmentManager();
 
         citrusClient = CitrusClient.getInstance(mContext);
-        citrusClient.init("test-signup", "c78ec84e389814a05d3ae46546d16d2e", "test-signin", "52f7e15efd4208cf5345dd554443fd99", "prepaid", CitrusClient.Environment.SANDBOX);
+        citrusClient.init("test-signup", "c78ec84e389814a05d3ae46546d16d2e", "test-signin", "52f7e15efd4208cf5345dd554443fd99", "prepaid", Environment.SANDBOX);
 
         showUI();
     }

@@ -20,6 +20,7 @@ import android.app.Application;
 import com.citrus.mobile.Config;
 import com.citrus.sdk.Constants;
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 import com.orhanobut.logger.LogLevel;
 
@@ -47,7 +48,9 @@ public class CitrusLibraryApp extends Application {
         if (!mTrackers.containsKey(trackerId)) {
 
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            //analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+            if(Constants.ENABLE_LOGS) {
+                analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+            }
             Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(Config.getAnalyticsID()):null;
 
            // t.enableAdvertisingIdCollection(true);
@@ -60,17 +63,10 @@ public class CitrusLibraryApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (Constants.ENABLE_LOGS) {
             com.orhanobut.logger.Logger.init(LOG_TAG)
                     .setMethodCount(2)
                     .hideThreadInfo()
-                    .setLogLevel(LogLevel.FULL);
-        } else {
-            com.orhanobut.logger.Logger.init(LOG_TAG)
-                    .setMethodCount(2)
-                    .hideThreadInfo()
-                    .setLogLevel(LogLevel.NONE);
-        }
+                    .setLogLevel(Constants.ENABLE_LOGS?LogLevel.FULL:LogLevel.NONE);
     }
 
 
