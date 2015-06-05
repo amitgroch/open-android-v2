@@ -129,7 +129,7 @@ public class CitrusClient {
 
         Config.setSigninId(signinId);
         Config.setSigninSecret(signinSecret);
-
+        Config.setVanity(vanity);
         switch (environment) {
             case SANDBOX:
                 Config.setEnv("sandbox");
