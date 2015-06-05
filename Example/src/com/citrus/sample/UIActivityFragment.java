@@ -59,7 +59,7 @@ public class UIActivityFragment extends Fragment implements View.OnClickListener
         btnSignout.setOnClickListener(this);
 
         if (isUserLoggedIn()) {
-            textMessage.setText("Welcome " + citrusClient.getUserEmailID());
+            textMessage.setText("Welcome " + citrusClient.getUserEmailId());
             btnWalletPayment.setVisibility(View.VISIBLE);
             btnUserManagement.setVisibility(View.GONE);
             btnSignout.setVisibility(View.VISIBLE);
