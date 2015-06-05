@@ -42,5 +42,7 @@ public interface ResponseMessages {
 
     String ERROR_MESSAGE_LINK_USER = "ERROR: Unable to Link User";
 
+    String SUCCESS_MESSAGE_SAVED_PAYMENT_OPTIONS = "Payment Option Saved Successfully.";
+
 
 }
