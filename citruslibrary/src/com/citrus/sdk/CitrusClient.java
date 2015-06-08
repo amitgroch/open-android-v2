@@ -199,7 +199,7 @@ public class CitrusClient {
                 public void success(AccessToken accessToken, Response response) {
                     Logger.d("accessToken " + accessToken.getJSON().toString());
 
-                    if (accessToken.getAccessToken() != null) {
+                    if (accessToken.getHeaderAccessToken() != null) {
                         OauthToken signuptoken = new OauthToken(mContext, SIGNUP_TOKEN);
                         signuptoken.createToken(accessToken.getJSON()); //Oauth Token received
 
@@ -212,7 +212,7 @@ public class CitrusClient {
                                     @Override
                                     public void success(AccessToken accessToken, Response response) {
                                         Logger.d("SIGNIN accessToken" + accessToken.getJSON().toString());
-                                        if (accessToken.getAccessToken() != null) {
+                                        if (accessToken.getHeaderAccessToken() != null) {
                                             OauthToken token = new OauthToken(mContext, SIGNIN_TOKEN);
                                             token.createToken(accessToken.getJSON());
                                             token.saveUserDetails(emailId, mobileNo);//save email and mobile No of the user
@@ -273,7 +273,7 @@ public class CitrusClient {
 
             @Override
             public void success(AccessToken accessToken, Response response) {
-                if (accessToken.getAccessToken() != null) {
+                if (accessToken.getHeaderAccessToken() != null) {
                     OauthToken token = new OauthToken(mContext, SIGNIN_TOKEN);
                     token.createToken(accessToken.getJSON());///grant Type username token saved
 
@@ -281,7 +281,7 @@ public class CitrusClient {
                         @Override
                         public void success(AccessToken accessToken, Response response) {
                             Logger.d("SIGN IN RESPONSE " + accessToken.getJSON().toString());
-                            if (accessToken.getAccessToken() != null) {
+                            if (accessToken.getHeaderAccessToken() != null) {
                                 OauthToken token = new OauthToken(mContext, PREPAID_TOKEN);
                                 token.createToken(accessToken.getJSON());///grant Type password token saved
                                 token.saveUserDetails(emailId, null);//save email ID of the signed in user
@@ -597,10 +597,10 @@ public class CitrusClient {
                 oauthToken.getSignInToken(new Callback<AccessToken>() {
                     @Override
                     public void success(AccessToken accessToken) {
-                        retrofitClient.savePaymentOption(accessToken.getAccessToken(), new TypedString(paymentOption.getSavePaymentOptionObject()), new retrofit.Callback<CitrusResponse>() {
+                        retrofitClient.savePaymentOption(accessToken.getHeaderAccessToken(), new TypedString(paymentOption.getSavePaymentOptionObject()), new retrofit.Callback<CitrusResponse>() {
                             @Override
                             public void success(CitrusResponse citrusResponse, Response response) {
-                                sendResponse(callback, citrusResponse);
+                                sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_MESSAGE_SAVED_PAYMENT_OPTIONS, Status.SUCCESSFUL));
                             }
 
                             @Override
@@ -684,11 +684,11 @@ public class CitrusClient {
                 @Override
                 public void success(AccessToken accessToken) {
                     if (!TextUtils.isEmpty(toUser.getEmailId())) {
-                        retrofitClient.sendMoneyByEmail(accessToken.getAccessToken(), amount.getValue(), amount.getCurrency(), message, toUser.getEmailId(), callbackSendMoney);
+                        retrofitClient.sendMoneyByEmail(accessToken.getHeaderAccessToken(), amount.getValue(), amount.getCurrency(), message, toUser.getEmailId(), callbackSendMoney);
                     } else {
                         long mobileNo = com.citrus.card.TextUtils.isValidMobileNumber(toUser.getMobileNo());
                         if (mobileNo != -1) {
-                            retrofitClient.sendMoneyByMobile(accessToken.getAccessToken(), amount.getValue(), amount.getCurrency(), message, String.valueOf(mobileNo), callbackSendMoney);
+                            retrofitClient.sendMoneyByMobile(accessToken.getHeaderAccessToken(), amount.getValue(), amount.getCurrency(), message, String.valueOf(mobileNo), callbackSendMoney);
                         } else {
                             sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_MOBILE_NO, Status.FAILED));
                         }

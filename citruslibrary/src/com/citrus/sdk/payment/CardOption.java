@@ -17,6 +17,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
+import com.citrus.card.CardType;
 import com.citrus.mobile.Month;
 import com.citrus.mobile.Year;
 
@@ -39,13 +40,14 @@ public abstract class CardOption extends PaymentOption {
         }
     };
 
-    String cardHolderName = null;
-    String cardNumber = null;
-    String cardCVV = null;
-    String cardExpiry = null;
-    String cardExpiryMonth = null;
-    String cardExpiryYear = null;
-    CardScheme cardScheme = null;
+    protected String cardHolderName = null;
+    protected String cardNumber = null;
+    protected String cardCVV = null;
+    protected String cardExpiry = null;
+    protected String cardExpiryMonth = null;
+    protected String cardExpiryYear = null;
+    protected CardScheme cardScheme = null;
+    protected String nickName = null;
 
     CardOption(String token, String cardCVV) {
         this.token = token;
@@ -63,9 +65,10 @@ public abstract class CardOption extends PaymentOption {
      */
     CardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiry) {
         this.cardHolderName = cardHolderName;
-        this.cardNumber = cardNumber;
+        this.cardNumber = normalizeCardNumber(cardNumber);
         this.cardCVV = cardCVV;
         this.cardExpiry = cardExpiry;
+        this.cardScheme = CardScheme.getCardSchemeUsingNumber(cardNumber);
 
         if (!TextUtils.isEmpty(cardExpiry)) {
             String[] strArr = cardExpiry.split("/");
@@ -85,8 +88,9 @@ public abstract class CardOption extends PaymentOption {
      */
     CardOption(String cardHolderName, String cardNumber, String cardCVV, Month cardExpiryMonth, Year cardExpiryYear) {
         this.cardHolderName = cardHolderName;
-        this.cardNumber = cardNumber;
+        this.cardNumber = normalizeCardNumber(cardNumber);
         this.cardCVV = cardCVV;
+        this.cardScheme = CardScheme.getCardSchemeUsingNumber(cardNumber);
 
         if (cardExpiryMonth != null) {
             this.cardExpiryMonth = cardExpiryMonth.toString();
@@ -99,7 +103,6 @@ public abstract class CardOption extends PaymentOption {
             this.cardExpiry = cardExpiryMonth + "/" + cardExpiryYear;
         }
     }
-
 
     /**
      * This constructor will be used internally, mostly to display the saved card details.
@@ -114,7 +117,7 @@ public abstract class CardOption extends PaymentOption {
     CardOption(String name, String token, String cardHolderName, String cardNumber, CardScheme cardScheme, String cardExpiry) {
         super(name, token);
         this.cardHolderName = cardHolderName;
-        this.cardNumber = cardNumber;
+        this.cardNumber = normalizeCardNumber(cardNumber);
         this.cardExpiry = cardExpiry;
         this.cardScheme = cardScheme;
 
@@ -125,10 +128,19 @@ public abstract class CardOption extends PaymentOption {
         }
     }
 
+    /**
+     * Get the type of the card, i.e. DEBIT or CREDIT.
+     *
+     * @return
+     */
     public abstract String getCardType();
 
     public String getCardHolderName() {
         return cardHolderName;
+    }
+
+    public String getNickName() {
+        return nickName;
     }
 
     public String getCardExpiryYear() {
@@ -159,6 +171,17 @@ public abstract class CardOption extends PaymentOption {
 
     public CardScheme getCardScheme() {
         return cardScheme;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    private String normalizeCardNumber(String number) {
+        if (number == null) {
+            return null;
+        }
+        return number.trim().replaceAll("\\s+|-", "");
     }
 
     @Override
@@ -245,7 +268,7 @@ public abstract class CardOption extends PaymentOption {
             e.printStackTrace();
         }
 
-        return object != null ? object.toString():null;
+        return object != null ? object.toString() : null;
     }
 
     /**
@@ -291,6 +314,36 @@ public abstract class CardOption extends PaymentOption {
             } else {
                 return null;
             }
+        }
+
+        public static CardScheme getCardSchemeUsingNumber(String cardNumber) {
+            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(cardNumber);
+            CardScheme cardScheme = null;
+            switch (cardType) {
+                case VISA:
+                    cardScheme = CardScheme.VISA;
+                    break;
+                case MCRD:
+                    cardScheme = CardScheme.MASTER_CARD;
+                    break;
+                case MTRO:
+                    cardScheme = CardScheme.MAESTRO;
+                    break;
+                case DINERS:
+                    cardScheme = CardScheme.DINERS;
+                    break;
+                case DISCOVER:
+                    cardScheme = CardScheme.DISCOVER;
+                    break;
+                case AMEX:
+                    cardScheme = CardScheme.AMEX;
+                    break;
+                case JCB:
+                    cardScheme = CardScheme.JCB;
+                    break;
+            }
+
+            return cardScheme;
         }
     }
 }

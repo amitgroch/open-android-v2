@@ -68,6 +68,9 @@ public final class CreditCardOption extends CardOption implements android.os.Par
     }
 
     @Override
+    /**
+     * Returns the type of the card i.e. CREDIT OR DEBIT
+     */
     public String getCardType() {
         return CardType.CREDIT.getCardType();
     }
