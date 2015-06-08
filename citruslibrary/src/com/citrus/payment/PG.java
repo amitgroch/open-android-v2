@@ -48,6 +48,7 @@ import java.util.ArrayList;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedString;
 
 
@@ -315,7 +316,7 @@ public class PG {
             }
 
         } else if (TextUtils.equals(paymenttype.toString(), "prepaid")) { //pay using citrus cash
-            isTokenizedPayment =true;
+            isTokenizedPayment = true;
             paymentmode = new JSONObject();
             try {
                 paymentmode.put("cvv", "000");
@@ -413,11 +414,10 @@ public class PG {
             payment.put("paymentToken", paymentToken);
             payment.put("merchantTxnId", bill.getTxnId());
             payment.put("requestSignature", bill.getSignature());
-            if(isTokenizedPayment) //Priyank Changes {
+            if (isTokenizedPayment) //Priyank Changes {
             {
                 payment.put("requestOrigin", "MSDKW");
-            }
-            else {
+            } else {
                 payment.put("requestOrigin", "MSDKG");
             }
             payment.put("userDetails", userdetails);
@@ -534,8 +534,24 @@ public class PG {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Logger.d("Failed to get Prepaid Bill" + error.getMessage());
-                        internal.onTaskexecuted("",error.getMessage());
+                        String json = null;
+                        String message = null;
+                        if (error != null && error.getResponse() != null && error.getResponse().getBody() != null) {
+                            json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                        }
+
+                        Logger.d("Failed to get Prepaid Bill" + json);
+
+                        if (json != null) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(json);
+                                message = jsonObject.optString("errorMessage");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        internal.onTaskexecuted("", message);
                     }
                 });
             }

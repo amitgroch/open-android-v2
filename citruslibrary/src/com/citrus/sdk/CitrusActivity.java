@@ -259,8 +259,6 @@ public class CitrusActivity extends ActionBarActivity {
 
                     mPaymentWebview.loadUrl(redirect.getString("redirectUrl"));
                 } else {
-                    Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-
                     transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.FAILED, response, mTransactionId);
                     sendResult(transactionResponse);
                 }
@@ -269,8 +267,6 @@ public class CitrusActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
-
             transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.FAILED, error, mTransactionId);
             sendResult(transactionResponse);
         }

@@ -319,30 +319,32 @@ public abstract class CardOption extends PaymentOption {
         public static CardScheme getCardSchemeUsingNumber(String cardNumber) {
             com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(cardNumber);
             CardScheme cardScheme = null;
-            switch (cardType) {
-                case VISA:
-                    cardScheme = CardScheme.VISA;
-                    break;
-                case MCRD:
-                    cardScheme = CardScheme.MASTER_CARD;
-                    break;
-                case MTRO:
-                    cardScheme = CardScheme.MAESTRO;
-                    break;
-                case DINERS:
-                    cardScheme = CardScheme.DINERS;
-                    break;
-                case DISCOVER:
-                    cardScheme = CardScheme.DISCOVER;
-                    break;
-                case AMEX:
-                    cardScheme = CardScheme.AMEX;
-                    break;
-                case JCB:
-                    cardScheme = CardScheme.JCB;
-                    break;
-            }
+            if (cardType != null) {
+                switch (cardType) {
+                    case VISA:
+                        cardScheme = CardScheme.VISA;
+                        break;
+                    case MCRD:
+                        cardScheme = CardScheme.MASTER_CARD;
+                        break;
+                    case MTRO:
+                        cardScheme = CardScheme.MAESTRO;
+                        break;
+                    case DINERS:
+                        cardScheme = CardScheme.DINERS;
+                        break;
+                    case DISCOVER:
+                        cardScheme = CardScheme.DISCOVER;
+                        break;
+                    case AMEX:
+                        cardScheme = CardScheme.AMEX;
+                        break;
+                    case JCB:
+                        cardScheme = CardScheme.JCB;
+                        break;
+                }
 
+            }
             return cardScheme;
         }
     }

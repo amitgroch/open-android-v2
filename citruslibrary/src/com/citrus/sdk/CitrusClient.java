@@ -62,6 +62,7 @@ import eventbus.CookieEvents;
 import retrofit.ResponseCallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedString;
 
 import static com.citrus.sdk.response.CitrusResponse.Status;
@@ -816,7 +817,25 @@ public class CitrusClient {
 
     private void sendError(Callback callback, RetrofitError error) {
         if (callback != null) {
-            callback.error(new CitrusError(error.getMessage(), Status.FAILED));
+            String message = null;
+            CitrusError citrusError = null;
+            if (error != null && error.getResponse() != null && error.getResponse().getBody() != null) {
+                message = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+            }
+
+            if (message != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(message);
+                    citrusError = new CitrusError(jsonObject.getString("error_description"), Status.FAILED);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    citrusError = new CitrusError(error.getMessage(), Status.FAILED);
+                }
+            } else {
+                citrusError = new CitrusError(error.getMessage(), Status.FAILED);
+            }
+
+            sendError(callback, citrusError);
         }
     }
 
@@ -824,10 +843,6 @@ public class CitrusClient {
         this.merchantPaymentOption = merchantPaymentOption;
 
         // TODO Save these values in DB
-    }
-
-    private void showToast(String message) {
-        Toast.makeText(mContext.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     // Getters and setters.
