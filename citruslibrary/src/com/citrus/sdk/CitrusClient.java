@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.citrus.analytics.EventsManager;
@@ -269,6 +270,7 @@ public class CitrusClient {
 
         //grant Type username token saved
         retrofitClient.getSignInToken(signinId, signinSecret, emailId, OAuth2GrantType.username.toString(), new retrofit.Callback<AccessToken>() {
+
             @Override
             public void success(AccessToken accessToken, Response response) {
                 if (accessToken.getAccessToken() != null) {
@@ -300,6 +302,7 @@ public class CitrusClient {
                                             if (config.getCookieString() != null) {
                                                 cookieManager.getInstance().removeSessionCookie();
                                             }
+                                            CookieSyncManager.createInstance(mContext);
                                             config.setCookie(prepaidCookie);
                                         } else {
                                             Logger.d("PREPAID LOGIN UNSUCCESSFUL");
@@ -905,7 +908,7 @@ public class CitrusClient {
 
     //this event is triggered from ReceivedCookiesInterceptor
     public void onEvent(CookieEvents cookieEvents) {
-        // Logger.d("COOKIE IN CITRUS CLIENT  ****" + cookieEvents.getCookie());
+         Logger.d("COOKIE IN CITRUS CLIENT  ****" + cookieEvents.getCookie());
         prepaidCookie = cookieEvents.getCookie();
     }
 }

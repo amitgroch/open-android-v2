@@ -15,6 +15,7 @@ package com.citrus.mobile;
 import android.app.Activity;
 import android.content.Context;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import com.citrus.cash.PersistentConfig;
 import com.citrus.sdk.Constants;
@@ -178,7 +179,8 @@ public class User {
 
     public final static boolean logoutUser(Activity activity) {
 
-        String setCookie = CookieManager.getInstance().getCookie(Config.getBaseURL());
+        CookieSyncManager.createInstance(activity);
+
         CookieManager.getInstance().setCookie(Config.getBaseURL(), Constants.CITRUS_PREPAID_COOKIE);//remove App Cookie
 
         new PersistentConfig(activity).clearToken(); //clear stored cookies
@@ -190,6 +192,8 @@ public class User {
 
 
     public final static boolean logoutUser(Context context) {
+
+        CookieSyncManager.createInstance(context);
 
         String setCookie = CookieManager.getInstance().getCookie(Config.getBaseURL());
         CookieManager.getInstance().setCookie(Config.getBaseURL(), Constants.CITRUS_PREPAID_COOKIE);//remove App Cookie
