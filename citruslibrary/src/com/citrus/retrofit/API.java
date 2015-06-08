@@ -135,4 +135,8 @@ public interface API {
     @POST("/service/v2/prepayment/load")
     void getPrepaidBill(@Header("Authorization") String header, @Field("amount") String amount, @Field("redirect") String redirectURL, @Field("currency") String currency, Callback<CitrusPrepaidBill> callback);
 
+    //get merchant name by vanity  --     //"utility/nagama/merchantName";
+    @GET("/utility/{path}/merchantName")
+    void getMerchantName(@Path("path") String path, Callback<String> callback);
+
 }
